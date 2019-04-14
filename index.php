@@ -1,31 +1,34 @@
 <?php
-session_start();
 
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+$installer = true;
+if(file_exists( __DIR__ . '/config.php')){
+    $installer = false;
+    require_once __DIR__ . '/config.php';
+}
 
-require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
 require  __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
-require  __DIR__ . '/src/Controllers/Public/Main.class.php';
+require  __DIR__ . '/src/Controllers/Public/Install.class.php';
 
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 
 
+if(!$installer){
+    require  __DIR__ . '/src/Controllers/Public/Main.class.php';
+    $router->all('/login', 'Main@login');
+    $router->all('/dashboard', 'Main@index');
+    $router->all('/tasks', 'Main@tasks');
+    $router->all('/logout', 'Main@logout');
+    $router->all('/taskdetails/(\d+)', 'Main@taskdetails');    
+}else{
+    $router->all('/install', 'install@index');
+}
 
-$router->all('/login', 'Main@login');
-$router->all('/dashboard', 'Main@index');
-$router->all('/tasks', 'Main@tasks');
-$router->all('/logout', 'Main@logout');
-$router->all('/taskdetails/(\d+)', 'Main@taskdetails');
-
-/*
-    $router->get('/taskdetails/(\d+)', function($id) {
-        echo 'movie id ' . htmlentities($id);
-    });
-*/
 
 $template = explode("@",$router->fn);
 $router->run(function() use ($tpl) {
@@ -34,6 +37,19 @@ $router->run(function() use ($tpl) {
     $GLOBALS["tpl"]->assign("includeDir", "/templates/v1/");
     $tpl->display($templateDir);
 });
+
+if($installer){
+
+    if(strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false){
+       
+        echo "Please Enable Apache Mod Rewrite (Enable .htaccess)";
+        die();
+    }
+
+    if( $_SERVER['REQUEST_URI'] != "/install"){
+        Header("Location: /install");
+    }
+}
 
 ?>
 
