@@ -84,7 +84,7 @@ class Main{
                 $tasks[] = $row;
             }
 
-
+        
 
 
             $GLOBALS["tpl"]->assign("tasks", $tasks);
@@ -92,4 +92,42 @@ class Main{
             //die();
         }
 
+        public function logout(){
+            session_destroy();
+            Header("Location: /login");
+        }
+
+        public function edituser($id){
+            $GLOBALS["template"][0] ="Main";
+            $GLOBALS["template"][1] ="edituser";
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users WHERE id = ?");
+            $result = $statement->execute(array($id));
+            $user = $statement->fetch();
+            $GLOBALS["tpl"]->assign("user", $user);
+            if(!empty($_POST)){
+                $passwort_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE users SET passwort = ? WHERE id = ?");
+                $result = $statement->execute(array($passwort_hash,$id));
+                header("refresh: 2");
+                die("Success Please wait...");
+            }
+        }
+
+        public function settings(Type $var = null)
+        {
+
+
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users");
+            $result = $statement->execute(array());
+            $users = $statement->fetchAll();
+
+            $GLOBALS["tpl"]->assign("users", $users);
+
+            //   
+        
+
+            
+        }
 }

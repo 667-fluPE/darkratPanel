@@ -14,6 +14,7 @@
           <ul>
               <li> <a href="/dashboard" title="Home">  <img src="{$includeDir}assets/img/nav/home.svg"> </a></li>
               <li> <a href="/tasks" title="Tasks">  <img src="{$includeDir}assets/img/nav/working-with-laptop.svg"> </a></li>
+              <li> <a href="/settings" title="Settings">  <img src="{$includeDir}assets/img/nav/settings.svg"> </a></li>
           </ul>
       </div>
   </div>

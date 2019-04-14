@@ -24,7 +24,9 @@ if(!$installer){
     $router->all('/dashboard', 'Main@index');
     $router->all('/tasks', 'Main@tasks');
     $router->all('/logout', 'Main@logout');
+    $router->all('/settings', 'Main@settings');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');    
+    $router->all('/edituser/(\d+)', 'Main@edituser');    
 }else{
     $router->all('/install', 'install@index');
 }
