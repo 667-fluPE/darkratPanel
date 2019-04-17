@@ -26,7 +26,7 @@
            <table class="table">
               <thead>
                 <tr>
-                  <th>Status</th>
+                  <th colspan="2">Status</th>
                   <th>Command</th>
                   <th>Type</th>
                   <th>Executions</th>
@@ -37,22 +37,29 @@
          
                 {foreach from=$allTasks item=task}
                   <tr>
-                    <td>
-
+                    <td width="30">
+                        <form method="post" id="delete-{$task.id}">
+                          <img width="25"  onclick="document.getElementById('delete-{$task.id}').submit()" src="{$includeDir}assets/img/delete.svg" title="Delete"> 
+                          <input name="delete" value="1" hidden> 
+                          <input name="taskid" value="{$task.id}" hidden>
+                        </form> 
+                      </td>
+                    <td width="30">
                       {if $task.status == "1"}
-                      <form method="post" id="pause-{$task.id}">
-                        <img width="25"  onclick="document.getElementById('pause-{$task.id}').submit()" src="{$includeDir}assets/img/round-pause-button.svg" title="Currenlty Running"> Running
-                        <input name="taskstatus" value="pause" hidden> 
-                        <input name="taskid" value="{$task.id}" hidden>
-                      </form> 
+                        <form method="post" id="pause-{$task.id}">
+                          <img width="25"  onclick="document.getElementById('pause-{$task.id}').submit()" src="{$includeDir}assets/img/round-pause-button.svg" title="Currenlty Running"> 
+                          <input name="taskstatus" value="pause" hidden> 
+                          <input name="taskid" value="{$task.id}" hidden>
+                        </form> 
                       {else} 
                        <form method="post" id="run-{$task.id}">
                           <input name="taskstatus" value="run" hidden> 
                           <input name="taskid" value="{$task.id}" hidden> 
-                          <img width="25" onclick="document.getElementById('run-{$task.id}').submit()" src="{$includeDir}assets/img/play-button.svg" title="Currenlty Paused"> Paused
+                          <img width="25" onclick="document.getElementById('run-{$task.id}').submit()" src="{$includeDir}assets/img/play-button.svg" title="Currenlty Paused"> 
                        </form> 
                       {/if}
                     </td> 
+                  
                     <td>{$task.command}</td>
                     <td>{$task.task}</td>
                     <td>{$task.executions}</td>

