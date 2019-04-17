@@ -9,13 +9,14 @@ if(file_exists( __DIR__ . '/config.php')){
     $installer = false;
     require_once __DIR__ . '/config.php';
 }
-
+require 'vendor/autoload.php';
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
 require  __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
 require  __DIR__ . '/src/Controllers/Public/Install.class.php';
 
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
+use GeoIp2\Database\Reader;
 
 
 if(!$installer){
