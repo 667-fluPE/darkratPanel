@@ -6,7 +6,7 @@ color: #606A96;
 
     */
 html{
-    overflow: hidden;
+    overflow-x: hidden;
 }
 body{
     color: white;
