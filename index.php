@@ -10,6 +10,7 @@ if(file_exists( __DIR__ . '/config.php')){
     require_once __DIR__ . '/config.php';
 }
 require 'vendor/autoload.php';
+
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
 require  __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
 require  __DIR__ . '/src/Controllers/Public/Install.class.php';
@@ -28,6 +29,7 @@ if(!$installer){
     $router->all('/settings', 'Main@settings');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');    
     $router->all('/edituser/(\d+)', 'Main@edituser');    
+    $router->all('/botinfo/(\d+)', 'Main@botinfo');
 }else{
     $router->all('/install', 'install@index');
 }

@@ -44,20 +44,23 @@ class Install{
      
    
                    CREATE TABLE `bots` (
-                   `id` int(11) NOT NULL,
-                   `hwid` varchar(100) DEFAULT NULL,
-                   `computrername` varchar(100) DEFAULT NULL,
-                   `country` varchar(25) DEFAULT NULL,
-                   `netframework2` varchar(11) NOT NULL DEFAULT 'false',
-                   `netframework3` varchar(11) NOT NULL DEFAULT 'false',
-                   `netframework35` varchar(11) NOT NULL DEFAULT 'false',
-                   `netframework4` varchar(11) NOT NULL DEFAULT 'false',
-                   `ip` varchar(30) DEFAULT NULL,
-                   `lastresponse` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   `operingsystem` varchar(255) DEFAULT NULL,
-                   `install_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   `version` varchar(10) NOT NULL DEFAULT '0.0'
-                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                  `id` int(11) NOT NULL,
+                  `hwid` varchar(255) DEFAULT NULL,
+                  `computrername` varchar(100) DEFAULT NULL,
+                  `country` varchar(25) DEFAULT NULL,
+                  `netframework2` varchar(11) NOT NULL DEFAULT 'false',
+                  `netframework3` varchar(11) NOT NULL DEFAULT 'false',
+                  `netframework35` varchar(11) NOT NULL DEFAULT 'false',
+                  `netframework4` varchar(11) NOT NULL DEFAULT 'false',
+                  `latitude` varchar(255) DEFAULT NULL,
+                  `longitude` varchar(255) DEFAULT NULL,
+                  `countryName` varchar(255) DEFAULT NULL,
+                  `ip` varchar(30) DEFAULT NULL,
+                  `lastresponse` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                  `operingsystem` varchar(255) DEFAULT NULL,
+                  `install_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                  `version` varchar(10) NOT NULL DEFAULT '0.0'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
    
    
                    CREATE TABLE `tasks` (

