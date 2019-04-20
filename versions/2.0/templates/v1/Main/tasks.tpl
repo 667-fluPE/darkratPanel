@@ -80,6 +80,7 @@
 
 {include file="footer.tpl"}
 <script>
+    var countryfilter = false;
     var submit = false;
     $('#inputGroupSelect01').on('change', function() {
       $('#inputs').empty();
@@ -92,10 +93,45 @@
       if(this.value == "uninstall"){
         submit = true;
       }
+
+
   
       if(submit){
-        $('#inputs').append('<hr><a onclick="document.getElementById(\'newTask\').submit()" class="bttn">Execute Task</a>');
+          $("#inputs").append('<label class="form-check-label"> <input id="enableCountryFilter" type="checkbox" class="form-check-input"> Enable Country Filter   <span class="checkmark"></span></label>');
+
+          $( "#enableCountryFilter" ).change(function() {
+              if($(this).is(":checked")) {
+                  addCountryfilter();
+              }else{
+                  $("#countyfilter").remove();
+              }
+          });
+
+          $('#inputs').append(' <div class="inputs-inner"></div><a onclick="document.getElementById(\'newTask\').submit()" class="bttn">Execute Task</a>');
       }
   
   });
+
+
+    function addCountryfilter() {
+        $('#inputs .inputs-inner').append(' <div id="countyfilter"> <div class="form-group"><select name="country-filter[]" id="multiple-checkboxes" multiple="multiple">\n' +
+                {foreach from=$countries item=country}
+            '        <option value="{$country}" data-img="{$includeDir}assets/img/flags/{$country|lower}.png"> {$country}</option>\n' +
+                {/foreach}
+            '    </select></div></div>');
+
+        $('#multiple-checkboxes').multiselect({
+            nonSelectedText: 'Select Countries!',
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableHTML: true,
+            optionLabel: function(element) {
+                return $(element).text()+' <img src="'+$(element).attr('data-img')+'">';
+            },
+        });
+
+    }
+
+
+
   </script>

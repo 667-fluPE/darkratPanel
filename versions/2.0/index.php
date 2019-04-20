@@ -43,6 +43,9 @@ if(!$installer){
 
 $template = explode("@",$router->fn);
 $router->run(function() use ($tpl) {
+    $tpl->caching = false;
+    $tpl->compile_check = true;
+    $tpl->force_compile  = true;
     $tpl->setTemplateDir(__DIR__."/templates/v1/");
     $templateDir = $GLOBALS["template"][0]."/".$GLOBALS["template"][1].".tpl";
     $GLOBALS["tpl"]->assign("includeDir", "/versions/2.0/templates/v1/");
@@ -52,7 +55,6 @@ $router->run(function() use ($tpl) {
 if($installer){
 
     if(strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false){
-       
         echo "Please Enable Apache Mod Rewrite (Enable .htaccess)";
         die();
     }

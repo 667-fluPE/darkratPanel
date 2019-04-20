@@ -324,3 +324,97 @@ body{
 .updatecenter{
         margin-top: 20px;
 }
+
+.multiselect.dropdown-toggle {
+    margin-top: 20px;
+    color: white;
+}
+
+#inputs .form-group label{
+    margin: 0px;
+    text-align: center;
+    width: 100%;
+}
+#inputs .form-check-label{
+    margin-left: 20px;
+}
+
+#inputs .form-check-label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    font-size: 18px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-top: 20px;
+}
+
+/* Hide the browser's default checkbox */
+#inputs .form-check-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+#inputs .form-check-label:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+#inputs .form-check-label input:checked ~ .checkmark {
+    background-color: #7d15ba;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+#inputs .form-check-label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+#inputs .form-check-label .checkmark:after {
+    left: 11px;
+    top: 7px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#inputs .form-group .btn-group{
+    width: 100%;
+}
+#inputs .btn-group-vertical>.btn, .btn-group>.btn{
+    flex: 0 1 auto;
+}
+.multiselect.dropdown-toggle{
+    margin: 0px;
+}
+#inputs .bttn{
+    margin-top: 20px;
+}

