@@ -4,7 +4,10 @@
 class Update{
 
     public  function version_check(){
-        $file = fopen ($GLOBALS["ext_version_loc"], "r");
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = :id");
+        $result = $statement->execute(array('id' => 1));
+        $config = $statement->fetch();
+        $file = fopen ($config["check_update_url"], "r");
         $exploded = explode(";",fgets($file));
         $vnum = $exploded[0];
         fclose($file);
@@ -25,7 +28,11 @@ class Update{
     }
 
     public function doUpdate(){
-        $file = fopen ($GLOBALS["ext_version_loc"], "r");
+
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = :id");
+        $result = $statement->execute(array('id' => 1));
+        $config = $statement->fetch();
+        $file = fopen ($config["check_update_url"], "r");
         $exploded = explode(";",fgets($file));
         $copy = copy($exploded[1], __DIR__."/../../../../update.zip");
         // check for success or fail

@@ -34,14 +34,27 @@ class Install{
     
    
                $database = "
-                   SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-                   SET time_zone = '+00:00';
-                   CREATE USER '".$mysqldatabaseRand."'@'localhost' IDENTIFIED BY  '".$mysqlpassword."';
-                   GRANT USAGE ON *.* TO '".$mysqldatabaseRand."'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-                   CREATE DATABASE IF NOT EXISTS `".$mysqldatabaseRand."`;GRANT ALL PRIVILEGES ON `".$mysqldatabaseRand."`.* TO '".$mysqldatabaseRand."'@'localhost';
-                   USE ".$mysqldatabaseRand.";
-   
-     
+                    SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
+                    SET time_zone = '+00:00';
+                    CREATE USER '".$mysqldatabaseRand."'@'localhost' IDENTIFIED BY  '".$mysqlpassword."';
+                    GRANT USAGE ON *.* TO '".$mysqldatabaseRand."'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+                    CREATE DATABASE IF NOT EXISTS `".$mysqldatabaseRand."`;GRANT ALL PRIVILEGES ON `".$mysqldatabaseRand."`.* TO '".$mysqldatabaseRand."'@'localhost';
+                    USE ".$mysqldatabaseRand.";
+                    
+                    CREATE TABLE `config` (
+                      `id` int(11) NOT NULL,
+                      `enryptionkey` varchar(255) DEFAULT NULL,
+                      `check_update_url` varchar(255) DEFAULT NULL,
+                      `todo2` varchar(255) DEFAULT NULL
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                    
+                    INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `todo2`) VALUES
+                    (1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', NULL);
+
+                   ALTER TABLE `config`
+                   ADD PRIMARY KEY (`id`);
+                   ALTER TABLE `config`
+                   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
    
                    CREATE TABLE `bots` (
                   `id` int(11) NOT NULL,
