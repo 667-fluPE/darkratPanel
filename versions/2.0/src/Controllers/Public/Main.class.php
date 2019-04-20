@@ -1,9 +1,37 @@
 <?php
 
 class Main{
+    public function __construct()
+    {
+        if(!empty($_COOKIE['identifier']) AND !empty($_COOKIE['securitytoken'])){
+            $identifier = $_COOKIE['identifier'];
+            $securitytoken = $_COOKIE['securitytoken'];
 
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM securitytokens WHERE identifier = ?");
+            $result = $statement->execute(array($identifier));
+            $securitytoken_row = $statement->fetch();
 
-         public function index(){
+            if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
+                //TODO Log Bruteforce?
+                unset($_COOKIE["identifier"]);
+                unset($_COOKIE["securitytoken"]);
+                die('Try Again');
+            } else { //Token war korrekt
+                //Setze neuen Token
+                $neuer_securitytoken = $this->random_string();
+                $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
+                $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
+                setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
+                setcookie("securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
+
+                //Logge den Benutzer ein
+                $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
+            }
+
+        }
+    }
+
+    public function index(){
 
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
@@ -29,8 +57,24 @@ class Main{
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
         }
 
+       private function random_string() {
+            if(function_exists('random_bytes')) {
+                $bytes = random_bytes(16);
+                $str = bin2hex($bytes);
+            } else if(function_exists('openssl_random_pseudo_bytes')) {
+                $bytes = openssl_random_pseudo_bytes(16);
+                $str = bin2hex($bytes);
+            } else if(function_exists('mcrypt_create_iv')) {
+                $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
+                $str = bin2hex($bytes);
+            } else {
+                //Bitte euer_geheim_string durch einen zufälligen String mit >12 Zeichen austauschen
+                $str = md5(uniqid('euer_geheimer_string', true));
+            }
+            return $str;
+        }
 
-        public function tasks(){
+    public function tasks(){
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
@@ -67,6 +111,9 @@ class Main{
         }
 
         public function login(){
+            if(!empty($_SESSION["darkrat_userid"])){
+                Header("Location: /dashboard");
+            }
             if(!empty($_POST)){
                 $username = $_POST['userid'];
                 $passwort = $_POST['pswrd'];
@@ -78,6 +125,17 @@ class Main{
                 //Überprüfung des Passworts
                 if ($user !== false && password_verify($passwort, $user['passwort'])) {
                     $_SESSION['darkrat_userid'] = $user['id'];
+
+                    if(isset($_POST['save_login'])) {
+                        $identifier = $this->random_string();
+                        $securitytoken = $this->random_string();
+
+                        $insert = $GLOBALS["pdo"]->prepare("INSERT INTO securitytokens (user_id, identifier, securitytoken) VALUES (:user_id, :identifier, :securitytoken)");
+                        $insert->execute(array('user_id' => $user['id'], 'identifier' => $identifier, 'securitytoken' => sha1($securitytoken)));
+                        setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Year
+                        setcookie("securitytoken",$securitytoken,time()+(3600*24*365)); //1 Year
+                    }
+
                     header("Location: /dashboard");
                 } else {
                     $errorMessage = "Incorect Details<br>";
@@ -86,6 +144,9 @@ class Main{
         }
 
         public function taskdetails($id){
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="taskdetails";
             $sql = "SELECT tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
@@ -98,21 +159,22 @@ class Main{
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $tasks[] = $row;
             }
-
-        
-
-
             $GLOBALS["tpl"]->assign("tasks", $tasks);
-           // var_dump($id);
-            //die();
         }
 
         public function logout(){
             session_destroy();
+            //Remove Cookies
+            setcookie("identifier","",time()-(3600*24*365));
+            setcookie("securitytoken","",time()-(3600*24*365));
+
             Header("Location: /login");
         }
 
         public function edituser($id){
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="edituser";
 
@@ -131,6 +193,9 @@ class Main{
 
         public function settings()
         {
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users");
             $statement->execute(array());
             $users = $statement->fetchAll();
@@ -147,20 +212,13 @@ class Main{
                 }
 
            }
-
-
-
-
-
-
             $GLOBALS["tpl"]->assign("users", $users);
             $GLOBALS["tpl"]->assign("config", $config);
-
-
-
-
         }
         public  function botinfo($id){
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="botinfo";
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE id = ?");

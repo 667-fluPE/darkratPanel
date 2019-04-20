@@ -3,6 +3,13 @@
 
 class Update{
 
+    function __construct()
+    {
+        if(empty($_SESSION["darkrat_userid"])) {
+            die("Login Required");
+        }
+    }
+
     public  function version_check(){
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = :id");
         $result = $statement->execute(array('id' => 1));
