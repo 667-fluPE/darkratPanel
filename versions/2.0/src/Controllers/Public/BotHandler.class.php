@@ -96,9 +96,19 @@ class BotHandler{
                                 $filter = json_decode($com["filter"],true);
                                 if(is_array($filter)){
                                     // Search Country in Filter if not found die
-                                    if (strpos($filter["country-filter"], $country) == false) {
+                                    if(!empty($filter["country-filter"])){
+                                        if (strpos($filter["country-filter"], $country) == false) {
                                             die("waiting");
+                                        }
                                     }
+
+                                    //Check if Bot Only Ececution
+                                    if(!empty($filter["onlybot"])) {
+                                        if($filter["onlybot"] != $bot["id"]){
+                                                die();
+                                        }
+                                    }
+
                                 }
                             }
                         }

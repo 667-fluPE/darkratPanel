@@ -97,15 +97,21 @@
 
   
       if(submit){
-          $("#inputs").append('<label class="form-check-label"> <input id="enableCountryFilter" type="checkbox" class="form-check-input"> Enable Country Filter   <span class="checkmark"></span></label>');
 
-          $( "#enableCountryFilter" ).change(function() {
-              if($(this).is(":checked")) {
-                  addCountryfilter();
-              }else{
-                  $("#countyfilter").remove();
-              }
-          });
+          var enablecountyFilter = {$showCountryFilter};
+          if(enablecountyFilter){
+              $("#inputs").append('<label class="form-check-label"> <input id="enableCountryFilter" type="checkbox" class="form-check-input"> Enable Country Filter   <span class="checkmark"></span></label>');
+
+              $( "#enableCountryFilter" ).change(function() {
+                  if($(this).is(":checked")) {
+                      addCountryfilter();
+                  }else{
+                      $("#countyfilter").remove();
+                  }
+              });
+
+          }
+
 
           $('#inputs').append(' <div class="inputs-inner"></div><a onclick="document.getElementById(\'newTask\').submit()" class="bttn">Execute Task</a>');
       }
