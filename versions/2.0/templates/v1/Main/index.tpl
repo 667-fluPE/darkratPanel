@@ -81,7 +81,6 @@ it's going to be hard but hard doesn't mean impossible
           </div>
       </div>
       <div class="row">
-
           <table class="table bot_table">
               <thead>
               <tr>

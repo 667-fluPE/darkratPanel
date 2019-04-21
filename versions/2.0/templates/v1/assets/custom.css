@@ -430,3 +430,12 @@ body{
 .card .card-body .special .card-category{
   margin: 0px;
 }
+
+.createnewUser{
+    margin-left: 40px;
+}
+
+.modal-content {
+    color: white;
+    background: #10111b;
+}

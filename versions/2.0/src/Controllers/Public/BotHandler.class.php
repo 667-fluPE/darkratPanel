@@ -5,7 +5,7 @@ use GeoIp2\Database\Reader;
 class BotHandler{
 
 
-    function xor_this($data) {
+    public function xor_this($data) {
 
         $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
         $statementConfig->execute(array("1"));
