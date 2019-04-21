@@ -108,6 +108,7 @@ class Install{
                    `id` int(10) UNSIGNED NOT NULL,
                    `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                    `passwort` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                   `active` int(1) NOT NULL DEFAULT '1',
                    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                    `updated_at` timestamp NULL DEFAULT NULL
                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -151,7 +152,7 @@ class Install{
                     die($e->getmessage());
                 }
                 $string = "<?php %pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqldatabaseRand."', '".$mysqlpassword."');";
-                file_put_contents(__DIR__."/../../../config.php",str_replace("%","$",$string));
+                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%","$",$string));
 
  
 
@@ -170,18 +171,25 @@ class Install{
        
             $return = array(
                 "mysql" => false,
-                "writable" => false,
+                "writable" => array(),
+                "dontwritable" => array(),
             );
 
             if(in_array("mysql",PDO::getAvailableDrivers())){
                 $return["mysql"] = true;
             }
-
-            $newFileName = __DIR__.'/../../../file.txt';
+            $newFileName = __DIR__.'/../../../../../file.txt';
+            $dirs = array_filter(glob('*'), 'is_dir');
             if (  is_writable(dirname($newFileName))) {
-                $return["writable"] = true;
+                $return["writable"][] = "Root Dir";
             }
-
+            foreach ($dirs as $dir) {
+                if (is_writable($dir)) {
+                    $return["writable"][] = $dir;
+                } else {
+                    $return["dontwritable"][] = $dir;
+                }
+            }
 
 
             $GLOBALS["tpl"]->assign("return",$return);

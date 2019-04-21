@@ -3,7 +3,10 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body { font-family: Arial; }
+body { font-family: Arial;
+    background: #27293d;
+    color: white;
+}
 
 /* Style the tab */
 .tab {
@@ -62,11 +65,15 @@ body { font-family: Arial; }
         Please Install MYsql
     {/if}
     <hr>
-    {if $return.writable == "1"}
-        Dir is Writable
-    {else}
-        Dir is not Writable
-    {/if}
+
+
+
+    {foreach from=$return.writable item=dir}
+        {$dir} is Writable <br/>
+    {/foreach}
+    {foreach from=$return.dontwritable item=dir}
+         Please make {$dir} Writable <br/>
+    {/foreach}
 
 </div>
 

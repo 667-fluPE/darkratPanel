@@ -418,3 +418,7 @@ body{
 #inputs .bttn{
     margin-top: 20px;
 }
+
+.multiselect-container.dropdown-menu.show{
+    background: #27293d;
+}

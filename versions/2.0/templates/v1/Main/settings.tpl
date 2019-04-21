@@ -33,7 +33,14 @@
                           {foreach from=$users item=user}
                           <tr>
                             <td>{$user.username}</td>
-                            <td> <a href="/edituser/{$user.id}"> Edit </a></td>
+                            <td>
+                                <a href="/edituser/{$user.id}"> Edit </a>
+                                {if $user.active == 1}
+                                    <img width="19" src="{$includeDir}assets/img/unlock.svg" title="User is Active">
+                                {else}
+                                    <img width="19" src="{$includeDir}assets/img/lock.svg" title="User is Banned">
+                                {/if}
+                            </td>
                           </tr>
                           {/foreach}
  

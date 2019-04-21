@@ -5,6 +5,19 @@
 
 <div class="col-md-11 col-lg-11">
         <div class="container">
+
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div id="vmap" style="width: 600px; height:400px;"></div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                     <!--  <h2>Some TODO</h2> -->
+                </div>
+            </div>
+
+
+
+
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -29,3 +42,8 @@
 </div>
         
 {include file="footer.tpl"}
+
+
+<script>
+    generateWordMap({$worldmap});
+</script>
