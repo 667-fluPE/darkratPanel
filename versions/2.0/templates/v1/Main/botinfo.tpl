@@ -26,6 +26,10 @@
                          <td>{$botinfo.computrername}</td>
                      </tr>
                      <tr>
+                         <td>Antivirus</td>
+                         <td>{$botinfo.antivirus}</td>
+                     </tr>
+                     <tr>
                          <td>Last Seen</td>
                          <td>{$botinfo.lastresponse}</td>
                      </tr>

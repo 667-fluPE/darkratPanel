@@ -30,6 +30,13 @@ class Main{
         }
     }
 
+    function getClientCount($sec,$key){
+        $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? ".$key." UNIX_TIMESTAMP()");
+        $statement->execute(array($sec)); // 1 Day
+        $result = $statement->fetch();
+        return $result["count"];
+    }
+
     public function index(){
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
@@ -48,26 +55,27 @@ class Main{
                  $return[ strtolower( $row["country"])] = intval ($row["NUM"]);
              }
              //GET ONLINE CLIENTS
-            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as online FROM bots WHERE UNIX_TIMESTAMP(lastresponse) + ? > UNIX_TIMESTAMP()");
-            $result = $statement->execute(array('300')); //5 min.
-            $onlinebotcount = $statement->fetch();
+            $onlinebotcount = $this->getClientCount(300,">"); // 5 min.
             //GET DEAD CLIENTS
-            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as dead FROM bots WHERE UNIX_TIMESTAMP(lastresponse) + ? < UNIX_TIMESTAMP()");
-            $result = $statement->execute(array('186400'));
-            $deadbotcount = $statement->fetch();
+            $deadbotcount = $this->getClientCount( 604800 * 7,"<"); // 14 Days
             //New Clients in Last x Days
-            $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? > UNIX_TIMESTAMP()");
-            $result = $statement->execute(array('86400')); // 1 Day
-            $lastclientscount = $statement->fetch();
+            $lastclientscount = $this->getClientCount(86400,">" ); // 1 Day
+
+            $last12hclientscount = $this->getClientCount(43200,">" ); // 12 Hours
+            $last7clientscount = $this->getClientCount(604800,">" ); // 7 Days
+
+
 
 
 
             $GLOBALS["tpl"]->assign("allbots", $allbots);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
             $GLOBALS["tpl"]->assign("botcount", $botcount);
-            $GLOBALS["tpl"]->assign("onlinebotcount", $onlinebotcount["online"]);
-            $GLOBALS["tpl"]->assign("deadbotcount", $deadbotcount["dead"]);
-            $GLOBALS["tpl"]->assign("lastclientscount", $lastclientscount["count"]);
+            $GLOBALS["tpl"]->assign("onlinebotcount", $onlinebotcount);
+            $GLOBALS["tpl"]->assign("deadbotcount", $deadbotcount);
+            $GLOBALS["tpl"]->assign("lastclientscount", $lastclientscount);
+            $GLOBALS["tpl"]->assign("last12hclientscount", $last12hclientscount);
+            $GLOBALS["tpl"]->assign("last7clientscount", $last7clientscount);
         }
 
        private function random_string() {

@@ -422,3 +422,11 @@ body{
 .multiselect-container.dropdown-menu.show{
     background: #27293d;
 }
+
+.card .card-body .special .card-title{
+  margin: 0px;
+    font-size: 24.15px
+}
+.card .card-body .special .card-category{
+  margin: 0px;
+}
