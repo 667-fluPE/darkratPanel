@@ -72,21 +72,16 @@ class Update{
                          /*
                           * symlink($link, $target);
                          */
-                $string = "<?php include('".$link."'); ?>";
-                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%","$",$string));
+                         $string = "<?php include('".$link."'); ?>";
+                         file_put_contents($target,$string);
 
 
-                if(file_exists(__DIR__.'/../../../../../config-backup.php')){
+                         if(file_exists(__DIR__.'/../../../../../config-backup.php')){
                              unlink(__DIR__.'/../../../../../config-backup.php');
-                         }else{
-                             rename(__DIR__.'/../../../../../config.php', __DIR__.'/../../../../../config-backup.php');
                          }
-                          /*
-                            $userfile =fopen (__DIR__."/../../Version/vnum_". $_POST['uid'] .".txt", "w");
-                            $user_vnum = fgets($userfile);
-                            fwrite($userfile, $_POST['vnum']);
-                            fclose($userfile);
-                          */
+
+                         rename(__DIR__.'/../../../../../config.php', __DIR__.'/../../../../../config-backup.php');
+
 
             }else{
                 // error updating files
