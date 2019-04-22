@@ -80,12 +80,15 @@ body { font-family: Arial;
 <div id="Database" class="tabcontent">
   <h3>Create MySql</h3>
 
-  <form method="POST">
-    <label>MySQL Root Username</label>
+  <form method="POST">Create MySql
+    <label>MySQL Username</label>
     <input name="mysqlusername">
     <br>
-    <label>MySQL Root Password</label>
+    <label>MySQL Password</label>
     <input name="mysqlpassword">
+    <hr>
+    <label>MySQL Database</label>
+    <input name="databaseName">
     <hr>
     <i>This Script Creates a Database with a new user the <strong>Root Login will not be saved</strong></i>
     <hr>

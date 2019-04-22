@@ -69,8 +69,14 @@ class Update{
                          $target = __DIR__.'/../../../../../index.php';
                          $link = 'versions/'.$_POST['vnum']."/index.php";
                          unlink($target);
-                         symlink($link, $target);
-                         if(file_exists(__DIR__.'/../../../../../config-backup.php')){
+                         /*
+                          * symlink($link, $target);
+                         */
+                $string = "<?php include('".$link."'); ?>";
+                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%","$",$string));
+
+
+                if(file_exists(__DIR__.'/../../../../../config-backup.php')){
                              unlink(__DIR__.'/../../../../../config-backup.php');
                          }else{
                              rename(__DIR__.'/../../../../../config.php', __DIR__.'/../../../../../config-backup.php');

