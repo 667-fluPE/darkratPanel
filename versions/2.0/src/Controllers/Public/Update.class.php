@@ -63,9 +63,7 @@ class Update{
                 $data = array("unzip" => 1);
                 // delete zip file
                     unlink( __DIR__."/../../../../update.zip");
-
                     // update users local version number file
-
                          $target = __DIR__.'/../../../../../index.php';
                          $link = 'versions/'.$_POST['vnum']."/index.php";
                          unlink($target);
@@ -74,15 +72,10 @@ class Update{
                          */
                          $string = "<?php include('".$link."'); ?>";
                          file_put_contents($target,$string);
-
-
                          if(file_exists(__DIR__.'/../../../../../config-backup.php')){
                              unlink(__DIR__.'/../../../../../config-backup.php');
                          }
-
                          rename(__DIR__.'/../../../../../config.php', __DIR__.'/../../../../../config-backup.php');
-
-
             }else{
                 // error updating files
                 $data = array("unzip" => 0);

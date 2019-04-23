@@ -130,6 +130,7 @@ class BotHandler{
                         $statement->execute(array($_POST["hwid"], $com["id"], "send"));
                         //insert Send
                         // Get Executed or Failed
+                        die();
                         break;
                     }
                 }
