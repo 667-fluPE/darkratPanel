@@ -100,7 +100,7 @@ it's going to be hard but hard doesn't mean impossible
                     <td class="flag">  <img src="{$includeDir}assets/img/flags/{$bot.country|lower}.png"> {$bot.country}</td>
                     <td> {$bot.ip}</td>
                     <td> {$bot.computrername}</td>
-                    <td> {$bot.antivirus}</td>
+                    <td class="avtivirus">  <img src="{$includeDir}assets/img/av/{$bot.antivirus}p.png"  width="120" height="28"> </td>
                     <td class="operingsystem">  <img src="{$includeDir}assets/img/operingsystems/{$bot.operingsystem}.png"> </td>
                     <td> {$bot.version} </td>
                     <td> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
