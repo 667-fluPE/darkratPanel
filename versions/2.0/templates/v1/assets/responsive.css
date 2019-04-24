@@ -1,0 +1,28 @@
+@media only screen and (max-width: 988px) {
+    .sidebar-nav{
+        width: auto;
+        height: auto;
+    }
+    .sidebar-nav ul li{
+        width: 33%;
+        float: right;
+    }
+    .sidebar-nav ul::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+}
+
+
+@media only screen and (max-width: 658px) {
+        .hideTablet{
+            display: none;
+        }
+}
+
+@media only screen and (max-width: 488px) {
+        .hideMobile{
+            display: none;
+        }
+}

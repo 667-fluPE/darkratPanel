@@ -11,7 +11,9 @@
                     <div id="vmap" style="width: 600px; height:400px;"></div>
                 </div>
                 <div class="col-md-6 col-lg-6">
-                     <!--  <h2>Some TODO</h2> -->
+                     <!--  <h2>Some TODO</h2>
+                      *List all Filter Types (Active on this task)
+                      -->
                 </div>
             </div>
 

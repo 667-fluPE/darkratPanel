@@ -31,7 +31,7 @@ class Install{
 
 
                     try{
-                        $databaseCon = new PDO('mysql:host=localhost', $_POST["mysqlusername"], $mysqlpassword);
+                        $databaseCon = new PDO('mysql:host=localhost', $mysqlusername, $mysqlpassword);
                     }catch(PDOException $e){
                         die($e->getmessage());
                     }
@@ -47,7 +47,7 @@ class Install{
     *
     */
                $database = "
-                    USE ".$_POST["databaseName"].";
+                    USE ".$mysqldatabaseRand.";
                     DROP TABLE IF EXISTS config;
                     DROP TABLE IF EXISTS securitytokens;
                     DROP TABLE IF EXISTS bots;
@@ -165,8 +165,8 @@ class Install{
                 }catch(PDOException $e){
                     die($e->getmessage());
                 }
-                $string = "<?php %pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."');";
-                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%","$",$string));
+                $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."');";
+                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
 
 
                 if($databaseErrors[2] == NULL){

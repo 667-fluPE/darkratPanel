@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="{$includeDir}assets/bootstrap.min.css">
   <link rel="stylesheet" href="{$includeDir}assets/jquery-jvectormap-2.0.3.css">
   <link rel="stylesheet" href="{$includeDir}assets/custom.css">
+  <link rel="stylesheet" href="{$includeDir}assets/responsive.css">
     <!-- Latest compiled and minified CSS -->
     <!-- jQuery library -->
     <script src="{$includeDir}assets/js/jquery.min.js"></script>

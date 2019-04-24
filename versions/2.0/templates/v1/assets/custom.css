@@ -439,3 +439,9 @@ body{
     color: white;
     background: #10111b;
 }
+
+#vmap{
+    min-width: 300px;
+    min-height: 300px;
+    width: 100%;
+}

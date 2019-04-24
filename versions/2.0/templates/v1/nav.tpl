@@ -9,7 +9,7 @@
 
 
 <div class="row">
-  <div class="col-md-1 col-lg-1">
+  <div class="col-md-12 col-lg-1">
       <div class="sidebar-nav">
           <ul>
               <li> <a href="/dashboard" title="Home">  <img src="{$includeDir}assets/img/nav/home.svg"> </a></li>
