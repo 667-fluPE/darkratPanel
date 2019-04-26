@@ -6,7 +6,15 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
 {
+    public static $files = array (
+        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'p' => 
+        array (
+            'phpseclib\\' => 10,
+        ),
         'M' => 
         array (
             'MaxMind\\WebService\\' => 19,
@@ -24,6 +32,10 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
     );
 
     public static $prefixDirsPsr4 = array (
+        'phpseclib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
         'MaxMind\\WebService\\' => 
         array (
             0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',

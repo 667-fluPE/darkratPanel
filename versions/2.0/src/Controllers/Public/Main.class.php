@@ -30,8 +30,8 @@ class Main{
         }
     }
 
-    private function getClientCount($sec,$key){
-        $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(install_date) + ? ".$key." UNIX_TIMESTAMP()");
+    private function getClientCount($sec,$key,$from = "install_date"){
+        $statement = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as count FROM bots WHERE UNIX_TIMESTAMP(".$from.") + ? ".$key." UNIX_TIMESTAMP()");
         $statement->execute(array($sec)); // 1 Day
         $result = $statement->fetch();
         return $result["count"];
@@ -47,6 +47,14 @@ class Main{
     {
         $temp = array_map(array($this,'js_str'), $array);
         return '[' . implode(',', $temp) . ']';
+    }
+    private function countryMap($country){
+        if($country == "RS"){
+            $country = "RU";
+        }elseif(empty($country)){
+            $country = "na";
+        }
+        return $country;
     }
 
     //dashboard function
@@ -65,16 +73,16 @@ class Main{
              $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
              $return = array();
              foreach ($GLOBALS["pdo"]->query($sql) as $row) {
-                 $return[ strtolower( $row["country"])] = intval ($row["NUM"]);
+                 $return[ strtolower( $this->countryMap($row["country"]))] = intval ($row["NUM"]);
              }
             //GET ONLINE CLIENTS
-            $onlinebotcount = $this->getClientCount(300,">"); // 5 min.
+            $onlinebotcount = $this->getClientCount(300,">","lastresponse"); // 5 min.
             //GET DEAD CLIENTS
-            $deadbotcount = $this->getClientCount( 604800 * 7,"<"); // 14 Days
+            $deadbotcount = $this->getClientCount( 604800 * 7,"<","lastresponse"); // 14 Days
             //New Clients in Last x Days
-            $lastclientscount = $this->getClientCount(86400,">" ); // 1 Day
-            $last12hclientscount = $this->getClientCount(43200,">" ); // 12 Hours
-            $last7clientscount = $this->getClientCount(604800,">" ); // 7 Days
+            $lastclientscount = $this->getClientCount(86400,">","lastresponse" ); // 1 Day
+            $last12hclientscount = $this->getClientCount(43200,">","lastresponse" ); // 12 Hours
+            $last7clientscount = $this->getClientCount(604800,">","lastresponse" ); // 7 Days
             // last 10 installs
             $statement = $GLOBALS["pdo"]->prepare("SELECT *,UNIX_TIMESTAMP(now()) as now, UNIX_TIMESTAMP(install_date) as install_date FROM `bots` ORDER BY `install_date` DESC LIMIT 10");
             $statement->execute(array());
@@ -274,7 +282,7 @@ class Main{
             $worldmap = array();
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $tasks[] = $row;
-                $worldmap[ strtolower( $row["country"])] = intval ($row["NUM"]);
+                $worldmap[ strtolower( $this->countryMap($row["country"]))] = intval ($row["NUM"]);
             }
             $countries = array();
             foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {

@@ -18,6 +18,7 @@ require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
 require __DIR__ . '/src/Controllers/Public/Install.class.php';
 require __DIR__ . '/src/Controllers/Public/Update.class.php';
 require __DIR__ . '/src/Controllers/Public/Recovery.class.php';
+require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
 
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
@@ -44,6 +45,7 @@ if (!$installer) {
     $router->all('/doUpdate', 'Update@doUpdate');
     $router->all('/passwordrecovery', 'Recovery@passwordrecovery');
     $router->all('/cookierecovery', 'Recovery@cookierecovery');
+    $router->all('/checkfunctions', 'OrderApi@checkFunctions');
 } else {
     $router->all('/install', 'install@index');
 }
