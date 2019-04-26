@@ -123,6 +123,13 @@ function generateLineChart(selector,lables,values){
             },
             responsive: true,
             maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
 

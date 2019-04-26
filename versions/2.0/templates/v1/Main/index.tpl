@@ -87,7 +87,7 @@ it's going to be hard but hard doesn't mean impossible
       </div>
 
       <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6">
               <div class="latestInstalls">
                   {foreach from=$last5Installs item=install}
                       <div class="install">
@@ -104,15 +104,12 @@ it's going to be hard but hard doesn't mean impossible
                   {/foreach}
               </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
               <canvas id="osPiChart" width="200" height="150"></canvas>
-          </div>
-          <div class="col-md-2">
               <canvas id="adminornotchart" width="200" height="150"></canvas>
-          </div>
-          <div class="col-md-2">
               <canvas id="architectureStatus" width="200" height="150"></canvas>
           </div>
+
       </div>
 
   </div>
