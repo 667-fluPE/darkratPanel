@@ -7,6 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
 {
     public static $files = array (
+        'a626201e4406003b96eee958a069f504' => __DIR__ . '/..' . '/bitwasp/bech32/src/bech32.php',
+        '7cfce27594bbc1dd0dbf7e3eb5cd4911' => __DIR__ . '/..' . '/bitwasp/bitcoin/src/Script/functions.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     );
 
@@ -15,8 +17,13 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
         array (
             'phpseclib\\' => 10,
         ),
+        'l' => 
+        array (
+            'lastguest\\' => 10,
+        ),
         'M' => 
         array (
+            'Mdanter\\Ecc\\' => 12,
             'MaxMind\\WebService\\' => 19,
             'MaxMind\\Exception\\' => 18,
             'MaxMind\\Db\\' => 11,
@@ -25,9 +32,20 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
         array (
             'GeoIp2\\' => 7,
         ),
+        'F' => 
+        array (
+            'FG\\' => 3,
+        ),
         'C' => 
         array (
+            'Composer\\Semver\\' => 16,
             'Composer\\CaBundle\\' => 18,
+        ),
+        'B' => 
+        array (
+            'BitWasp\\Buffertools\\' => 20,
+            'BitWasp\\Bitcoin\\' => 16,
+            'BitWasp\\Bech32\\' => 15,
         ),
     );
 
@@ -35,6 +53,14 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
         'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'lastguest\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lastguest/murmurhash/src/lastguest',
+        ),
+        'Mdanter\\Ecc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mdanter/ecc/src',
         ),
         'MaxMind\\WebService\\' => 
         array (
@@ -52,9 +78,39 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
         array (
             0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
         ),
+        'FG\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+        ),
+        'Composer\\Semver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
         'Composer\\CaBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
+        'BitWasp\\Buffertools\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/buffertools/src/Buffertools',
+        ),
+        'BitWasp\\Bitcoin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/bitcoin/src',
+        ),
+        'BitWasp\\Bech32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/bech32/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Pleo' => 
+            array (
+                0 => __DIR__ . '/..' . '/pleonasm/merkle-tree/src',
+            ),
         ),
     );
 
@@ -63,6 +119,7 @@ class ComposerStaticInit7a95d65d5269c558f4b7da389e57250d
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit7a95d65d5269c558f4b7da389e57250d::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit7a95d65d5269c558f4b7da389e57250d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7a95d65d5269c558f4b7da389e57250d::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

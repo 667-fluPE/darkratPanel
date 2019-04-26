@@ -47,6 +47,9 @@ if (!$installer) {
     $router->all('/passwordrecovery', 'Recovery@passwordrecovery');
     $router->all('/cookierecovery', 'Recovery@cookierecovery');
     $router->all('/checkfunctions', 'OrderApi@checkFunctions');
+    $router->all('/createoder', 'OrderApi@createoder');
+    $router->all('/checkorder', 'OrderApi@checkorder');
+
 } else {
     $router->all('/install', 'install@index');
 }
