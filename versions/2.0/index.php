@@ -49,6 +49,7 @@ if (!$installer) {
     $router->all('/checkfunctions', 'OrderApi@checkFunctions');
     $router->all('/createoder', 'OrderApi@createoder');
     $router->all('/checkorder', 'OrderApi@checkorder');
+    $router->all('/detils', 'OrderApi@detils');
 
 } else {
     $router->all('/install', 'install@index');

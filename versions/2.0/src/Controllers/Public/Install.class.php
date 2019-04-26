@@ -114,6 +114,22 @@ CREATE TABLE `config` (
   `template` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+--
+-- Daten für Tabelle `botshop_orders`
+--
+
+INSERT INTO `botshop_orders` (`id`, `type`, `address`, `privatekey`, `botamount`, `coinstopay`, `usd`, `somesigfromkey`, `payed`, `taskid`) VALUES
+(1, 'btc', 'mt5UuYv5gbEuTfPcwnFNBXJ1qwV7GDtNui', 'cTueVaUNpKsHncrcgZASDmN9Wk19BmxJzmcw5hgepgGk7cz3ijCU', '50', '0.00190618', '10', NULL, 0, 'none'),
+(2, 'btc', 'miNgvQugw15d9zGGyVpWhWQMpnCdyY7SMp', 'cV74RHsDr6hNkckt3Zh9f7azeGKBGfKjjmU1Korq3ff3gcRA1Bti', '50', '0.00190618', '10', NULL, 0, 'none'),
+(3, 'btc', 'mtohPhWnpZRmeYJMYSCSf3URg85uxr3raw', 'cVY6Em1EAKtjwzyqLzSmdjSFxckEczWRkXTTfoi8aZe54viMVPqi', '50', '0.0019051', '10', NULL, 0, 'none'),
+(4, 'btc', 'miQS7eRB9FUb8FnELwgQdy2zTRhcwvwP9U', 'cPYMUGnoQH3Ca6Hd7s9cRJyfDReX4eWpKdbt1WFwBhRqDbfGuo4m', '50', '0.00190226', '10', NULL, 0, 'none'),
+(5, 'btc', 'mqidkxJMNwVhHTpScpca17kS94wb4Cjhwh', 'cW9KTc8HGzK1CxzWos5gLuBhRXkbaveaDeZBm5uGTJKiU6LrmPeS', '50', '0.00190067', '10', NULL, 0, 'none'),
+(6, 'btc', 'mzLgxiuzYcxC9FqamHHXbMDzENvgmMevLC', 'cVBfxs8vvrvuSTgCPmfiBfcYKK5gyh4FjYZu9ak869j9TzY6JrNx', '50', '0.00190125', '10', NULL, 1, 'none');
+
+-- --------------------------------------------------------
+
+
 --
 -- Daten für Tabelle `config`
 --
@@ -238,6 +254,13 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT für exportierte Tabellen
 --
+
+
+--
+-- Indizes für die Tabelle `botshop_orders`
+--
+ALTER TABLE `botshop_orders`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT für Tabelle `bots`
