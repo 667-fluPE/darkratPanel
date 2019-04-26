@@ -327,7 +327,28 @@ class Main{
             $statementConfig->execute(array("1"));
             $config = $statementConfig->fetch();
             $encryptedOUT = "";
+
+
+
+            //Fetching templates from Template dir and Assign to config array
+            $currentTheme = "v1";
+            $dir    = __DIR__.'/../../../templates';
+            $allFiles = scandir($dir);
+            $templates = array_diff($allFiles, array('.', '..'));
+            if(!empty($config["template"])){
+                $currentTheme = $config["template"];
+            }
+            $config["currentTheme"] = $currentTheme;
+
+          //  var_dump($templates);
+          //  die();
+
+
            if(!empty($_POST)){
+                if(!empty($_POST["changeTemplate"])){
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET template = ? WHERE id = ?");
+                    $statement->execute(array($_POST["changeTemplate"],1));
+                }
                 if(!empty($_POST["enryptionkey"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET enryptionkey = ? WHERE id = ?");
                     $statement->execute(array($_POST["enryptionkey"],1));
@@ -372,6 +393,7 @@ class Main{
            }
             $GLOBALS["tpl"]->assign("users", $users);
             $GLOBALS["tpl"]->assign("config", $config);
+            $GLOBALS["tpl"]->assign("templates", $templates);
             $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
         }
 

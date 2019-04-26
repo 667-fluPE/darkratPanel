@@ -110,7 +110,8 @@ CREATE TABLE `config` (
   `id` int(11) NOT NULL,
   `enryptionkey` varchar(255) DEFAULT NULL,
   `check_update_url` varchar(255) DEFAULT NULL,
-  `useragent` varchar(255) DEFAULT NULL
+  `useragent` varchar(255) DEFAULT NULL,
+  `template` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

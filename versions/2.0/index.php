@@ -50,13 +50,20 @@ if (!$installer) {
 
 
 $template = explode("@", $router->fn);
+
+$statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+$statementConfig->execute(array("1"));
+$config = $statementConfig->fetch();
+
+
+
 $router->run(function () use ($tpl) {
     $tpl->caching = false;
     $tpl->compile_check = true;
     $tpl->force_compile = true;
-    $tpl->setTemplateDir(__DIR__ . "/templates/v1/");
+    $tpl->setTemplateDir(__DIR__ . "/templates/".$GLOBALS["config"]["template"]."/");
     $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
-    $GLOBALS["tpl"]->assign("includeDir", "/versions/2.0/templates/v1/");
+    $GLOBALS["tpl"]->assign("includeDir", "/versions/2.0/templates/".$GLOBALS["config"]["template"]."/");
     $tpl->display($templateDir);
 });
 

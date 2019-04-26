@@ -15,19 +15,14 @@
             </div>
             <form method="POST">
             <div class="modal-body">
-
                    <div class="form-group">
                        <label for="createuser_password">Username</label>
                        <input type="text" class="form-control" name="createuser_username"  id="createuser_password" placeholder="Username" required>
-
                    </div>
                    <div class="form-group">
                        <label for="createuser_password">Passowrd</label>
                        <input type="password" class="form-control" name="createuser_password"  id="createuser_password"  placeholder="Password" required>
-
                    </div>
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -51,6 +46,9 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#update" role="tab" data-toggle="tab">Update</a>
@@ -123,6 +121,23 @@
                         <div class="loading"></div>
                     </div>
                 </div>
+                  <div role="tabpanel" class="tab-pane fade" id="template">
+                      <form method="post">
+                         <div class="form-group">
+                                <label> Change your current Template</label> <br>
+                                <select onchange="this.form.submit()" class="form-control" name="changeTemplate">
+                                    {foreach from=$templates item=template}
+                                        {if $config.currentTheme == $template}
+                                            <option value="{$template}" selected>{$template}</option>
+                                        {else}
+                                            <option value="{$template}">{$template}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                          </div>
+                      </form>
+
+                  </div>
                   <div role="tabpanel" class="tab-pane fade" id="functions">
                       <form method="POST">
                           {if $encryptedOUT != ""}
