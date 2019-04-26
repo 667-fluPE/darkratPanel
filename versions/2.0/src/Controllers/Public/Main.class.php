@@ -37,6 +37,19 @@ class Main{
         return $result["count"];
     }
 
+
+    public function js_str($s)
+    {
+        return '"' . addcslashes($s, "\0..\37\"\\") . '"';
+    }
+
+    private function js_array($array)
+    {
+        $temp = array_map(array($this,'js_str'), $array);
+        return '[' . implode(',', $temp) . ']';
+    }
+
+    //dashboard function
     public function index(){
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
@@ -62,7 +75,60 @@ class Main{
             $lastclientscount = $this->getClientCount(86400,">" ); // 1 Day
             $last12hclientscount = $this->getClientCount(43200,">" ); // 12 Hours
             $last7clientscount = $this->getClientCount(604800,">" ); // 7 Days
+            // last 10 installs
+            $statement = $GLOBALS["pdo"]->prepare("SELECT *,UNIX_TIMESTAMP(now()) as now, UNIX_TIMESTAMP(install_date) as install_date FROM `bots` ORDER BY `install_date` DESC LIMIT 10");
+            $statement->execute(array());
+            $last5Installs = $statement->fetchAll(PDO::FETCH_ASSOC);
+            //======================== Country  HANDLER ========================
+            $statement = $GLOBALS["pdo"]->prepare("SELECT country, COUNT(*) AS cnt FROM bots GROUP BY country ORDER BY cnt DESC LIMIT 3");
+            $statement->execute(array());
+            $top3Countrys = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $CountyLables = array();
+            $CountyValues = array();
+            foreach($top3Countrys as $country){
+                $CountyLables[] = $country["country"];
+                $CountyValues[] = $country["cnt"];
+            }
+            //======================== Country  HANDLER END ========================
 
+            //======================== OPERING SYSTEM HANDLER ========================
+            $statement = $GLOBALS["pdo"]->prepare("SELECT operingsystem, COUNT(*) AS cnt FROM bots GROUP BY operingsystem ORDER BY cnt DESC LIMIT 3");
+            $statement->execute(array());
+            $top3os = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $OsLables = array();
+            $osValues = array();
+            foreach($top3os as $os){
+                    $OsLables[] = $os["operingsystem"];
+                    $osValues[] = $os["cnt"];
+            }
+            //======================== OPERING SYSTEM HANDLER END========================
+            //======================== ADMIN OR NOT HANDLER ========================
+            $statement = $GLOBALS["pdo"]->prepare("SELECT isadmin, COUNT(*) AS cnt FROM bots GROUP BY isadmin ORDER BY cnt DESC");
+            $statement->execute(array());
+            $adminOrNotStats = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $AdminOrNotLables = array();
+            $AdminOrNotValues = array();
+            foreach($adminOrNotStats as $status){
+                if($status["isadmin"] == "false"){
+                    $status["isadmin"] = "Non Admin: ".$status["cnt"];
+                }else{
+                    $status["isadmin"] = "Admins: ".$status["cnt"];
+                }
+                $AdminOrNotLables[] = $status["isadmin"];
+                $AdminOrNotValues[] = $status["cnt"];
+            }
+            //======================== ADMIN OR NOT HANDLER END========================
+            //======================== Architecture Stats ========================
+            $statement = $GLOBALS["pdo"]->prepare("SELECT architecture, COUNT(*) AS cnt FROM bots GROUP BY architecture ORDER BY cnt DESC");
+            $statement->execute(array());
+            $architectureStatus = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $ArchitectureLables = array();
+            $ArchitecturetValues = array();
+            foreach($architectureStatus as $status){
+                $ArchitectureLables[] = $status["architecture"];
+                $ArchitecturetValues[] = $status["cnt"];
+            }
+            //======================== Architecture Stats END ========================
             $GLOBALS["tpl"]->assign("allbots", $allbots);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
             $GLOBALS["tpl"]->assign("botcount", $botcount);
@@ -71,6 +137,17 @@ class Main{
             $GLOBALS["tpl"]->assign("lastclientscount", $lastclientscount);
             $GLOBALS["tpl"]->assign("last12hclientscount", $last12hclientscount);
             $GLOBALS["tpl"]->assign("last7clientscount", $last7clientscount);
+            $GLOBALS["tpl"]->assign("last5Installs", $last5Installs);
+            $GLOBALS["tpl"]->assign("top3Countrys", $top3Countrys);
+            $GLOBALS["tpl"]->assign("top3osLables", $this->js_array($OsLables));
+            $GLOBALS["tpl"]->assign("top3osvalues", $this->js_array($osValues));
+            $GLOBALS["tpl"]->assign("adminOrNotLables",$this->js_array($AdminOrNotLables));
+            $GLOBALS["tpl"]->assign("adminOrNotValues",$this->js_array($AdminOrNotValues));
+            $GLOBALS["tpl"]->assign("architectureLables",$this->js_array($ArchitectureLables));
+            $GLOBALS["tpl"]->assign("architectureValue",$this->js_array($ArchitecturetValues));
+            $GLOBALS["tpl"]->assign("countyLables",$this->js_array($CountyLables));
+            $GLOBALS["tpl"]->assign("countyValue",$this->js_array($CountyValues));
+            $GLOBALS["tpl"]->assign("architectureStatus",$architectureStatus);
     }
 
    private function random_string() {
@@ -328,4 +405,19 @@ class Main{
 
             $GLOBALS["tpl"]->assign("allusers",$rows);
         }
+
+        public function bots(){
+            if(empty($_SESSION["darkrat_userid"])) {
+                die("Login Required");
+            }
+            $sql = "SELECT *, UNIX_TIMESTAMP(lastresponse) as lastresponse, UNIX_TIMESTAMP(now()) as now FROM bots ORDER BY lastresponse DESC";
+            $allbots = array();
+            $botcount = 0;
+            foreach ($GLOBALS["pdo"]->query($sql) as $row) {
+                $allbots[] = $row;
+                $botcount++;
+            }
+            $GLOBALS["tpl"]->assign("allbots", $allbots);
+        }
+
 }

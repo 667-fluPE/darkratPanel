@@ -445,3 +445,24 @@ body{
     min-height: 300px;
     width: 100%;
 }
+
+#osPiChart, #architectureStatus, #adminornotchart, #countryStatus{
+    max-height: 100px;
+    width: 100%;
+}
+
+.install{
+    width: 100%;
+}
+.install .country{
+    width: 50px;
+    float: left;
+}
+.install .computername{
+    float: right;
+}
+.install::after {
+    content: "";
+    clear: both;
+    display: table;
+}

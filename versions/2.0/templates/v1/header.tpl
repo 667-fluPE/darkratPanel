@@ -16,6 +16,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="{$includeDir}assets/js/bootstrap.min.js"></script>
     <script src="{$includeDir}assets/js/jquery.vmap.js"></script>
+    <script src="{$includeDir}assets/js/Chart.js"></script>
     <script src="{$includeDir}assets/js/functions.js"></script>
 
 </head>

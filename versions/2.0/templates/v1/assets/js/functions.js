@@ -85,3 +85,45 @@ function timeDifference(current, previous) {
 }
 
 
+
+function generateOsPiChart(selector,lables,values){
+    new Chart(document.getElementById(selector), {
+        type: 'pie',
+        data: {
+            labels: lables,
+            datasets: [{
+                label: "Population (millions)",
+                backgroundColor: ["#27293d", "#33354c","#474a63","#5d6079","#757996"],
+                data: values
+            }]
+        }
+    });
+}
+
+function generateLineChart(selector,lables,values){
+    var horizontalBarChartData = {
+        labels: lables,
+        datasets: [{
+            backgroundColor: "#27293d",
+            data: values
+        }]
+
+    };
+    var ctx = document.getElementById(selector).getContext("2d");
+    ctx.width = 300;
+    var myHorizontalBar = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: horizontalBarChartData,
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+}

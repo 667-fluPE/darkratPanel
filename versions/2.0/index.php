@@ -36,6 +36,7 @@ if (!$installer) {
     $router->all('/logout', 'Main@logout');
     $router->all('/settings', 'Main@settings');
     $router->all('/passrecovery', 'Main@passrecovery');
+    $router->all('/bots', 'Main@bots');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');
     $router->all('/edituser/(\d+)', 'Main@edituser');
     $router->all('/botinfo/(\d+)', 'Main@botinfo');
