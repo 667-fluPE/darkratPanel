@@ -42,6 +42,7 @@ if (!$installer) {
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');
     $router->all('/edituser/(\d+)', 'Main@edituser');
     $router->all('/botinfo/(\d+)', 'Main@botinfo');
+    $router->all('/cookiemanager/(\d+)', 'Main@cookiemanager');
     $router->all('/version_check', 'Update@version_check');
     $router->all('/doUpdate', 'Update@doUpdate');
     $router->all('/passwordrecovery', 'Recovery@passwordrecovery');

