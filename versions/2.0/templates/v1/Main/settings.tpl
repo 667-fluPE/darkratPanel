@@ -48,6 +48,9 @@
                   <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#botshop" role="tab" data-toggle="tab">BotShop</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
                 </li>
                 <li class="nav-item">
@@ -121,6 +124,17 @@
                         <div class="loading"></div>
                     </div>
                 </div>
+                  <div role="tabpanel" class="tab-pane fade" id="botshop">
+                   TODO:<br>
+                      - Activate / Disable API<br>
+                      - Enable Public / Disbale<br>
+                                        + create API Call keys and to manage here
+
+
+
+
+
+                  </div>
                   <div role="tabpanel" class="tab-pane fade" id="template">
                       <form method="post">
                          <div class="form-group">
