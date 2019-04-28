@@ -56,8 +56,7 @@ class BotHandler{
             }
 
 
-// {0a2495a8-5af7-11e9-b637-806e6f6e6963}
-//$_POST["hwid"] =  "{0a2495a8-5af7-11e9-b637-806e6f6e6963}";
+
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($_POST["hwid"]));
             $botfound = false;
@@ -102,14 +101,14 @@ class BotHandler{
                                         // Search Country in Filter if not found die
                                         if(!empty($filter["country-filter"])){
                                             if (strpos($filter["country-filter"], $country) == false) {
-                                                die("waiting");
+                                                continue;
                                             }
                                         }
 
                                         //Check if Bot Only Ececution
                                         if(!empty($filter["onlybot"])) {
                                             if($filter["onlybot"] != $bot["id"]){
-                                                die();
+                                               continue;
                                             }
                                         }
 
