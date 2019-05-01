@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{$includeDir}assets/bootstrap.min.css">
+  <link rel="stylesheet" href="{$includeDir}assets/datatables.min.css">
   <link rel="stylesheet" href="{$includeDir}assets/jquery-jvectormap-2.0.3.css">
   <link rel="stylesheet" href="{$includeDir}assets/custom.css">
   <link rel="stylesheet" href="{$includeDir}assets/responsive.css">
@@ -16,6 +17,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="{$includeDir}assets/js/bootstrap.min.js"></script>
     <script src="{$includeDir}assets/js/jquery.vmap.js"></script>
+    <script src="{$includeDir}assets/js/datatables.min.js"></script>
     <script src="{$includeDir}assets/js/Chart.js"></script>
     <script src="{$includeDir}assets/js/functions.js"></script>
 

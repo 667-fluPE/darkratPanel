@@ -23,7 +23,7 @@
         </div>
      
         <div class="col-md-7 col-lg-7">
-           <table class="table">
+           <table class="table taskstable">
               <thead>
                 <tr>
                   <th colspan="2">Status</th>

@@ -450,7 +450,15 @@ body{
     max-height: 100px;
     width: 100%;
 }
-
+.table,.odd,table.dataTable tbody tr{
+    background: #27293d;
+}
+.taskstable{
+    background: #10111b;
+}
+.dataTables_wrapper{
+    width: 98%;
+}
 .install{
     width: 100%;
 }
