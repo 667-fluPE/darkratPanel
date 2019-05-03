@@ -14,6 +14,7 @@
           <select name="task" class="custom-select" id="inputGroupSelect01">
             <option selected disabled>Task method</option>
             <option value="dande">Download & Execute</option>
+            <option value="runpe">Download & Execute in Memory</option>
             <option value="update">Update</option>
             <option value="uninstall">Uninstall</option>
           </select>
@@ -85,7 +86,7 @@
     $('#inputGroupSelect01').on('change', function() {
       $('#inputs').empty();
   
-      if(this.value == "dande" || this.value == "update"){
+      if(this.value == "dande" || this.value == "update" || this.value == "runpe"){
         submit = true;
         $('#inputs').append('<hr><input value="" Placeholder="http://yourdomainorip.com/path/to/file.exe" name="command" class="form-control">');    
       }
