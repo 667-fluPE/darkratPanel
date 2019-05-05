@@ -332,8 +332,16 @@ body{
 
 #inputs .form-group label{
     margin: 0px;
-    text-align: center;
     width: 100%;
+}
+.multiselect.dropdown-toggle.btn.btn-default{
+    background: #27293d;
+}
+.multiselect-container>li>a{
+    color: white;
+}
+.multiselect-container>li>a:hover{
+    color: white;
 }
 #inputs .form-check-label{
     margin-left: 20px;

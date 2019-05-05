@@ -121,8 +121,8 @@ class BotHandler
                                     $filter = json_decode($com["filter"], true);
                                     if (is_array($filter)) {
                                         // Search Country in Filter if not found die
-                                        if (!empty($filter["country-filter"])) {
-                                            if (strpos($filter["country-filter"], $country) == false) {
+                                        if (!empty($filter["country"])) {
+                                            if (!preg_match('/\b'.$country.'\b/',$filter["country"])) {
                                                 continue;
                                             }
                                         }
@@ -134,6 +134,37 @@ class BotHandler
                                             }
                                         }
 
+                                        if (!empty($filter["netFramwork"])) {
+
+                                                $framworkHelper = "";
+                                                if($postbot["netFramework2"] == "true"){
+                                                    $framworkHelper .= " net2 ";
+                                                }
+
+                                                if($postbot["netFramework3"] == "true"){
+                                                    $framworkHelper .= " net3 ";
+                                                }
+
+                                                if($postbot["netFramework35"] == "true"){
+                                                    $framworkHelper .= " net35 ";
+                                                }
+
+                                                if($postbot["netFramework4"] == "true"){
+                                                    $framworkHelper .= " net4 ";
+                                                }
+
+                                                $frameworks = explode(",",$filter["netFramwork"]);
+                                                $allow = false;
+                                                foreach ($frameworks as $framework){
+                                                    if (preg_match('/\b'.trim($framework).'\b/',$framworkHelper)) {
+                                                        $allow = true;
+                                                    }
+                                                }
+
+                                                if(!$allow){
+                                                    continue;
+                                                }
+                                        }
                                     }
                                 }
                             }

