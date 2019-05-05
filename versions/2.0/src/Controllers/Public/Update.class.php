@@ -11,6 +11,9 @@ class Update{
     }
 
     public  function version_check(){
+        if(empty($_SESSION["darkrat_userid"])){
+            die();
+        }
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = :id");
         $result = $statement->execute(array('id' => 1));
         $config = $statement->fetch();
@@ -35,7 +38,9 @@ class Update{
     }
 
     public function doUpdate(){
-
+        if(empty($_SESSION["darkrat_userid"])){
+            die();
+        }
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = :id");
         $result = $statement->execute(array('id' => 1));
         $config = $statement->fetch();
@@ -88,5 +93,4 @@ class Update{
         echo json_encode($data);
         die();
     }
-
 }

