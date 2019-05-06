@@ -126,7 +126,13 @@
                  </table>
                  <hr>
 
-                <a href="/tasks/{$botinfo.id}" class="btn btn-primary">Execute Task on This Only</a>
+                <a href="/tasks/{$botinfo.id}" class="btn btn-dark">Execute Task on this Bot</a>
+                <hr>
+                <form method="post">
+                    <input value="{$botinfo.id}" name="botid" hidden>
+                    <input type="submit" class="btn btn-danger" name="delete_bot" value="Delete this Bot">
+                </form>
+
                 <hr>
                 <br>
             </div>
