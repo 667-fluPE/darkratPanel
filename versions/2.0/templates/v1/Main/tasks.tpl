@@ -159,7 +159,7 @@
             '<div class="form-group"><select name="netFramwork-filter[]" id="multiple-frameworks" multiple="multiple">\n' +
             '        <option value="net2" >.Net Framwork 2</option>\n' +
             '        <option value="net3" >.Net Framwork 3</option>\n' +
-            '        <option value="net35" >.Net Framwork 35</option>\n' +
+            '        <option value="net35" >.Net Framwork 3.5</option>\n' +
             '        <option value="net4" >.Net Framwork 4</option>\n' +
             '    </select></div></div>');
 

@@ -11,7 +11,6 @@ if (file_exists(__DIR__ . '/../../config.php')) {
     require_once __DIR__ . '/../../config.php';
 }
 require 'vendor/autoload.php';
-include __DIR__ . '/src/Geo/geoip.inc';
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
 require __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
 require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
@@ -23,7 +22,7 @@ require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 
-use GeoIp2\Database\Reader;
+//use GeoIp2\Database\Reader;
 
 
 if (!$installer) {

@@ -58,21 +58,12 @@ class BotHandler
             $bot = "";
 
 
-
-
-
-
-
-
-            $gi = geoip_open(__DIR__ . "/../../Geo/GeoIP.dat", "");
             $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
-
-
-
+            
             if (!empty($_SERVER['REMOTE_ADDR'])) {
                 $ip = $_SERVER['REMOTE_ADDR'];
                 $record = $reader->city($ip);
-                $country = geoip_country_code_by_addr($gi, $ip);
+                $country = $record->country->isoCode;
                 $countryName = $record->country->name;
                 $countryCity = $record->city->name;
                 $countryLatitude = $record->location->latitude;
@@ -83,10 +74,6 @@ class BotHandler
                 $countryLongitude = "";
                 $countryName = "";
             }
-
-
-//var_dump($postbot);
-  //          die();
 
 
 
