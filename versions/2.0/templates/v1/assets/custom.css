@@ -458,8 +458,8 @@ body{
     max-height: 100px;
     width: 100%;
 }
-.table,.odd,table.dataTable tbody tr{
-    background: #27293d;
+table.dataTable tbody tr{
+   background: #27293d;
 }
 .taskstable{
     background: #10111b;

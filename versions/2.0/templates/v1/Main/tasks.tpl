@@ -61,7 +61,7 @@
                   </td>
                   <td>{$task.command}</td>
                   <td>{$task.task}</td>
-                  <td>{$task.executions}</td>
+                  <td>{$task.executions} / {($task.execution_limit) ? $task.execution_limit : 'unlimited'}</td>
                   <td><a href="/taskdetails/{$task.id}">Show</a></td>
                 </tr> 
                 {/foreach}
@@ -98,6 +98,8 @@
 
   
       if(submit){
+
+          $('#inputs').append('<hr><input value="" Placeholder="Execution Limit" name="limit" class="form-control">');
 
           var enablecountyFilter = {$showCountryFilter};
           if(enablecountyFilter){
