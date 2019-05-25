@@ -375,6 +375,17 @@ class Main{
 
 
            if(!empty($_POST)){
+                if(!empty($_POST["pluginChanger"])){
+                    $activePlugins = explode(",",$config["plugins"]);
+                    if(!in_array($_POST["pluginChanger"],$activePlugins)){
+                        $activePlugins[$_POST["pluginChanger"]] = $_POST["pluginChanger"];
+                        $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET plugins = ? WHERE id = ?");
+                        $statement->execute(array(implode(",",$activePlugins),1));
+                    }else{
+                        $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET plugins = ? WHERE id = ?");
+                        $statement->execute(array(str_replace($_POST["pluginChanger"],"",$config["plugins"]),1));
+                    }
+                }
                 if(!empty($_POST["changeTemplate"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET template = ? WHERE id = ?");
                     $statement->execute(array($_POST["changeTemplate"],1));
@@ -439,6 +450,7 @@ class Main{
             $GLOBALS["tpl"]->assign("templates", $templates);
             $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
             $GLOBALS["tpl"]->assign("botshopAccessList", $botshopAccessList);
+            $GLOBALS["tpl"]->assign("foundPlugins", $GLOBALS["foundPlugins"]);
         }
 
         function formatBytes($size, $precision = 2) {

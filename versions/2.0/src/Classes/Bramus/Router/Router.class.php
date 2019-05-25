@@ -83,7 +83,6 @@ class Router
 
         $uri = $this->getCurrentUri();
 
-
         foreach (explode('|', $methods) as $method) {
             $active = false;
             if($pattern == $uri ){

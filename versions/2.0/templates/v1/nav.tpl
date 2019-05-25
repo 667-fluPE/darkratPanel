@@ -17,6 +17,10 @@
               <li> <a href="/bots" title="A list of all Bots">  <img src="{$includeDir}assets/img/nav/group.svg"> </a></li>
        <!--   <li> <a href="/passrecovery" title="Password Recovery from Bots"> <img src="{$includeDir}assets/img/pwd/show-password.svg"> </a></li> -->
               <li> <a href="/settings" title="Settings">  <img src="{$includeDir}assets/img/nav/settings.svg"> </a></li>
+
+              {foreach from=$navRegistrations key=name item=navTab}
+               <li> <a href="/{$name}" title="{$name}"> <img src="{$navTab}"> </a></li>
+              {/foreach}
           </ul>
       </div>
   </div>

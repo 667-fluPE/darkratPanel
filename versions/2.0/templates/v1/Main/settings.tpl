@@ -53,6 +53,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#plugins" role="tab" data-toggle="tab">Plugins</a>
+                </li>
         <!--       <li class="nav-item">
                     <a class="nav-link" href="#update" role="tab" data-toggle="tab">Update</a>
                 </li> -->
@@ -190,6 +193,32 @@
                               <input type="submit" class="btn btn-dark" value="Encrypt">
                           {/if}
                       </form>
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="plugins">
+
+                      <table class="table">
+                          <tbody>
+                          {foreach from=$foundPlugins item=plugin}
+
+                              <tr>
+                                  <td>
+                                      <form method="POST">
+                                          <input value="{$plugin.name}" name="pluginChanger" hidden>
+                                          {if $plugin.active == "1"}
+                                                 <input class="btn-dark" type="submit" value="Disable Plugin">
+                                              {else}
+                                                  <input  class="btn-dark" type="submit" value="Enable Plugin">
+                                              {/if}
+
+                                      </form>
+                                  </td>
+                                  <td>{$plugin.name}</td>
+                              </tr>
+                          {/foreach}
+
+                          </tbody>
+                      </table>
+
                   </div>
               </div>
 

