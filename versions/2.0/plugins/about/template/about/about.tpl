@@ -4,7 +4,9 @@
 
 
 <div class="col-md-12 col-lg-11">
-    Hello World
+
+
+    About DarkRat
 </div>
 
 

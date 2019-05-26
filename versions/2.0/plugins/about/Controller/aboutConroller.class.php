@@ -4,7 +4,7 @@ class aboutConroller
 {
     public function __construct()
     {
-        $GLOBALS["template"][0] = get_plugin_base_dir("testplugin") . "/template/about";
+        $GLOBALS["template"][0] = get_plugin_base_dir("about") . "/template/about";
     }
 
     public function dashboard()

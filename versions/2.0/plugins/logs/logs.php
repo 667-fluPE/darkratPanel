@@ -3,7 +3,7 @@ require "Controller/logController.class.php";
 /*
 * Set Plugin dir in Globals
 */
-$GLOBALS["foundPlugins"]["advanced"]["plugindir"] = __DIR__;
+$GLOBALS["foundPlugins"]["logs"]["plugindir"] = __DIR__;
 
 
 if(!empty($_REQUEST)){
@@ -54,7 +54,7 @@ if(!empty($_REQUEST)){
 
 $router->all('/logs', 'logController@logs');
 $router->all('/loginfo/(\d+)', 'logController@loginfo');
-register_navigation_tab("logs",get_plugin_include_dir("advanced")."assets/nav/logs.svg");
+register_navigation_tab("logs",get_plugin_include_dir("logs")."assets/nav/logs.svg");
 
 
 
