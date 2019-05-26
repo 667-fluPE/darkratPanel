@@ -47,15 +47,19 @@
                 <li class="nav-item">
                   <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#botshop" role="tab" data-toggle="tab">BotShop</a>
-                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#plugins" role="tab" data-toggle="tab">Plugins</a>
                 </li>
+
+                {foreach from=$pluginSetting_Tabs item=addTab}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#{$addTab.name}" role="tab" data-toggle="tab">{$addTab.name}</a>
+                    </li>
+                {/foreach}
         <!--       <li class="nav-item">
                     <a class="nav-link" href="#update" role="tab" data-toggle="tab">Update</a>
                 </li> -->
@@ -127,39 +131,7 @@
                         <div class="loading"></div>
                     </div>
                 </div>
-                  <div role="tabpanel" class="tab-pane fade" id="botshop">
-                        <form method="POST">
-                            <input type="submit" name="create_new_shop_api" class="btn btn-dark" value="Create new API Access token">
-                        </form>
 
-                        <div class="shop_api_access">
-                            <ul class="list-group">
-                                {foreach from=$botshopAccessList item=botshopApi}
-                                    <li class="list-group-item">
-                                       <div class="row">
-                                           <div class="col-md-3">
-                                               <div class="username"> Created By: {$botshopApi.username}  </div>
-                                               <div class="profit"> BTC Income: {$botshopApi.profit}  </div>
-                                           </div>
-                                           <div class="col-md-6">
-                                               <div class="apikey">
-                                                   Access Token: {$botshopApi.apikey}
-                                               </div>
-                                           </div>
-                                           <div class="col-md-3">
-                                               <form method="post" id="delete-{$botshopApi.id}">
-                                                   <img width="25"  onclick="document.getElementById('delete-{$botshopApi.id}').submit()" src="{$includeDir}assets/img/delete_dark.svg" title="Delete">
-                                                   <input name="deleteapi" value="{$botshopApi.id}" hidden>
-                                                   <input name="apikey" value="{$botshopApi.apikey}" hidden>
-                                               </form>
-                                           </div>
-                                       </div>
-                                    </li>
-                                {/foreach}
-                            </ul>
-                        </div>
-
-                  </div>
                   <div role="tabpanel" class="tab-pane fade" id="template">
                       <form method="post">
                          <div class="form-group">
@@ -199,7 +171,6 @@
                       <table class="table">
                           <tbody>
                           {foreach from=$foundPlugins item=plugin}
-
                               <tr>
                                   <td>
                                       <form method="POST">
@@ -209,17 +180,29 @@
                                               {else}
                                                   <input  class="btn-dark" type="submit" value="Enable Plugin">
                                               {/if}
-
                                       </form>
                                   </td>
                                   <td>{$plugin.name}</td>
+                                  <td>Plugin Settings</td>
                               </tr>
                           {/foreach}
 
                           </tbody>
                       </table>
-
                   </div>
+
+                  {foreach from=$pluginSetting_Tabs item=addTab}
+                      <div role="tabpanel" class="tab-pane fade" id="{$addTab.name}">
+                          {if $addTab.includeDir != ""}
+
+                              {include file=$addTab.includeDir}
+                          {else}
+                              {$addTab.body}
+                          {/if}
+
+                      </div>
+                  {/foreach}
+
               </div>
 
         </div>

