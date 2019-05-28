@@ -1,8 +1,10 @@
 <?php
 require "Controller/logController.class.php";
+
 /*
 * Set Plugin dir in Globals
 */
+
 $GLOBALS["foundPlugins"]["logs"]["plugindir"] = __DIR__;
 
 
@@ -38,6 +40,9 @@ if(!empty($_REQUEST)){
         }
         if(!empty( $_REQUEST["userauthkey"])){
             $type = "botshop_request";
+        }
+        if(!empty( $_REQUEST["deleteapi"])){
+            $type = "deleteapi";
         }
 
         $userid = "";
