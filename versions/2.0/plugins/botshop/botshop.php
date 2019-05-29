@@ -18,6 +18,7 @@ $AddController->options();
 register_settings_tab("Botshop",false,get_plugin_base_dir("botshop")."/template/Botshop/options.tpl");
 
 $router->all('/checkfunctions', 'OrderApi@checkFunctions');
+$router->all('/editapi/(\d+)', 'Botshop@editapi');
 $router->all('/createoder', 'OrderApi@createoder');
 $router->all('/checkorder', 'OrderApi@checkorder');
 $router->all('/detils', 'OrderApi@detils');

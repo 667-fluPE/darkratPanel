@@ -5,6 +5,8 @@ CREATE TABLE `botshop_access` (
   `id` int(11) NOT NULL,
   `created_by_userid` int(255) NOT NULL,
   `apikey` varchar(255) NOT NULL,
+  `botprice` varchar(255) NOT NULL,
+  `sandbox` int(11) NOT NULL DEFAULT '1',
   `active` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

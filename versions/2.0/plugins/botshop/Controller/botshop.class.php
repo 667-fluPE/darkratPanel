@@ -7,6 +7,24 @@ class Botshop{
     }
 
 
+    private function shorter($text, $chars_limit)
+    {
+        // Check if length is larger than the character limit
+        if (strlen($text) > $chars_limit)
+        {
+            // If so, cut the string at the character limit
+            $new_text = substr($text, 0, $chars_limit);
+            // Trim off white space
+            $new_text = trim($new_text);
+            // Add at end of text ...
+            return $new_text . "...";
+        }
+        // If not just return the text as is
+        else
+        {
+            return $text;
+        }
+    }
 
     private function random_string() {
         if(function_exists('random_bytes')) {
@@ -47,5 +65,26 @@ class Botshop{
             $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM botshop_access WHERE id = ?");
             $statement->execute(array($_POST["deleteapi"]));
         }
+    }
+
+    public function editapi($id){
+        $GLOBALS["template"][1] = "editapi";
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE id = ?");
+        $statement->execute(array($id));
+        $apidetails = $statement->fetch();
+
+
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE from_access_api = ?");
+        $statement->execute(array($apidetails["apikey"]));
+        $orders = array();
+        while($row = $statement->fetch()) {
+            $row["privatekey_short"] = $this->shorter($row["privatekey"],15);
+            $row["address_short"] = $this->shorter($row["address"],15);
+            $orders[] = $row;
+        }
+
+        $GLOBALS["tpl"]->assign("apidetails", $apidetails);
+        $GLOBALS["tpl"]->assign("orders", $orders);
+
     }
 }
