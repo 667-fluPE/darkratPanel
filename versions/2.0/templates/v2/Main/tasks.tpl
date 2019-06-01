@@ -57,8 +57,7 @@
                         <option selected disabled>Task method</option>
                         {foreach from=$task_configuration key=taskkey item=task}
 
-                            <option data-value="{if !empty($task.value)} {$task.value} {/if}" data-placeholder="{if !empty($task.placeholder)} {$task.placeholder} {/if}" value="{$task.command}">{$task.name}
-                                - {$taskkey}</option>
+                            <option data-value="{if !empty($task.value)}{$task.value}{/if}" data-placeholder="{if !empty($task.placeholder)} {$task.placeholder} {/if}" value="{$task.command|trim}">{$task.name}- {$taskkey}</option>
                         {/foreach}
                     </select>
                     <div id="inputs">
