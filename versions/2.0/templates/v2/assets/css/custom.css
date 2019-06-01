@@ -1,1 +1,129 @@
 /* your styles go here */
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+#inputs .form-check-label:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+#inputs .form-check-label input:checked ~ .checkmark {
+    background-color: #7d15ba;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+#inputs .form-check-label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+#newTask .form-check-label{
+    margin-top: 20px;
+    position: relative;
+    display: block;
+    padding-bottom: 5px;
+}
+
+.inputs-inner{
+    margin-top: 20px;
+}
+
+#newTask .form-check-label div{
+    margin-left: 30px;
+}
+#newTask input[type="checkbox"]{
+   display: none;
+}
+/* Style the checkmark/indicator */
+#inputs .form-check-label .checkmark:after {
+    left: 11px;
+    top: 7px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+.text-primary{
+    color: #7127AC !important;
+}
+
+.login-page .form-holder .info{
+    background: rgba(113, 39, 172, 0.5) !important;
+}
+.list-group-item:first-child, .list-group-item:last-child {
+    border-radius: 0;
+    background: #2d3035 !important;
+}
+
+.progress-bar{
+    background: rgba(113, 39, 172, 1) !important;
+}
+#vmap{
+    min-width: 300px;
+    min-height: 300px;
+    width: 100%;
+}
+
+.plugin_registrations{
+
+}
+
+.plugin_registrations img{
+    max-height: 40px;
+    width: auto;
+}
+
+.botinfo_modal_link,.taskinformation_modal_link{
+    color: #DB6574 !important;
+    cursor: pointer;
+    text-decoration: underline !important;
+}
+
+.block .title{
+    margin-bottom: 15px;
+}
+
+.block .d-block strong{
+    font-size: 130% !important;
+    font-weight: 400;
+}
+
+.multiselect.dropdown-toggle.btn{
+    background: #7127AC !important;
+}
+
+.install{
+    width: 100%;
+}
+.install .country{
+    width: 50px;
+    float: left;
+}
+.install .computername{
+    float: right;
+}
+.install::after {
+    content: "";
+    clear: both;
+    display: table;
+}

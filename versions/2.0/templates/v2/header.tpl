@@ -15,13 +15,17 @@
     <!-- theme stylesheet-->
     <link rel="stylesheet" href="{$includeDir}assets/css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="{$includeDir}assets/css/bootstrap-multiselect.css">
     <link rel="stylesheet" href="{$includeDir}assets/css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="{$includeDir}assets/img/favicon.ico">
-
-
-
-
+    <!-- jQuery library -->
+    <script src="{$includeDir}assets/js/jquery.min.js"></script>
+    <script src="{$includeDir}assets/vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="{$includeDir}assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{$includeDir}assets/js/bootstrap-multiselect.js"></script>
+    <script src="{$includeDir}assets/js/functions.js"></script>
+<!-- TODo include .DataTable -->
 </head>
 <body>
 

