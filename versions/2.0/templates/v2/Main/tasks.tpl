@@ -105,7 +105,7 @@
                                     </form>
                                 {/if}
                             </td>
-                            <td>{$task.command}</td>
+                            <td>{$task.command_short}</td>
                             <td>{$task.task}</td>
                             <td>{$task.executions}
                                 / {($task.execution_limit) ? $task.execution_limit : 'unlimited'}</td>

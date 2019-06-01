@@ -173,12 +173,20 @@
                     {foreach from=$foundPlugins item=plugin}
                         <tr>
                             <td>
-                                <form method="POST">
+                                <form method="POST" id="pluginsForm-{$plugin.name}">
                                     <input value="{$plugin.name}" name="pluginChanger" hidden>
                                     {if $plugin.active == "1"}
-                                        <input class="btn btn-primary" type="submit" value="Disable Plugin">
+                                        <label class="switch">
+                                            <input data-id="{$plugin.name}" type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+
                                     {else}
-                                        <input  class="btn btn-primary" type="submit" value="Enable Plugin">
+                                        <label class="switch">
+                                            <input data-id="{$plugin.name}" type="checkbox" >
+                                            <span class="slider round"></span>
+                                        </label>
+
                                     {/if}
                                 </form>
                             </td>
@@ -215,6 +223,13 @@
 
     // function to reorder
     $(document).ready(function(){
+
+        $("input[type=checkbox]").change(function(e){
+            console.log($(this).attr("data-id"));
+            $('#pluginsForm-'+$(this).attr("data-id")).submit();
+
+        });
+
         // check users files and update with most recent version
         $(".version_check").on('click',function(e) {
             //$(".loading").show();
