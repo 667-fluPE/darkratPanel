@@ -6,7 +6,7 @@
                 <thead>
                     <tr>
                     <th>Country</th>
-                        <th>ID</th>
+
                     <th>Computrername</th>
                     <th>Opering System</th>
                     <th>Status</th>
@@ -16,7 +16,7 @@
                     {foreach from=$tasks item=info}
                         <tr>
                             <td>{$info.country}</td>
-                            <td>Todo</td>
+
                             <td>{$info.computrername}</td>
                             <td>{$info.operingsystem}</td>
                             <td>{$info.status}</td>

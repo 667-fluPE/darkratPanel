@@ -607,41 +607,7 @@ $(document).ready(function () {
 
     // ------------------------------------------------------- //
     // Pie Chart
-    // ------------------------------------------------------ //
-    var PIECHARTEXMPLE    = $('#visitPieChart');
-    var pieChartExample = new Chart(PIECHARTEXMPLE, {
-        type: 'pie',
-        options: {
-            legend: {
-                display: false
-            }
-        },
-        data: {
-            labels: [
-                "A",
-                "B",
-                "C",
-                "D"
-            ],
-            datasets: [
-                {
-                    data: [300, 50, 100, 80],
-                    borderWidth: 0,
-                    backgroundColor: [
-                        '#723ac3',
-                        "#864DD9",
-                        "#9762e6",
-                        "#a678eb"
-                    ],
-                    hoverBackgroundColor: [
-                        '#723ac3',
-                        "#864DD9",
-                        "#9762e6",
-                        "#a678eb"
-                    ]
-                }]
-            }
-    });
+
 
     var pieChartExample = {
         responsive: true

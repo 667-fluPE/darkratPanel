@@ -15,3 +15,4 @@ $GLOBALS["task_configuration"]["example_task"] = array(
     "value" => "http://".$_SERVER["HTTP_HOST"]."/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/dll/example.dll;DisplayHelloFromDLL",
 );
 
+

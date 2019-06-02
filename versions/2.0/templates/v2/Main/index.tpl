@@ -173,6 +173,7 @@ wait a bit
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="stats-with-chart-1 block">
+                    <div class="title"><strong class="d-block"> Latest Installs </strong><span class="d-block">These bots are the newest</span></div>
                     <div class="latestInstalls">
                         {foreach from=$last5Installs item=install}
                             <div class="install">
@@ -195,13 +196,13 @@ wait a bit
             <div class="col-lg-4 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block">
-                    <div class="title"><strong class="d-block"> Top Countries</strong><span class="d-block">Lorem ipsum dolor sit</span>
+                    <div class="title"><strong class="d-block"> Top Countries</strong><span class="d-block">The most bots are from:</span>
                     </div>
                     <div class="row d-flex align-items-top justify-content-between">
                         <div class="col-4">
                             <div class="text">
 
-                                <span class="d-block">Seen in last </span>
+                                <span class="d-block">Bots Seen in last </span>
                                 <small class="d-block">12 Hours: <strong>{$last12hclientscount}</strong></small>
                                 <small class="d-block">24 Hours: <strong>{$lastclientscount}</strong></small>
                                 <small class="d-block">7 Days: <strong>{$last7clientscount}</strong></small>
@@ -231,8 +232,20 @@ wait a bit
 
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
-
-                Top Countries
+                <br>
+                privilege need to be correct (admin/user)<br>
+                latest installs : need to be more sorted.<br>
+                make the circle for top country bigger<br>
+                <br>
+                +Suggestions:<br>
+                <br>
+                -Add when you highlight the map it shows country name and total bots from this country
+                <br>
+                -Add a circle for Privielges (how many admin and how many users %)<br>
+                -Add paging numbers for bots in this template<br>
+<br>
+                paginate on bots tab<br>
+                need fix 1366x768 for bot installs<br>
 
             </div>
 

@@ -121,11 +121,11 @@ class Main{
             $AdminOrNotValues = array();
             foreach($adminOrNotStats as $status){
                 if($status["isadmin"] == "false"){
-                    $status["label"] = "Users";
+                    $status["label"] = "User";
                     //$status["isadmin"] = "Non Admin: ".$status["cnt"];
                 }else{
                     //$status["isadmin"] = "Admins: ".$status["cnt"];
-                    $status["label"] = "Admins";
+                    $status["label"] = "Admin";
                 }
                 $AdminOrNotLables[] = $status["label"];
                 $AdminOrNotValues[] = $status["cnt"];

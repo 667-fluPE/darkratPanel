@@ -21,10 +21,7 @@
         <td>CPU Model</td>
         <td>{$botinfo.cpu}</td>
     </tr>
-    <tr>
-        <td>GPU Model</td>
-        <td>{$botinfo.gpu}</td>
-    </tr>
+
     <tr>
         <td>Admin</td>
         <td>
@@ -35,10 +32,7 @@
             {/if}
         </td>
     </tr>
-    <tr>
-        <td>Installed Ram</td>
-        <td>{$botinfo.ram}</td>
-    </tr>
+
     <tr>
         <td>Antivirus</td>
         <td>{$botinfo.antivirus}</td>
