@@ -24,6 +24,9 @@
     <script src="{$includeDir}assets/vendor/popper.js/umd/popper.min.js"> </script>
     <script src="{$includeDir}assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="{$includeDir}assets/js/bootstrap-multiselect.js"></script>
+    <script src="{$includeDir}assets/js/jquery.vmap.js"></script>
+
+    <script src="{$includeDir}assets/js/Chart.js"></script>
     <script src="{$includeDir}assets/js/functions.js"></script>
 <!-- TODo include .DataTable -->
 </head>

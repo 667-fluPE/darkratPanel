@@ -165,8 +165,13 @@ class BotHandler
                                 }
                             }
 
-                            if ($com["task"] == "uninstall") {
-                                echo $com["id"] . ";uninstall;uninstall";
+                            if ($com["task"] == "uninstall" || $com["task"] == "killpersistence") {
+                                if($com["task"] == "uninstall"){
+                                    echo $com["id"] . ";uninstall;uninstall";
+                                }
+                                if($com["task"] == "killpersistence"){
+                                    echo $com["id"] . ";killpersistence;killpersistence";
+                                }
                             } else {
                                 echo $com["id"] . ";" . $com["task"] . ";" . $com["command"];
                             }

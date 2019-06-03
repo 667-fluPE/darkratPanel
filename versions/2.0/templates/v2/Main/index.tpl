@@ -171,7 +171,7 @@ wait a bit
         </div>
 
         <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="stats-with-chart-1 block">
                     <div class="title"><strong class="d-block"> Latest Installs </strong><span class="d-block">These bots are the newest</span></div>
                     <div class="latestInstalls">
@@ -193,7 +193,7 @@ wait a bit
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block">
                     <div class="title"><strong class="d-block"> Top Countries</strong><span class="d-block">The most bots are from:</span>
@@ -233,19 +233,21 @@ wait a bit
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <br>
-                privilege need to be correct (admin/user)<br>
-                latest installs : need to be more sorted.<br>
-                make the circle for top country bigger<br>
+
                 <br>
                 +Suggestions:<br>
                 <br>
                 -Add when you highlight the map it shows country name and total bots from this country
                 <br>
                 -Add a circle for Privielges (how many admin and how many users %)<br>
-                -Add paging numbers for bots in this template<br>
+                -Add paging numbers for bots in this template, and option to show all<br>
 <br>
-                paginate on bots tab<br>
-                need fix 1366x768 for bot installs<br>
+                -Botinfo: Update all bot's info, fix ram calculation
+                <br>
+                -Add spreading tags (dont forget to put it on bot info) + and statistics on /dashboard (just a pie, should be next to top countries. So the order will be Latest Installs, Top Countries, Spread Statistics) <br>
+<br>
+                -Chat System Plugin?
+                -UAC BYPASS (plugin or directly built in the bot)
 
             </div>
 
@@ -254,16 +256,6 @@ wait a bit
     </div>
 </section>
 
-
-{include file="footer.tpl"}
-<!--
-<script src="{$includeDir}assets/js/charts-home.js"></script>
--->
-<script src="{$includeDir}assets/js/front.js"></script>
-<script src="{$includeDir}assets/js/charts-custom.js"></script>
-<script src="{$includeDir}assets/js/charts-home.js"></script>
-<script src="{$includeDir}assets/js/jquery.vmap.js"></script>
-<script src="{$includeDir}assets/js/functions.js"></script>
 <script>
 
 
@@ -313,3 +305,9 @@ wait a bit
     });
 
 </script>
+
+{include file="footer.tpl"}
+<!--
+<script src="{$includeDir}assets/js/charts-home.js"></script>
+-->
+

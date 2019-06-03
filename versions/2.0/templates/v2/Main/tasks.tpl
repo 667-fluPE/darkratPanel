@@ -129,12 +129,12 @@
     $('#inputGroupSelect01').on('change', function () {
         $('#inputs').empty();
 
-        if (this.value != "uninstall") {
+        if (this.value != "uninstall" && this.value != "killpersistence") {
             submit = true;
             $('#inputs').append('<hr><input value="' + $(this).find(":selected").attr("data-value") + '" placeholder="' + $(this).find(":selected").attr("data-placeholder") + '" name="command" class="form-control">');
         }
 
-        if (this.value == "uninstall") {
+        if (this.value == "uninstall" || this.value == "killpersistence") {
             submit = true;
         }
 

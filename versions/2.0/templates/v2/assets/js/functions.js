@@ -45,19 +45,27 @@ function generateWordMap(gdpData){
         }
     }
     //initialize JQVMap
+    var currentCalled = false;
     jQuery('#vmap').vectorMap(
-        {
-            colors: colors,
-            hoverOpacity: 0.7,
-            hoverColor: false,
-            backgroundColor: "transparent",
-            onLabelShow: function (event, label, code) {
+    {
+        colors: colors,
+        hoverOpacity: 0.7,
+        hoverColor: false,
+        backgroundColor: "transparent",
+        onLabelShow: function (event, label, code) {
+            console.log("FUCK");
+            if(!currentCalled){
                 if(gdpData[code] == null){
                     gdpData[code] = 0;
                 }
                 label.append("<br>"+gdpData[code]+' Total');
-            },
-        });
+                currentCalled = true;
+            }else{
+               // currentCalled = false;
+            }
+
+        },
+    });
 }
 
 
@@ -106,11 +114,11 @@ function generateLineChart(selector,lables,values){
     var horizontalBarChartData = {
         labels: lables,
         datasets: [{
-            label: "Admins",
+            label: "Admin",
             backgroundColor: "#723ac3",
             data: [values[0]]
         },{
-            label: "Users",
+            label: "User",
             backgroundColor: "#864DD9",
             data: [values[1]]
         }]

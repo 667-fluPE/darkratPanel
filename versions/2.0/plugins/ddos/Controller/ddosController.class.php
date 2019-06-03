@@ -11,13 +11,8 @@ class ddosController{
     {
         $GLOBALS["template"][1] = "ddoshub";
 
-
-
-
         if(!empty($_POST["load-ddosBots"])){
-
             echo $_POST["load-ddosBots"];
-
             die("TOdo Begin Loading task");
         }
 

