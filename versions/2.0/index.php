@@ -13,7 +13,7 @@ if (file_exists(__DIR__ . '/../../config.php')) {
     $installer = false;
     require_once __DIR__ . '/../../config.php';
 }
-
+//TODO Autoload .class.php
 require_once __DIR__ . '/src/Classes/DarkRat/Encryption/RC4.class.php';
 require_once __DIR__ . '/src/Classes/DarkRat/Plugins/PluginHelper.class.php';
 require 'vendor/autoload.php';

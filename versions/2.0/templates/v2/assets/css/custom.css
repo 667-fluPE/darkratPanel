@@ -195,3 +195,9 @@ input:checked + .slider:before {
     border-radius: 20px;
     position: absolute;
 }
+
+@media (min-width: 1200px){
+    .container {
+        max-width: 1180px;
+    }
+}

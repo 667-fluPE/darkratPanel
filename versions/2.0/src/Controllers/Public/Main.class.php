@@ -17,15 +17,12 @@ class Main{
                     //setcookie("identifier","",time()-(3600*24*365));
                     //setcookie("securitytoken","",time()-(3600*24*365));
                    // die('UPS: An error by Checking your Authentication');
-                } else { //Token war korrekt
-                    //Setze neuen Token
+                } else {
                     $neuer_securitytoken = $this->random_string();
                     $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
                     $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
                     setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
                     setcookie("securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
-
-                    //Logge den Benutzer ein
                     $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
                 }
             }
@@ -264,8 +261,6 @@ Botshop Proift btc $
             foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots group by country") as $row) {
                 $countries[] = $row["country"];
             }
-
-
 
             if($botid != ""){
                 $GLOBALS["tpl"]->assign("showCountryFilter", "false");

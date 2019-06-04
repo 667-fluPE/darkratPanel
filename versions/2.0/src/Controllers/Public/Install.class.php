@@ -100,15 +100,6 @@ CREATE TABLE `bots` (
   `version` varchar(10) NOT NULL DEFAULT '0.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Daten für Tabelle `bots`
---
-
-INSERT INTO `bots` (`id`, `antivirus`, `hwid`, `computrername`, `country`, `netframework2`, `netframework3`, `netframework35`, `netframework4`, `latitude`, `longitude`, `countryName`, `ram`, `gpu`, `cpu`, `isadmin`, `architecture`, `ip`, `lastresponse`, `operingsystem`, `install_date`, `version`) VALUES
-(1, 'none', '6b166207-b512-4e13-8840-14fba0047b28', 'IE9WIN7', 'PL', 'true', 'true', 'true', 'true', '52.2309', '20.9978', 'Poland', '2.999504', 'todo', 'Intel Core i7 (Nehalem Class Core i7)', 'true', 'x86', '83.144.86.146', '2019-05-26 18:29:38', 'Windows 7 Service Pack 1', '2019-05-26 18:29:38', '2.1'),
-(2, 'Panda Dome', '79cff2de-715e-438a-aece-984cf880b614', 'INTERNAUTE-PC', 'CA', 'true', 'true', 'true', 'true', '45.4024', '-71.8479', 'Canada', '15.976757', 'todo', 'AMD A8-3870 APU with Radeon(tm) HD Graphics', 'true', 'x64', '70.80.111.154', '2019-05-26 18:29:40', 'Windows 7 Service Pack 1', '2019-05-26 18:29:40', '2.1');
-
--- --------------------------------------------------------
 
 --
 -- Tabellenstruktur für Tabelle `config`

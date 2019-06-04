@@ -32,7 +32,7 @@
                 <hr>
             </div>
             -->
-            <head>
+
 
             <table class="table bot_table">
                 <thead>
@@ -53,14 +53,14 @@
                     <tr>
                         <td class="flag">  <img src="{$includeDir}assets/img/flags/flags/{$bot.country|lower}.png"> {$bot.countryName} </td>
                         <td class="hideTablet"> {$bot.ip}</td>
-                        <td  class="hideMobile"> {$bot.computrername}</td>
-                        <td class="avtivirus hideTablet">  <img src="{$includeDir}assets/img/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
-                        <td class="operingsystem hideTablet">  <img src="{$includeDir}assets/img/img/operingsystems/{$bot.operingsystem}.png" width="120" height="28"> </td>
+                        <td  class="hideMobile">{$bot.computrername}</td>
+                        <td class="avtivirus hideTablet"> <img src="{$includeDir}assets/img/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
+                        <td class="operingsystem hideTablet"> {$bot.operingsystem} </td>
                         <td> {$bot.version} </td>
                         <td class="hideMobile"> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
 
                         <td>
-                            <a class="botinfo_modal_link" onclick="openBotInfo({$bot.id})">More Info</a>
+                            <a class="botinfo_modal_link" onclick="openBotInfo({$bot.id})"> Info</a>
                         </td>
                     </tr>
                 {/foreach}
