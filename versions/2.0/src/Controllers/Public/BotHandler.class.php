@@ -65,18 +65,25 @@ class BotHandler
             $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
 
             if (!empty($_SERVER['REMOTE_ADDR'])) {
-                $ip = $_SERVER['REMOTE_ADDR'];
-                $record = $reader->city($ip);
-                $country = $record->country->isoCode;
-                $countryName = $record->country->name;
-                $countryCity = $record->city->name;
-                $countryLatitude = $record->location->latitude;
-                $countryLongitude = $record->location->longitude;
+               try{
+                   $ip = $_SERVER['REMOTE_ADDR'];
+                   $record = $reader->city($ip);
+                   $country = $record->country->isoCode;
+                   $countryName = $record->country->name;
+                   $countryCity = $record->city->name;
+                   $countryLatitude = $record->location->latitude;
+                   $countryLongitude = $record->location->longitude;
+               }catch (Exception $e){
+                   $country = "unknow";
+                   $countryLatitude = "unknow";
+                   $countryLongitude = "unknow";
+                   $countryName = "unknow";
+               }
             } else {
                 $country = "unknow";
-                $countryLatitude = "";
-                $countryLongitude = "";
-                $countryName = "";
+                $countryLatitude = "unknow";
+                $countryLongitude = "unknow";
+                $countryName = "unknow";
             }
 
 

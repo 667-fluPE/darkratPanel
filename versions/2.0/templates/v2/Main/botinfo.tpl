@@ -111,7 +111,7 @@
 
 <a href="/tasks/{$botinfo.id}" class="btn btn-dark">Execute Task on this Bot</a>
 <hr>
-<form method="post">
+<form method="post" action="/botinfo/{$botinfo.id}">
     <input value="{$botinfo.id}" name="botid" hidden>
     <input type="submit" class="btn btn-danger" name="delete_bot" value="Delete this Bot">
 </form>

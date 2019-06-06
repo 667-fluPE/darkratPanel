@@ -449,8 +449,15 @@ Botshop Proift btc $
 
 
                 if(!empty($_POST["encrypt"])){
-                    $handler = new BotHandler();
-                    $encryptedOUT =$handler->xor_this($_POST["encrypt"]);
+                    $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+                    $statementConfig->execute(array("1"));
+                    $config = $statementConfig->fetch();
+                    $key = $config["enryptionkey"];
+                    $cipher = new  phpseclib\Crypt\RC4();
+                    $cipher->setKey($key);
+                    $encrypted = $cipher->encrypt($_POST["encrypt"]);
+                    $encryptedOUT =  base64_encode($encrypted);
+                    //$encryptedOUT =$handler->xor_this($_POST["encrypt"]);
                 }else{
                     Header("Location: /settings");
                 }
