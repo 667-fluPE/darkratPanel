@@ -122,6 +122,13 @@
                             <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
                         </div>
+
+                        <div class="form-group">
+                            <label for="useragent">Request Time of Bots</label>
+                            <input type="number" class="form-control" name="requestinterval" value="{$config.requestinterval}" id="requestinterval" aria-describedby="requestintervalHelp" placeholder="Enter your encryption key (From bot config.h)">
+                            <small id="requestintervalHelper" class="form-text text-muted">Its needed for a correct Online Calculation.</small>
+                        </div>
+
                     <input type="submit" class="btn btn-primary" value="Save">
                 </form>
             </div>

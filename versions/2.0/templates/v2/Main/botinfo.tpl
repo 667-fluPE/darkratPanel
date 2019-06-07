@@ -38,6 +38,10 @@
         <td>{$botinfo.antivirus}</td>
     </tr>
     <tr>
+        <td>Spread Tag</td>
+        <td>{$botinfo.spreadtag}</td>
+    </tr>
+    <tr>
         <td>Last Seen</td>
         <td>{$botinfo.lastresponse}</td>
     </tr>

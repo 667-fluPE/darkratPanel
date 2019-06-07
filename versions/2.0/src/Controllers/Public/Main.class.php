@@ -62,6 +62,11 @@ class Main{
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
+            $result = $statement->execute(array(1));
+            $config = $statement->fetch();
+
             //select count(*),now() as now  from bots where UNIX_TIMESTAMP(lastresponse) > UNIX_TIMESTAMP((now() + interval -3 minute))
             $sql = "SELECT *, UNIX_TIMESTAMP(lastresponse) as lastresponse, UNIX_TIMESTAMP(now()) as now FROM bots ORDER BY lastresponse DESC";
             $allbots = array();
@@ -76,7 +81,7 @@ class Main{
                  $return[ strtolower( $this->countryMap($row["country"]))] = intval ($row["NUM"]);
              }
             //GET ONLINE CLIENTS
-            $onlinebotcount = $this->getClientCount(300,">","lastresponse"); // 5 min.
+            $onlinebotcount = $this->getClientCount(intval($config["requestinterval"]),">","lastresponse"); // 5 min.
             //GET DEAD CLIENTS
             $deadbotcount = $this->getClientCount( 604800 * 7,"<","lastresponse"); // 14 Days
             //New Clients in Last x Days
@@ -422,6 +427,12 @@ Botshop Proift btc $
                 if(!empty($_POST["useragent"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET useragent = ? WHERE id = ?");
                     $statement->execute(array($_POST["useragent"],1));
+                }
+                if(!empty($_POST["requestinterval"])){
+                    if(is_int(intval($_POST["requestinterval"]))){
+                        $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET requestinterval = ? WHERE id = ?");
+                        $statement->execute(array($_POST["requestinterval"],1));
+                    }
                 }
                 if(!empty($_POST["blockuser"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE users SET active = ? WHERE id = ?");

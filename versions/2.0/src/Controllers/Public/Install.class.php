@@ -80,6 +80,7 @@ CREATE TABLE `bots` (
   `countryName` varchar(255) DEFAULT NULL,
   `ram` varchar(255) DEFAULT NULL,
   `gpu` varchar(255) DEFAULT NULL,
+  `spreadtag` varchar(255) DEFAULT NULL,
   `cpu` varchar(255) DEFAULT NULL,
   `isadmin` varchar(255) DEFAULT NULL,
   `architecture` varchar(255) DEFAULT NULL,
@@ -90,7 +91,7 @@ CREATE TABLE `bots` (
   `version` varchar(10) NOT NULL DEFAULT '0.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+ 
 --
 -- Tabellenstruktur für Tabelle `config`
 --
@@ -190,6 +191,7 @@ ALTER TABLE `bots`
 ALTER TABLE `config`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `config` ADD `requestinterval` VARCHAR(255) NOT NULL DEFAULT '60' AFTER `enryptionkey`;
 --
 -- Indizes für die Tabelle `securitytokens`
 --

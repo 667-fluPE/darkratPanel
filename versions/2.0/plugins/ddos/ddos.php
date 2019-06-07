@@ -18,6 +18,7 @@ $GLOBALS["task_configuration"]["ddos"] = array(
 );
 
 $router->all('/ddos', 'ddosController@ddoshub');
+$router->all('/ddosinfo', 'ddosController@ddosinfo');
 
 
 $router->all('/ddoscontroll', 'ddosHandlerController@ddoscontroll');
