@@ -20,7 +20,6 @@ function generateWordMap(gdpData){
             min = parseFloat(gdpData[cc]);
         }
     }
-
     //set colors according to values of GDP
     for (cc in gdpData)
     {
@@ -52,19 +51,6 @@ function generateWordMap(gdpData){
         hoverOpacity: 0.7,
         hoverColor: false,
         backgroundColor: "transparent",
-        onLabelShow: function (event, label, code) {
-            console.log("FUCK");
-            if(!currentCalled){
-                if(gdpData[code] == null){
-                    gdpData[code] = 0;
-                }
-                label.append("<br>"+gdpData[code]+' Total');
-                currentCalled = true;
-            }else{
-               // currentCalled = false;
-            }
-
-        },
     });
 }
 

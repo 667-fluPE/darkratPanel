@@ -28,9 +28,9 @@
                     <div class="form-group">
                         <label for="sel1">Select Method:</label>
                         <select name="method" class="form-control" id="sel1">
-                            <option value="slow">SlowLoris</option>
-                            <!--  <option value="udp">UDP</option>
-                              <option value="tcp">TCP</option> -->
+                             <option value="slow">SlowLoris</option>
+                             <option value="udp">UDP</option>
+                             <option value="tcp">TCP</option>
                         </select>
                     </div>
 

