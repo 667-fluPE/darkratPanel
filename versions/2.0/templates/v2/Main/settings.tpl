@@ -117,11 +117,11 @@
                             <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the RC4 Cipher Private Key)</small>
                         </div>
-                     <!--   <div class="form-group">
+                       <div class="form-group">
                             <label for="useragent">User Agent</label>
                             <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
                             <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
-                        </div> -->
+                        </div>
                     <input type="submit" class="btn btn-primary" value="Save">
                 </form>
             </div>
