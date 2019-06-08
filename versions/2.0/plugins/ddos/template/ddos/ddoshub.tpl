@@ -70,8 +70,8 @@
                         <label for="sel1">Select Method:</label>
                         <select name="method" class="form-control" id="sel1">
                              <option value="slow">SlowLoris</option>
-                        <!--     <option value="udp">UDP</option>
-                             <option value="tcp">TCP</option> -->
+                             <option value="udp">UDP</option>
+                            <option value="tcp">TCP</option>
                         </select>
                     </div>
 
@@ -103,28 +103,37 @@
             <tr>
                 <th>ID</th>
                 <th>Target</th>
+                <th>Method</th>
                 <th>Working on</th>
                 <th>Status</th>
             </tr>
+
+
+
+
+
             {foreach from=$tasks item=task}
                 <tr>
                     <td>{$task.id}</td>
                     <td>{$task.targetip}</td>
+                    <td>{$task.method}</td>
                     <td>{if $task.status} {$task.workingon}  {/if}</td>
-                    <td>
+                    <td class="buttons">
                         <form method="post"  >
                             <input name="changeTask" value="{$task.id}" hidden>
                             {if $task.status}
                                 {if $task.status == "none"}
-                                    <input type="submit" value="Start">
+                                    <img width="22" onclick="$(this).closest('form').submit();"   src="{$includeDir}assets/img/img/play-button.svg" title="Currenlty Paused">
+                                    <input type="text" value="Start" hidden>
                                 {else}
-                                    <input type="submit" value="Stop">
+                                    <img width="25" onclick="$(this).closest('form').submit();"   src="{$includeDir}assets/img/img/round-pause-button.svg" title="Active">
+                                    <input type="text" value="Stop" hidden>
                                 {/if}
                             {/if}
                         </form>
                         <form method="post" onSubmit="if(!confirm('Sure?')){ return false; }">
                             <input name="delete" value="{$task.id}" hidden>
-                            <input type="submit" value="Delete">
+                            <img width="22" onclick="$(this).closest('form').submit();" src="{$includeDir}assets/img/img/delete.svg" title="Delete">
                         </form>
                     </td>
                 </tr>

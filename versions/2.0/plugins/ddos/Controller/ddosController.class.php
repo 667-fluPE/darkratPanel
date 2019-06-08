@@ -72,8 +72,8 @@ class ddosController{
         }
 
 
-        $statement = $GLOBALS["pdo"]->prepare("SELECT count(ddos_avalible.id) as workingon,ddos_tasks.* FROM ddos_tasks 
-                                                LEFT JOIN ddos_avalible on ddos_tasks.id = ddos_avalible.ddos_taskid GROUP by ddos_tasks.id ");
+        $statement = $GLOBALS["pdo"]->prepare("SELECT SUM(if(ddos_avalible.lastseen > ?, 1, 0)) as workingon,ddos_tasks.* FROM ddos_tasks 
+                                               LEFT JOIN ddos_avalible on ddos_tasks.id = ddos_avalible.ddos_taskid GROUP by ddos_tasks.id ");
         $statement->execute(array(time()-5));
         $tasks = array();
         while($row = $statement->fetch()) {

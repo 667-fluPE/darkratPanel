@@ -222,6 +222,18 @@ input:checked + .slider:before {
     float: right;
 }
 
+
+.table .buttons  form{
+    width: 20px;
+    float: left;
+    margin-right: 20px;
+}
+.table .buttons form:last-child{
+    width: 20px;
+    float: right;
+    margin-right: 0px;:
+}
+
 table.dataTable tbody tr{
     background: #2d3035;
 }
