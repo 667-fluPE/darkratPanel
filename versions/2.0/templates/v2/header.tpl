@@ -4,6 +4,8 @@
     <title>DarkRat Native</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{$includeDir}assets/css/datatables.css">
+
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="{$includeDir}assets/vendor/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome CSS-->
@@ -16,6 +18,7 @@
     <link rel="stylesheet" href="{$includeDir}assets/css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{$includeDir}assets/css/bootstrap-multiselect.css">
+
     <link rel="stylesheet" href="{$includeDir}assets/css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="{$includeDir}assets/img/favicon.ico">
@@ -25,6 +28,7 @@
     <script src="{$includeDir}assets/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="{$includeDir}assets/js/bootstrap-multiselect.js"></script>
     <script src="{$includeDir}assets/js/jquery.vmap.js"></script>
+    <script src="{$includeDir}assets/js/datatables.js"></script>
 
     <script src="{$includeDir}assets/js/Chart.js"></script>
     <script src="{$includeDir}assets/js/functions.js"></script>

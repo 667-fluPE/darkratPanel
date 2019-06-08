@@ -68,26 +68,25 @@
             <div class="col-md-7 col-lg-7">
                 <table class="table taskstable">
                     <thead>
-                    <tr>
-                        <th colspan="2">Status</th>
-                        <th>Command</th>
-                        <th>Type</th>
-                        <th>Executions</th>
-                        <th>Task Details</th>
-                    </tr>
+                        <tr>
+                            <th >Status</th>
+                            <th>Command</th>
+                            <th>Type</th>
+                            <th>Executions</th>
+                            <th>Task Details</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {foreach from=$allTasks item=task}
                         <tr>
-                            <td width="30">
+                            <td width="60">
                                 <form method="post" id="delete-{$task.id}">
                                     <img width="25" onclick="document.getElementById('delete-{$task.id}').submit()"
                                          src="{$includeDir}assets/img/img/delete.svg" title="Delete">
                                     <input name="delete" value="1" hidden>
                                     <input name="taskid" value="{$task.id}" hidden>
                                 </form>
-                            </td>
-                            <td width="30">
+
                                 {if $task.status == "1"}
                                     <form method="post" id="pause-{$task.id}">
                                         <img width="25" onclick="document.getElementById('pause-{$task.id}').submit()"
@@ -124,6 +123,8 @@
 
 {include file="footer.tpl"}
 <script>
+
+
     var countryfilter = false;
     var submit = false;
     $('#inputGroupSelect01').on('change', function () {
@@ -217,6 +218,10 @@
             enableHTML: true,
         });
     }
+    $( document ).ready(function() {
+        $('.taskstable').DataTable({});
+
+    });
 
 
 </script>

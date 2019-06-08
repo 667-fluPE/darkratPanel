@@ -51,6 +51,14 @@ function generateWordMap(gdpData){
         hoverOpacity: 0.7,
         hoverColor: false,
         backgroundColor: "transparent",
+        showTooltip: true,
+        normalizeFunction: 'polynomial',
+        onLabelShow: function (event, label, code) {
+            if(gdpData[code] == null){
+                gdpData[code] = 0;
+            }
+            label.append("<br>"+gdpData[code]+' Total');
+        },
     });
 }
 

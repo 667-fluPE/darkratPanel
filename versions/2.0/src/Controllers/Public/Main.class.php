@@ -314,6 +314,7 @@ Botshop Proift btc $
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
+
             $GLOBALS["template"][0] ="Main";
             $GLOBALS["template"][1] ="taskdetails";
             $sql = "SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 

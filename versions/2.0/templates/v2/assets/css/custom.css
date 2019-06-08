@@ -191,13 +191,45 @@ input:checked + .slider:before {
 
 .jqvmap-label{
     background: #2d3035;
-    padding: 20px;
+    padding: 8px;
     border-radius: 20px;
-    position: absolute;
+    position: fixed;
+
 }
 
 @media (min-width: 1200px){
     .container {
         max-width: 1180px;
     }
+}
+
+.dataTables_filter input, .dataTables_length select{
+    border: none;
+    background: #2d3035;
+    color: white;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate{
+    color: white;
+}
+
+.taskstable tr td[width="60"] form{
+    width: 20px;
+    float: left;
+}
+.taskstable tr td[width="60"] form:last-child{
+    width: 20px;
+    float: right;
+}
+
+table.dataTable tbody tr{
+    background: #2d3035;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+    background-color: #7127AC !important;
 }

@@ -93,3 +93,6 @@
         </div>
 
 
+<script>
+    $('.bot_table').DataTable();
+</script>
