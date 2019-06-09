@@ -199,7 +199,7 @@ input:checked + .slider:before {
 
 @media (min-width: 1200px){
     .container {
-        max-width: 1180px;
+        max-width: 1380px;
     }
 }
 
@@ -244,4 +244,8 @@ table.dataTable tbody tr{
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
     background-color: #7127AC !important;
+}
+
+.dataTables_wrapper{
+    width: 100%;
 }

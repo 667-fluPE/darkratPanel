@@ -53,7 +53,6 @@ require __DIR__ . '/src/Classes/Smarty/Smarty.class.php';
 require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
 require __DIR__ . '/src/Controllers/Public/Install.class.php';
 require __DIR__ . '/src/Controllers/Public/Update.class.php';
-require __DIR__ . '/src/Controllers/Public/Recovery.class.php';
 require __DIR__ . '/src/Controllers/Public/FakeErrors.class.php';
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();

@@ -34,7 +34,13 @@
 </div>
 
 
-<div class="col-md-11 col-lg-11">
+<div class="page-header">
+    <div class="container-fluid">
+        <h2 class="h5 no-margin-bottom">Settings</h2>
+    </div>
+</div>
+
+<div class="col-md-12 col-lg-12">
     <div class="container">
 
         <ul class="nav nav-tabs" role="tablist">

