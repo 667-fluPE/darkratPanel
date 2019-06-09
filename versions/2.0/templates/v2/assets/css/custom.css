@@ -249,3 +249,41 @@ table.dataTable tbody tr{
 .dataTables_wrapper{
     width: 100%;
 }
+
+#taskInformation ul li a{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: solid 0.5px #7127AC;
+}
+
+#taskInformation ul li {
+   margin-right: 20px;
+    margin-bottom: 20px;
+}
+#taskInformation ul li a {
+    text-decoration: none !important;
+}
+
+#taskInformation ul li a:hover {
+ text-decoration: none !important;
+}
+
+#taskInformation ul li a.active {
+    background:  #7127AC;
+    color: white;
+}
+.dot {
+    height: 20px;
+    width: 20px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot.online{
+    background: green;
+}
+.dot.offline{
+    background: brown;
+}
