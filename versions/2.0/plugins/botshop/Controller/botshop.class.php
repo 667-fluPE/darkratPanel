@@ -57,8 +57,8 @@ class Botshop{
 
 
         if(!empty($_POST["create_new_shop_api"])){
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_access (created_by_userid, apikey) VALUES (:userid, :apikey)");
-            $statement->execute(array('userid' => $_SESSION["darkrat_userid"], 'apikey' => $this->random_string()));
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_access (created_by_userid, apikey, botprice) VALUES (:userid, :apikey, :botprice)");
+            $statement->execute(array('userid' => $_SESSION["darkrat_userid"],'botprice' => "0.20", 'apikey' => $this->random_string()));
         }
 
         if(!empty($_POST["deleteapi"])){

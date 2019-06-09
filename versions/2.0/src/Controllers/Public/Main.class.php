@@ -323,7 +323,7 @@ Botshop Proift btc $
             $sql = "SELECT  COUNT(bots.id) as NUM, tasks_completed.bothwid, tasks_completed.status, tasks_completed.taskid, bots.country, bots.computrername, bots.operingsystem, tasks.task, tasks.command, tasks.filter, tasks.status as taskstatus FROM `tasks_completed` 
             LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
             LEFT JOIN tasks ON tasks_completed.taskid = tasks.id
-            WHERE tasks_completed.taskid = ? group by bothwid";
+            WHERE tasks_completed.taskid = ? group by tasks_completed.bothwid";
             $tasks = array();
             $statement =  $GLOBALS["pdo"]->prepare($sql);
             $statement->execute(array($id));
