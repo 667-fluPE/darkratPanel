@@ -408,7 +408,7 @@ Botshop Proift btc $
                         $statement->execute(array(implode(",",$activePlugins),1));
                     }else{
                         $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET plugins = ? WHERE id = ?");
-                        $statement->execute(array(str_replace($_POST["pluginChanger"],"",$config["plugins"]),1));
+                        $statement->execute(array(str_replace(",".$_POST["pluginChanger"],"",$config["plugins"]),1));
                     }
 
                     if(file_exists(__DIR__."/../../../plugins/".$_POST["pluginChanger"]."/".$_POST["pluginChanger"].".sql")){
