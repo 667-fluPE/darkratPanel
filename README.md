@@ -11,6 +11,13 @@ If anyone would like to support this project would be a new documentation with f
   - Connect to your Server via SSH
   - Install Apache2, PHP7.x, MYSQL (MariaDB Server in Ubuntu 18) and PHPMYADMIN
   - Enable .htaccess
+  ```php
+<Directory /var/www/html>
+        Options FollowSymLinks
+        AllowOverride all
+        Require all granted
+</Directory>
+  ```
   - Unpack the Panel.zip
   - Upload Files to the root of your www:data (By Default /var/www/html/)
   - on a new Installation delete the index.html

