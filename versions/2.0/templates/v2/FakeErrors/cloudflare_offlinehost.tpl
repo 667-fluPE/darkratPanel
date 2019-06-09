@@ -1016,7 +1016,7 @@
 
                 <span class="cf-error-type">Error</span>
                 <span class="cf-error-code">521</span>
-                <small class="heading-ray-id">Ray ID: 4e339d49bd61728d &bull; 2019-06-07 15:21:12 UTC</small>
+                <small class="heading-ray-id">Ray ID: {$ray_id} &bull; {$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'} UTC</small>
             </h1>
             <h2 class="cf-subheadline">Web server is down</h2>
         </div><!-- /.error-overview -->
@@ -1050,7 +1050,7 @@
                             <i class="cf-icon cf-icon-server"></i>
                             <i class="cf-icon-status cf-icon-error"></i>
                         </div>
-                        <span class="cf-status-desc">securitylabs.me</span>
+                        <span class="cf-status-desc">{$smarty.server.HTTP_HOST}</span>
                         <h3 class="cf-status-name">Host</h3>
                         <span class="cf-status-label">Error</span>
                     </div>
@@ -1081,9 +1081,9 @@
 
         <div class="cf-error-footer cf-wrapper">
             <p>
-                <span class="cf-footer-item">Cloudflare Ray ID: <strong>4e339d49bd61728d</strong></span>
+                <span class="cf-footer-item">Cloudflare Ray ID: <strong>{$ray_id}</strong></span>
                 <span class="cf-footer-separator">&bull;</span>
-                <span class="cf-footer-item"><span>Your IP</span>: 89.39.107.191</span>
+                <span class="cf-footer-item"><span>Your IP</span>: {$smarty.server.REMOTE_ADDR}</span>
                 <span class="cf-footer-separator">&bull;</span>
                 <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=error_footer" id="brand_link" target="_blank">Cloudflare</a></span>
 
