@@ -227,6 +227,9 @@ Botshop Proift btc $
                 if(!empty($_POST["country-filter"])){
                     $filter["country"] = implode(', ', $_POST['country-filter']);
                 }
+                if(!empty($_POST["version"])){
+                    $filter["version"] = $_POST['version'];
+                }
                 if(!empty($_POST["netFramwork-filter"])){
                     $filter["netFramwork"] = implode(', ', $_POST['netFramwork-filter']);
                 }
@@ -342,7 +345,7 @@ Botshop Proift btc $
             setcookie("identifier","",time()-(3600*24*365));
             setcookie("securitytoken","",time()-(3600*24*365));
 
-            Header("Location: /login");
+            Header("Location: /");
         }
 
         public function edituser($id){

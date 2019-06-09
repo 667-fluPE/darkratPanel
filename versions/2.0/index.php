@@ -1,5 +1,5 @@
 <?php
-header('HTTP/1.1 521 Web server is down'); // Confuse bots
+
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -131,6 +131,7 @@ foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginN
 $template = explode("@", $router->fn);
 
 $router->set404(function() {
+    header('HTTP/1.1 521 Web server is down'); // Confuse bots
     $cl = new FakeErrors();
     $cl->cloudflare_offlinehost();
     $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
