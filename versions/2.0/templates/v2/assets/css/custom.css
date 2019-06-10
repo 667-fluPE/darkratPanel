@@ -250,7 +250,7 @@ table.dataTable tbody tr{
     width: 100%;
 }
 
-#taskInformation ul li a{
+.nav.nav-pills li a{
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
@@ -258,19 +258,19 @@ table.dataTable tbody tr{
     border: solid 0.5px #7127AC;
 }
 
-#taskInformation ul li {
+.nav.nav-pills li {
    margin-right: 20px;
     margin-bottom: 20px;
 }
-#taskInformation ul li a {
+.nav.nav-pillsli a {
     text-decoration: none !important;
 }
 
-#taskInformation ul li a:hover {
+.nav.nav-pills li a:hover {
  text-decoration: none !important;
 }
 
-#taskInformation ul li a.active {
+.nav.nav-pills li a.active {
     background:  #7127AC;
     color: white;
 }

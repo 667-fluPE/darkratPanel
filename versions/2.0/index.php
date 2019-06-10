@@ -82,7 +82,10 @@ if (!$installer) {
     $router->all('/install', 'install@index');
 }
 
-$template = explode("@", $router->fn);
+if(!is_object($router->fn)){
+    $template = explode("@", $router->fn);
+}
+
 
 
 $router->run(function () use ($tpl) {
