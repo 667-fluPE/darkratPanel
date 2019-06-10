@@ -67,7 +67,7 @@ if (!$installer) {
             $router->all($route,$controller);
         }
     }
-    
+
     $router->set404(function() {
         header('HTTP/1.1 521 Web server is down'); // Confuse bots
         $cl = new FakeErrors();
