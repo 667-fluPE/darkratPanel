@@ -159,6 +159,20 @@
                             {/foreach}
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label> Force Compile Template</label> <br>
+                        <select onchange="this.form.submit()" class="form-control" name="forcecompile_template">
+                                {if $config.forcecompile_template == "0"}
+                                    <option value="0" selected>Disabled</option>
+                                    <option value="1">Enabled</option>
+                                {else}
+                                    <option value="0">Disabled</option>
+                                    <option value="1" selected>Enabled</option>
+                                {/if}
+                        </select>
+                    </div>
+                    <input type="submit"  class="btn btn-light" name="clearcache" value="Clear Template Cache">
                 </form>
 
             </div>

@@ -416,9 +416,26 @@ Botshop Proift btc $
                        $GLOBALS["pdo"]->query($sql);
                     }
                 }
+                if(!empty($_POST["clearcache"])){
+                    $tempdir = __DIR__."/../../../../../templates_c";
+                    // Remove a dir (all files and folders in it)
+                    $i = new DirectoryIterator($tempdir);
+                    foreach($i as $f) {
+                        if($f->isFile()) {
+                            unlink($f->getRealPath());
+                        } else if(!$f->isDot() && $f->isDir()) {
+                            rrmdir($f->getRealPath());
+                            rmdir($f->getRealPath());
+                        }
+                    }
+                }
                 if(!empty($_POST["changeTemplate"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET template = ? WHERE id = ?");
                     $statement->execute(array($_POST["changeTemplate"],1));
+                }
+                if(!empty($_POST["forcecompile_template"])){
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET forcecompile_template = ? WHERE id = ?");
+                    $statement->execute(array($_POST["forcecompile_template"],1));
                 }
                 if(!empty($_POST["enryptionkey"])){
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET enryptionkey = ? WHERE id = ?");

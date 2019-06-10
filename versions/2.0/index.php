@@ -90,9 +90,11 @@ if(!is_object($router->fn)){
 
 $router->run(function () use ($tpl) {
 
-    $tpl->caching = false;
-    $tpl->compile_check = true;
-    $tpl->force_compile = true;
+    if($GLOBALS["config"]["forcecompile_template"] == 1){
+        $tpl->caching = false;
+        $tpl->compile_check = true;
+        $tpl->force_compile = true;
+    }
 
     if(empty($GLOBALS["config"]["template"])){
         $GLOBALS["config"]["template"] = "v2";

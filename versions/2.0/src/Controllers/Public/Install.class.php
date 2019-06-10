@@ -192,6 +192,8 @@ ALTER TABLE `config`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `config` ADD `requestinterval` VARCHAR(255) NOT NULL DEFAULT '60' AFTER `enryptionkey`;
+ALTER TABLE `config` ADD `jsonconfig` TEXT NULL DEFAULT NULL AFTER `plugins`;
+ALTER TABLE `config` ADD `forcecompile_template` INT(255) NOT NULL DEFAULT '0' AFTER `plugins`;
 --
 -- Indizes für die Tabelle `securitytokens`
 --
