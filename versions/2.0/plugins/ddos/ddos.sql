@@ -16,6 +16,9 @@ CREATE TABLE `ddos_tasks` (
   `port` varchar(255) NOT NULL,
   `targetip` varchar(255) NOT NULL,
   `method` varchar(255) NOT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `origin_from` varchar(255) NOT NULL,
+  `max_executions` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

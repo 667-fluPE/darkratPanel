@@ -129,10 +129,10 @@
                             <tr>
                                 <td>{$api.apikey}</td>
                                 <td>
-                                    /ddosapi?apikey={$api.apikey}&handle=attack&maxtime=10&port=10&method=tcp&targetip=10.0.0.9<br>
-                                    /ddosapi?apikey={$api.apikey}&handle=status&id=taskid<br>
-                                    /ddosapi?apikey={$api.apikey}&handle=startstop&id=taskid<br>
-                                    /ddosapi?apikey={$api.apikey}&handle=apiinfo<br>
+                                    /ddosapi/v1?apikey={$api.apikey}&handle=attack&maxtime=10&port=10&method=tcp&targetip=10.0.0.9<br>
+                                    /ddosapi/v1?apikey={$api.apikey}&handle=status&id=taskid<br>
+                                    /ddosapi/v1?apikey={$api.apikey}&handle=startstop&id=taskid<br>
+                                    /ddosapi/v1?apikey={$api.apikey}&handle=apiinfo<br>
                                 </td>
                             </tr>
                         {/foreach}

