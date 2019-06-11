@@ -19,6 +19,7 @@ CREATE TABLE `ddos_tasks` (
   `created_by` varchar(255) NOT NULL,
   `origin_from` varchar(255) NOT NULL,
   `max_executions` varchar(255) NOT NULL,
+   `executed_at` TIMESTAMP NOT NULL,
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -32,6 +33,8 @@ CREATE TABLE `ddos_apis` (
   `max_tasks` int(11) NOT NULL DEFAULT '1',
   `active` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `ddos_tasks` ADD `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `status`;
 
 ALTER TABLE `ddos_tasks`
   ADD PRIMARY KEY (`id`);
