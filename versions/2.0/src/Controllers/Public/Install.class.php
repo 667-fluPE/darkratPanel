@@ -307,6 +307,11 @@ ALTER TABLE `users`
                 die("install Bcmath Extension for PHP");
             }
 
+
+            if(!extension_loaded("gmp")){
+                die("install gmp Extension for PHP");
+            }
+
             $neededDirs = array(
                 "versions",
                 __DIR__."/../../../../../",

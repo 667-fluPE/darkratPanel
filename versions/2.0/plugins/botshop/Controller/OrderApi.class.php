@@ -196,9 +196,20 @@ class OrderApi
 
     public function checkFunctions()
     {
-        //  echo $this->checkAmount("2MtmwAVzoDcjR9S41SDpAhkbEBJES551ERv",1);
-       // $infos = $this->generateOrder("btc",$_POST["amount"]);
-       // echo json_encode($infos);
+        die("Disabled for Security");
+        echo $this->checkAmount("2MtmwAVzoDcjR9S41SDpAhkbEBJES551ERv",1);
+        echo "<hr>";
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access LIMIT 1");
+        $statement->execute(array());
+        $row = $statement->fetch();
+        var_dump($row);
+        if($row != false){
+            $infos = $this->generateOrder("btc","50","http://backtest.com/test.exe",$row["apikey"]);
+            echo json_encode($infos);
+        }else{
+            die("Create a API Key");
+        }
+        echo "<hr>";
         die();
     }
 
