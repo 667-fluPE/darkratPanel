@@ -3,30 +3,7 @@
 class Main{
     public function __construct()
     {
-        if(!empty($_COOKIE['identifier']) AND !empty($_COOKIE['securitytoken'])){
-            $identifier = $_COOKIE['identifier'];
-            $securitytoken = $_COOKIE['securitytoken'];
 
-            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM securitytokens WHERE identifier = ?");
-            $result = $statement->execute(array($identifier));
-            $securitytoken_row = $statement->fetch();
-
-            if(!empty($securitytoken)){
-                if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
-                    //TODO Log Bruteforce?
-                    //setcookie("identifier","",time()-(3600*24*365));
-                    //setcookie("securitytoken","",time()-(3600*24*365));
-                   // die('UPS: An error by Checking your Authentication');
-                } else {
-                    $neuer_securitytoken = $this->random_string();
-                    $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
-                    $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
-                    setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
-                    setcookie("securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
-                    $_SESSION['darkrat_userid'] = $securitytoken_row['user_id'];
-                }
-            }
-        }
     }
 
     private function getClientCount($sec,$key,$from = "install_date"){
