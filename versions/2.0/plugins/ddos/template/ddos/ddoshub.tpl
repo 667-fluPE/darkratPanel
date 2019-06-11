@@ -109,10 +109,10 @@
 
     <div class="row">
         <div class="col-md-12">
-            <ul class="nav nav-pills">
-                <li class="active"><a data-toggle="pill" href="#home">Config</a></li>
-                <li><a data-toggle="pill" href="#menu1">DDOS-HUB</a></li>
-                <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">Config</a></li>
+                <li><a data-toggle="tab" href="#menu1">DDOS-HUB</a></li>
+
             </ul>
 
             <div class="tab-content">
@@ -236,10 +236,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="menu2" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
-                </div>
+
             </div>
         </div>
     </div>
@@ -251,3 +248,15 @@
 
 
 {include file="footer.tpl"}
+
+<script>
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        console.log("tab shown...");
+        localStorage.setItem('activeHubTab', $(e.target).attr('href'));
+    });
+
+    var activeTab = localStorage.getItem('activeHubTab');
+    if(activeTab){
+        $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+    }
+</script>

