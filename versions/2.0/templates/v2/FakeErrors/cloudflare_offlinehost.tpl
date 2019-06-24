@@ -7,7 +7,7 @@
 <head>
 
 
-    <title>securitylabs.me | 521: Web server is down</title>
+    <title>{$smarty.server.REMOTE_ADDR} | 521: Web server is down</title>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
