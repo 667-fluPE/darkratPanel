@@ -27,6 +27,12 @@ if (file_exists(__DIR__ . '/../../config.php')) {
 if(!$installer){
 
     if(!empty($_COOKIE['identifier']) AND !empty($_COOKIE['securitytoken'])){
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
         $identifier = $_COOKIE['identifier'];
         $securitytoken = $_COOKIE['securitytoken'];
 
@@ -41,7 +47,7 @@ if(!$installer){
                 //setcookie("securitytoken","",time()-(3600*24*365));
                 // die('UPS: An error by Checking your Authentication');
             } else {
-                $neuer_securitytoken = $this->random_string();
+                $neuer_securitytoken =$randomString;
                 $insert = $GLOBALS["pdo"]->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
                 $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
                 setcookie("identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
