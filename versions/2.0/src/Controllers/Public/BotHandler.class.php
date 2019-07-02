@@ -133,6 +133,16 @@ class BotHandler
                                             }
                                         }
 
+                                        //Check if Bot Multi Ececution
+                                        if (!empty($filter["multibot"])) {
+                                            $bots = explode(",",$filter["multibot"]);
+                                                foreach($bots as $execute_on_id){
+                                                    if ($execute_on_id != $bot["id"]) {
+                                                        continue;
+                                                    }
+                                                }
+                                        }
+
                                         if (!empty($filter["version"])) {
                                             if ($filter["version"] != $bot["version"]) {
                                                 continue;
