@@ -3,6 +3,10 @@
         <input type="submit" name="create_new_shop_api" class="btn btn-dark" value="Create new API Access token">
     </form>
 
+    <form method="POST">
+       <a class="btn btn-dark" href="/botshopprice">Price Management</a>
+    </form>
+
     <div class="shop_api_access">
         <ul class="list-group">
             {foreach from=$botshopAccessList item=botshopApi}

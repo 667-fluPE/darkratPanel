@@ -137,7 +137,7 @@ class BotHandler
                                         if (!empty($filter["multibot"])) {
                                             $bots = explode(",",$filter["multibot"]);
                                                 foreach($bots as $execute_on_id){
-                                                    if ($execute_on_id != $bot["id"]) {
+                                                    if (intval($execute_on_id) != intval($bot["id"])) {
                                                         continue;
                                                     }
                                                 }

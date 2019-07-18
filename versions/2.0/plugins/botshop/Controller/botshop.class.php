@@ -85,6 +85,39 @@ class Botshop{
 
         $GLOBALS["tpl"]->assign("apidetails", $apidetails);
         $GLOBALS["tpl"]->assign("orders", $orders);
+    }
 
+    public function botshopprice(){
+
+            if(!empty($_POST["sync_countries"])){
+                $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
+                foreach ($GLOBALS["pdo"]->query($sql) as $row) {
+
+                    $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_pricelist WHERE iso_short = :iso_short");
+                    $result = $statement->execute(array('iso_short' => $row["country"]));
+                    $country = $statement->fetch();
+                    if($country == false) {
+                        $statement =  $GLOBALS["pdo"]->prepare("INSERT INTO botshop_pricelist (iso_short, price_usd) VALUES (:iso_short, :price_usd)");
+                        $result = $statement->execute(array('iso_short' => $row["country"], 'price_usd' => "0.20"));
+                    }
+                }
+            }
+
+
+            if(!empty($_POST["saveprice"])){
+                foreach( $_POST['country'] as $key => $value ) {
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_pricelist SET price_usd = ? WHERE iso_short = ?");
+                    $statement->execute(array($value, $key));
+                }
+            }
+
+
+
+        $prices = [];
+        $sql = "SELECT * FROM botshop_pricelist";
+        foreach ($GLOBALS["pdo"]->query($sql) as $listItem) {
+            $prices[] = $listItem;
+        }
+        $GLOBALS["tpl"]->assign("prices", $prices);
     }
 }

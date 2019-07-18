@@ -44,3 +44,26 @@ ALTER TABLE `botshop_orders`
 
 ALTER TABLE `botshop_orders`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+
+
+--
+-- Tabellenstruktur für Tabelle `botshop_pricelist`
+--
+
+CREATE TABLE `botshop_pricelist` (
+  `id` int(11) NOT NULL,
+  `iso_short` varchar(10) DEFAULT NULL,
+  `price_usd` varchar(10) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indizes für die Tabelle `botshop_pricelist`
+--
+ALTER TABLE `botshop_pricelist`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `botshop_pricelist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

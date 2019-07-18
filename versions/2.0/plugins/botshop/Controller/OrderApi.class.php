@@ -220,6 +220,21 @@ class OrderApi
         die();
     }
 
+
+    public function fetchPriceList(){
+        $this->checkApi();
+
+        $prices = [];
+        $sql = "SELECT * FROM botshop_pricelist";
+        foreach ($GLOBALS["pdo"]->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $listItem) {
+            unset($listItem["id"]);
+            unset($listItem["created_at"]);
+            $prices[] = $listItem;
+        }
+        echo json_encode($prices);
+        die();
+    }
+
 }
 
 ?>
