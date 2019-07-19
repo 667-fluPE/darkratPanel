@@ -44,6 +44,9 @@ class Botshop{
     }
 
     public function options(){
+        if(empty($_SESSION["darkrat_userid"])) {
+            die("Login Required");
+        }
         $GLOBALS["template"][1] = "options";
 
         $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 Then botshop_orders.coinstopay Else 0 End ) as profit, botshop_access.apikey, botshop_access.id, users.username 
@@ -68,6 +71,9 @@ class Botshop{
     }
 
     public function editapi($id){
+        if(empty($_SESSION["darkrat_userid"])) {
+            die("Login Required");
+        }
         $GLOBALS["template"][1] = "editapi";
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE id = ?");
         $statement->execute(array($id));
@@ -88,7 +94,9 @@ class Botshop{
     }
 
     public function botshopprice(){
-
+        if(empty($_SESSION["darkrat_userid"])) {
+            die("Login Required");
+        }
             if(!empty($_POST["sync_countries"])){
                 $sql = "SELECT country, count(*) as NUM FROM bots GROUP BY country";
                 foreach ($GLOBALS["pdo"]->query($sql) as $row) {
