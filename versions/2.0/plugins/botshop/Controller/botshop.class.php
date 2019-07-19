@@ -111,6 +111,21 @@ class Botshop{
                 }
             }
 
+            if(!empty($_POST["default_bot_price"])){
+
+                $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_pricelist WHERE iso_short = :iso_short");
+                $result = $statement->execute(array('iso_short' => "mix"));
+                $country = $statement->fetch();
+                if($country == false) {
+                    $statement =  $GLOBALS["pdo"]->prepare("INSERT INTO botshop_pricelist (iso_short, price_usd) VALUES (:iso_short, :price_usd)");
+                    $result = $statement->execute(array('iso_short' =>  "mix", 'price_usd' => $_POST["default_bot_price"]));
+                }else{
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_pricelist SET price_usd = ? WHERE iso_short = ?");
+                    $statement->execute(array($_POST["default_bot_price"], "mix"));
+                }
+
+            }
+
 
 
         $prices = [];

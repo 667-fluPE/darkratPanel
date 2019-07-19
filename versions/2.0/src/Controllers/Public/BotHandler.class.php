@@ -122,6 +122,17 @@ class BotHandler
                                         // Search Country in Filter if not found die
                                         if (!empty($filter["country"])) {
                                             if (!preg_match('/\b' . $country . '\b/', $filter["country"])) {
+
+                                                //Country Possible check current countries and difference
+                                                if($com["execution_limit"] > 1){
+                                                    $mixArray = explode(", ",$filter["country"]);
+                                                    $botsDifference = number_format($com["execution_limit"] / count($mixArray),0);
+                                                    $executions_querry = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as executions FROM tasks_completed WHERE taskid = :i AND country = :country");
+                                                    $executions_querry->execute(array(":i" => $com['id'],":country" => $country));
+                                                    if($executions_querry->fetchColumn(0) >= $botsDifference){
+                                                        continue;
+                                                    }
+                                                }
                                                 continue;
                                             }
                                         }

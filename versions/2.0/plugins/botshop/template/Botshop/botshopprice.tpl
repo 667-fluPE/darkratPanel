@@ -3,10 +3,16 @@
 {include file="nav.tpl"}
 
 
-<form method="post">
-    <input type="submit" name="sync_countries" value="Sync Country List with Botlist">
+<form method="post" >
+    <label for="default_bot_price">Create Worldmix Bot Price</label>
+    <input class="form-control" id="default_bot_price" name="default_bot_price">
+    <input  style="" type="submit" class="btn btn-danger"  value="Create Price">
 </form>
-
+<hr>
+<form method="post">
+    <input  style="width: 100%" type="submit" class="btn btn-danger" name="sync_countries" value="Sync Country List with Botlist">
+</form>
+<br>
 
 <form method="post">
     <input name="saveprice" value="1" style="display: none;">
@@ -27,7 +33,7 @@
         </tbody>
     </table>
 
-    <input type="submit"  value="Save Prices">
+    <input type="submit" class="btn btn-danger"  value="Save Prices">
 </form>
 
 
