@@ -11,9 +11,10 @@ require ("Controller/OrderApi.class.php");
 //case when kind = 1 then 1 else 0 end
 // sum(IFNULL( case when botshop_orders.payed = 1 then botshop_orders.coinstopay else 0 end, 0))
 
-
-$AddController = new Botshop();
-$AddController->options();
+if(!empty($_SESSION["darkrat_userid"])) {
+    $AddController = new Botshop();
+    $AddController->options();
+}
 
 register_settings_tab("Botshop",false,get_plugin_base_dir("botshop")."/template/Botshop/options.tpl");
 
