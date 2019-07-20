@@ -97,8 +97,8 @@ class BotHandler
                 if(empty($postbot["spreadtag"])){
                     $postbot["spreadtag"] = "none";
                 }
-                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?  WHERE hwid = ?");
-                $statement->execute(array($ip,$postbot["botversion"], $postbot["hwid"]));
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?, country = ?, spreadtag = ?, countryName = ?  WHERE hwid = ?");
+                $statement->execute(array($ip,$postbot["botversion"], $postbot["hwid"], $country, $postbot["spreadtag"],$countryName));
                 $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks ORDER BY id");
                 while ($com = $cmds->fetch(PDO::FETCH_ASSOC)) {
                     if ($com['status'] == "1") {
