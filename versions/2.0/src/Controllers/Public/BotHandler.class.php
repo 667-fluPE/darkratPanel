@@ -34,7 +34,7 @@ class BotHandler
 
         if (!empty($_POST["botversion"])) {
             //Old version
-            die("uninstall");
+            //die("uninstall");
         }
 
         //  var_dump($_POST);
@@ -135,7 +135,7 @@ class BotHandler
                                                         continue;
                                                     }
                                                 }
-                                                
+
                                             }else{
                                                 continue;
                                             }
