@@ -101,7 +101,40 @@ function generateOsPiChart(selector,lables,values){
         }
     });
 }
+function generateArchitectureStatusLineChart(selector,lables,values){
+    var horizontalBarChartData = {
+        labels: lables,
+        datasets: [{
+            backgroundColor: "#27293d",
+            data: values
+        }]
 
+    };
+    var ctx = document.getElementById(selector).getContext("2d");
+    ctx.width = 300;
+    var myHorizontalBar = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: horizontalBarChartData,
+        options: {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+}
 function generateLineChart(selector,lables,values){
     console.log(values[0]);
     console.log(values[1]);

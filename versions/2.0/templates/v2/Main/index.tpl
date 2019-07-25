@@ -234,24 +234,41 @@ wait a bit
                         </div>
                     </div>
                 </div>
+            </div>
+
+
+
+        </div>
+<br>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+
+                <div class="stats-with-chart-1 block" style="height: 150px;">
+                    <canvas id="osPiChart" width="200" height="150"></canvas>
+                </div>
+
+                <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
+
 
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
-                <br>
 
-                <br>
-                +Suggestions:<br>
-                <br>
-                -Add a circle for Privielges (how many admin and how many users %)<br>
-                <br>
-                -Botinfo: Update all bot's info, fix ram calculation
-                <br>
-                -Add spreading tags (dont forget to put it on bot info) + and statistics on /dashboard (just a pie, should be next to top countries. So the order will be Latest Installs, Top Countries, Spread Statistics) <br>
+                <div class="stats-with-chart-1 block" style="height: 150px;">
+                    <canvas id="architectureStatus" width="200" height="150"></canvas>
+                </div>
+                <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
 
 
             </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+
+                <div class="stats-with-chart-1 block" style="height: 150px;">
+                    <canvas id="countryStatus2" width="200" height="150"></canvas>
+                </div>
+                <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
 
 
+            </div>
         </div>
     </div>
 </section>
@@ -271,6 +288,12 @@ wait a bit
     percentage({$botcount},{$botcount}, "#dashbg-4");
 
     $(document).ready(function () {
+
+
+
+
+
+
 
 
         "use strict";
@@ -301,6 +324,9 @@ wait a bit
 
     $(document).ready(function () {
         generateWordMap({$worldmap}); // if you CLICK STRG and click on the function you load the file
+        generateArchitectureStatusLineChart("architectureStatus",{$architectureLables},{$architectureValue});
+        generateArchitectureStatusLineChart("countryStatus2",{$countyLables},{$countyValue});
+        generateArchitectureStatusLineChart("osPiChart",{$top3osLables},{$top3osvalues});
 
     });
 
