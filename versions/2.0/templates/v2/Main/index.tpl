@@ -243,7 +243,7 @@ wait a bit
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
 
-                <div class="stats-with-chart-1 block" style="height: 150px;">
+                <div class="stats-with-chart-1 block" style="height: 1000px;">
                     <canvas id="osPiChart" width="200" height="150"></canvas>
                 </div>
 
@@ -262,7 +262,7 @@ wait a bit
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
 
-                <div class="stats-with-chart-1 block" style="height: 150px;">
+                <div class="stats-with-chart-1 block" style="height: 2000px;">
                     <canvas id="countryStatus2" width="200" height="150"></canvas>
                 </div>
                 <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
