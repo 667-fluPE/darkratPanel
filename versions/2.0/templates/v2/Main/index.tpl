@@ -181,7 +181,7 @@ wait a bit
                                 <div class="country">
                                     {if $install.country == "unknow"}
                                         <span>N/A</span>
-                                        {else}
+                                    {else}
                                         <img src="{$includeDir}assets/img/flags/flags/{$install.country|lower}.png">
                                         <span>{$install.country}</span>
                                     {/if}
@@ -239,11 +239,11 @@ wait a bit
 
 
         </div>
-<br>
+        <br>
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12">
 
-                <div class="stats-with-chart-1 block" style="height: 1000px;">
+                <div class="stats-with-chart-1 block" style="height: 500px;">
                     <canvas id="osPiChart" width="200" height="150"></canvas>
                 </div>
 
@@ -262,7 +262,7 @@ wait a bit
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
 
-                <div class="stats-with-chart-1 block" style="height: 2000px;">
+                <div class="stats-with-chart-1 block" style="height: 500px;">
                     <canvas id="countryStatus2" width="200" height="150"></canvas>
                 </div>
                 <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
@@ -314,8 +314,8 @@ wait a bit
                 datasets: [{
                     data: {$countyValue},
                     borderWidth: 0,
-                    backgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb"],
-                    hoverBackgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb"]
+                    backgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3"],
+                    hoverBackgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3"]
                 }]
             }
         });

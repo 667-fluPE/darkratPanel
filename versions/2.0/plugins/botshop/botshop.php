@@ -5,6 +5,7 @@
  */
 $GLOBALS["foundPlugins"]["botshop"]["plugindir"] = __DIR__;
 
+require ("Classes/EthereumDriver/GenerateEthereumWallet.php");
 require ("Controller/botshop.class.php");
 require ("Controller/OrderApi.class.php");
 //Botshop
