@@ -9,7 +9,19 @@
 
         <div class="card-body">
             <h5 class="card-title">   {$apidetails.apikey}</h5>
-TODO Sandbox Switch
+            <!--
+            <h5 class="card-title">
+            {if $apidetails.sandbox == 1}
+                Sandbox Active
+                {else}
+                Mainnet Active
+            {/if}
+                -->
+            </h5>
+
+
+
+
 
 
 
@@ -20,8 +32,7 @@ TODO Sandbox Switch
         <thead>
         <tr>
             <th>Status</th>
-            <th>Address</th>
-            <th>Key</th>
+
             <th>Load Amount</th>
             <th>Load Url</th>
             <th>Price</th>
@@ -40,16 +51,15 @@ TODO Sandbox Switch
                Not Payed
            {/if}
            </td>
-           <td>   {$order.address_short}</td>
-           <td>   {$order.privatekey_short}</td>
+
            <td>   {$order.botamount}</td>
            <td>   {$order.loadurl}</td>
-           <td>   {$order.coinstopay}  |  {$order.usd} $</td>
+           <td>   {$order.coinstopay}  {$order.type} |  {$order.usd} $</td>
            <td>   {$order.userauthkey}</td>
            {if $order.taskid == "none"}
                 <td>No task Active</td>
                {else}
-               <td>   <a href="/taskdetails/{$order.taskid}">Go to Task</a></td>
+               <td><a href="/taskdetails/{$order.taskid}">Go to Task</a></td>
            {/if}
 
        </tr>

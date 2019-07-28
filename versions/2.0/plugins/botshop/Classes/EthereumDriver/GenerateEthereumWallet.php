@@ -90,7 +90,7 @@ class EthereumDriver{
         }
 
         $USD = 1 / $eth;
-        return round($USD * $amount, 18);
+        return round($USD * $amount, 6);
     }
 
 

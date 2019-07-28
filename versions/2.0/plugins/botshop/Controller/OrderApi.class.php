@@ -235,7 +235,7 @@ class OrderApi
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
                 $statement->execute(array(1, $taskid, $order["address"]));
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
-                //file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" .$payAmount));
+                 file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" .$payAmount. " ". $order["type"]));
             }else{
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
                 //file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" . $payAmount));

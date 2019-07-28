@@ -49,7 +49,9 @@ class Botshop{
         }
         $GLOBALS["template"][1] = "options";
 
-        $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 Then botshop_orders.coinstopay Else 0 End ) as profit, botshop_access.apikey, botshop_access.id, users.username 
+        $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'btc'  Then botshop_orders.coinstopay Else 0 End ) as profit_btc,
+SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'eth'  Then botshop_orders.coinstopay Else 0 End ) as profit_eth,
+ botshop_access.apikey, botshop_access.id, users.username 
                                                          FROM botshop_access 
                                                          LEFT JOIN users ON users.id = botshop_access.created_by_userid 
                                                          LEFT JOIN botshop_orders ON botshop_orders.from_access_api = botshop_access.apikey

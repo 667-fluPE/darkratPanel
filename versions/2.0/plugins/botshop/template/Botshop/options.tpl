@@ -14,7 +14,8 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="username"> Created By: {$botshopApi.username}  </div>
-                            <div class="profit"> BTC Income: {$botshopApi.profit}  </div>
+                            <div class="profit"> BTC Income: {$botshopApi.profit_btc}  </div>
+                            <div class="profit"> ETH Income: {$botshopApi.profit_eth}  </div>
                         </div>
                         <div class="col-md-6">
                             <div class="apikey">
