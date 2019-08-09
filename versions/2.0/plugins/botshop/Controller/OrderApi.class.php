@@ -23,7 +23,7 @@ class OrderApi
     // TODO BotShop API
 
     private $priceperbot;
-    private $isTestnet = true;
+    private $isTestnet;
     private $blockchainAPI;
     private $blockconfirms;
 
@@ -32,6 +32,12 @@ class OrderApi
         $price = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_pricelist WHERE iso_short = ? ");
         $price->execute(array("mix"));
         $DefaultMixPrice = $price->fetch();
+
+        $price = $GLOBALS["pdo"]->prepare("SELECT sandbox FROM botshop_access WHERE apikey = ? AND active = 1");
+        $price->execute(array($_POST["apikey"]));
+        $fetch = $price->fetch();
+        $this->isTestnet = $fetch["sandbox"];
+
         $this->priceperbot = $DefaultMixPrice["price_usd"];
         $this->blockconfirms = 1;
         if($this->isTestnet){
@@ -157,11 +163,13 @@ class OrderApi
         if($type== "eth"){
             $driver = new EthereumDriver();
             $ethereumOnWallet = $driver->getBalance($address)["result"];
-            return $driver->wei2eth($ethereumOnWallet) ;
+            return array("confirmed_balance" => $driver->wei2eth($ethereumOnWallet), "unconfirmed_balance" =>0);
 
         }
-        $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/".$confirms),true);
-        return $checked["data"]["confirmed_balance"];
+        // $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/".$confirms),true);
+        $checked = json_decode(file_get_contents($this->blockchainAPI."/".$address."/"),true);
+        return array("confirmed_balance" => $checked["data"]["confirmed_balance"], "unconfirmed_balance" => $checked["data"]["unconfirmed_balance"]);
+      // return $checked["data"]["confirmed_balance"];
     }
 
     public function detils(){
@@ -222,7 +230,14 @@ class OrderApi
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM botshop_orders WHERE userauthkey = ?");
         $statement->execute(array($address));
         $order = $statement->fetch();
-        $payAmount = $this->checkAmount( $order["address"],$this->blockconfirms,$order["type"]);
+        if($order["payed"] == 1){
+            $payAmount = $order["coinstopay"];
+        }else{
+            $balance =  $this->checkAmount( $order["address"],$this->blockconfirms,$order["type"]);
+            $order["api"] = $balance;
+            $payAmount = $balance["confirmed_balance"];
+        }
+
 
 
         if($order["coinstopay"] <= $payAmount){
@@ -240,7 +255,7 @@ class OrderApi
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE address = ?");
                 $statement->execute(array(1, $taskid, $order["address"]));
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
-                 file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" .$payAmount. " ". $order["type"]));
+              //   file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" .$payAmount. " ". $order["type"]));
             }else{
                 echo json_encode(array("success"=>"true","message"=>"Success Ordered"));
                 //file_get_contents("https://api.telegram.org/bot626574855:AAFigV4LxuX40-e8XBTncHWu-TCDaVmKZFk/sendMessage?chat_id=-346183841&text=" . urlencode("someone has paid" . $payAmount));

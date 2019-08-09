@@ -267,7 +267,7 @@ ALTER TABLE `users`
                 }catch(PDOException $e){
                     die($e->getmessage());
                 }
-                $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."');";
+                $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."'); \n %%%%pdo->exec(\"SET CHARACTER SET utf8\");";
                 file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
 
 

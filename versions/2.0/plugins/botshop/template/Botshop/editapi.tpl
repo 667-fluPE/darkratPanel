@@ -9,15 +9,24 @@
 
         <div class="card-body">
             <h5 class="card-title">   {$apidetails.apikey}</h5>
-            <!--
-            <h5 class="card-title">
-            {if $apidetails.sandbox == 1}
+
+<form method="post">
+    <h5 class="card-title">
+
+        {if $apidetails.sandbox == 1}
+            <div class="alert alert-warning" role="alert">
                 Sandbox Active
-                {else}
+            </div>
+            <input type="submit" name="changesandbox" class="form-control" value="Change to Main Network">
+        {else}
+            <div class="alert alert-success" role="alert">
                 Mainnet Active
-            {/if}
-                -->
-            </h5>
+            </div>
+            <input type="submit" name="changesandbox" class="form-control" value="Change to Sandbox">
+        {/if}
+
+    </h5>
+</form>
 
 
 
