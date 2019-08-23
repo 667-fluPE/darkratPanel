@@ -16,10 +16,10 @@ it's going to be hard but hard doesn't mean impossible
             <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody >
         {foreach from=$allusers item=user}
             <tr>
-                <td>{$user.site}</td>
+                <td style="     word-break: break-word;"><a style="     word-break: break-word;" href="{$user.site}"> {$user.site}</a></td>
                 <td>{$user.username}</td>
                 <td>{$user.password}</td>
                 <td> <a href="/cookiemanager/{$user.id}">Cookie Infos & Management</a> </td>
