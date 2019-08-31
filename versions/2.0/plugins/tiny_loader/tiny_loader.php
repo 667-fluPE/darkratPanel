@@ -16,5 +16,10 @@ register_navigation_tab("tiny_loader",get_plugin_include_dir("tiny_loader")."ass
 
 
 
-$host = "http://".$_SERVER["HTTP_HOST"];
+$host = $_SERVER["HTTP_HOST"];
 
+$GLOBALS["task_configuration"]["hvnc"] = array(
+    "name" => "Start Hidden Desktop",
+    "command" => "hvnc",
+    "value" => $host.":6667"
+);
