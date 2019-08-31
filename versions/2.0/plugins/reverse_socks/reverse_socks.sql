@@ -6,7 +6,8 @@ CREATE TABLE `reverse_socks` (
   `status` varchar(255) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `country_name` varchar(255) DEFAULT NULL,
-  `country_city` varchar(255) DEFAULT NULL
+  `country_city` varchar(255) DEFAULT NULL,
+    `lastcheck` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `reverse_socks`
