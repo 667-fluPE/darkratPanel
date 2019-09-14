@@ -15,13 +15,12 @@ class reverse_socks{
             fclose($fp);
             return true;
         } else {
-            fclose($fp);
             return false;
         }
     }
 
     public function checkSocks($minutes = 10){
-        $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL ".$minutes." MINUTE LIMIT 10)";
+        $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL ".intval($minutes)." MINUTE ) LIMIT 10";
         foreach ($GLOBALS["pdo"]->query($sql) as $row) {
 
             if(!$this->check($row["ip"],$row["status"])){
