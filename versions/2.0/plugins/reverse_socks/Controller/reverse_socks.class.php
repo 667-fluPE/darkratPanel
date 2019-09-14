@@ -10,7 +10,7 @@ class reverse_socks{
 
     function check($host,$port)
     {
-        $waitTimeoutInSeconds = 10;
+        $waitTimeoutInSeconds = 5;
         if($fp = @fsockopen($host,$port,$errCode,$errStr,$waitTimeoutInSeconds)){
             fclose($fp);
             return true;
@@ -20,22 +20,26 @@ class reverse_socks{
         }
     }
 
+    public function checkSocks($minutes = 10){
+        $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL ".$minutes." MINUTE LIMIT 10)";
+        foreach ($GLOBALS["pdo"]->query($sql) as $row) {
+
+            if(!$this->check($row["ip"],$row["status"])){
+                $statement = $GLOBALS["pdo"]->prepare("DELETE FROM reverse_socks WHERE id = :id ");
+                $statement->execute(array('id' => $row["id"]));
+            }else{
+                $statement = $GLOBALS["pdo"]->prepare("UPDATE reverse_socks SET lastcheck = CURRENT_TIMESTAMP() WHERE id = ?");
+                $statement->execute(array($row["id"]));
+            }
+        }
+    }
+
     public function dashboard(){
         $GLOBALS["template"][1] = "dashboard";
 
 
         if(!empty($_GET["check"])){
-            $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL 30 MINUTE)";
-            foreach ($GLOBALS["pdo"]->query($sql) as $row) {
-
-                if(!$this->check($row["ip"],$row["status"])){
-                    $statement = $GLOBALS["pdo"]->prepare("DELETE FROM reverse_socks WHERE id = :id ");
-                    $statement->execute(array('id' => $row["id"]));
-                }else{
-                    $statement = $GLOBALS["pdo"]->prepare("UPDATE reverse_socks SET lastcheck = CURRENT_TIMESTAMP() WHERE id = ?");
-                    $statement->execute(array($row["id"]));
-                }
-            }
+            $this->checkSocks($_GET["check"]);
         }
 
         $statement = $GLOBALS["pdo"]->prepare("SELECT * FROM reverse_socks ORDER BY lastcheck");
@@ -49,6 +53,11 @@ class reverse_socks{
 
 
     public function reverse_socks_controll(){
+
+        if(!empty($_POST["check"])){
+            $this->checkSocks(1);
+        }
+
         $sql = "SELECT * FROM reverse_socks WHERE `lastcheck` < (NOW() - INTERVAL 10 MINUTE) LIMIT 10";
         foreach ($GLOBALS["pdo"]->query($sql) as $row) {
 
