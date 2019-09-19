@@ -243,7 +243,7 @@ Botshop Proift btc $
                $allTasks[] = $row;
             }
             $countries = array();
-            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots group by country") as $row) {
+            foreach ($GLOBALS["pdo"]->query("SELECT country FROM bots group by country  ORDER BY country") as $row) {
                 $countries[] = $row["country"];
             }
 
