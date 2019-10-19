@@ -41,7 +41,7 @@
 </div>
 
 <div class="col-md-12 col-lg-12">
-    <div class="container">
+    <div class="">
 
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -50,6 +50,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="#globalsettings" role="tab" data-toggle="tab">Global Settings</a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
             </li>

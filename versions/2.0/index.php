@@ -24,6 +24,11 @@ if (file_exists(__DIR__ . '/../../config.php')) {
     $installer = false;
     require_once __DIR__ . '/../../config.php';
 }
+
+if(!empty($_GET["installer"])){
+    $installer = true;
+}
+
 if(!$installer){
 
     if(!empty($_COOKIE['identifier']) AND !empty($_COOKIE['securitytoken'])){
@@ -72,6 +77,9 @@ require __DIR__ . '/src/Controllers/Public/FakeErrors.class.php';
 $tpl = new Smarty;
 $router = new \Bramus\Router\Router();
 require __DIR__ . '/src/Controllers/Public/Main.class.php';
+
+
+
 if (!$installer) {
 
 
@@ -178,8 +186,11 @@ $router->run(function () use ($tpl) {
     $tpl->display($templateDir);
 });
 
+
 if ($installer) {
-    if ($_SERVER['REQUEST_URI'] != "/install") {
+    if (strpos($_SERVER['REQUEST_URI'], 'install') !== false) {
+        die();
+    }else{
         Header("Location: /install");
     }
 }

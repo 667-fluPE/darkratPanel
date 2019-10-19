@@ -46,7 +46,7 @@
 
 
 <div class="col-md-11 col-lg-11">
-    <div class="container">
+    <div class="">
 
         <div class="row">
 
@@ -56,7 +56,6 @@
                     <select name="task" class="custom-select" id="inputGroupSelect01">
                         <option selected disabled>choose task</option>
                         {foreach from=$task_configuration key=taskkey item=task}
-
                             <option data-value="{if !empty($task.value)}{$task.value}{/if}" data-placeholder="{if !empty($task.placeholder)} {$task.placeholder} {/if}" value="{$task.command|trim}">{$task.name}- {$taskkey}</option>
                         {/foreach}
                     </select>

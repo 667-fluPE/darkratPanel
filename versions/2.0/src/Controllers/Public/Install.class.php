@@ -1,9 +1,7 @@
 <?php
 
 class Install{
-
-
-
+    
     function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -17,18 +15,46 @@ class Install{
      public function index()
     {
         $finishing = false;
-        //uUog~{qyTKN{
-        if(!empty($_POST)){
+        if(!empty($_GET["installer"])){
+            $finishing = true;
+        }
+
+        if(!empty($_POST["config"])){
+            if($_POST["config"] == "Finish Setup"){
+                if(!empty($_POST["encryptionkey"]) || !empty($_POST["useragent"]) || !empty($_POST["requestinterval"] || !empty($_POST["installPW"]) || !empty($_POST["adminPW"]))){
+                    include(__DIR__."/../../../../../config.php");
+                    if($_POST["installPW"] != $GLOBALS["installPW"]){
+                        die("Wrong Install PW");
+                    }
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET enryptionkey = ?,useragent = ?, requestinterval= ? WHERE id = ?");
+                    $statement->execute(array($_POST["encryptionkey"],$_POST["useragent"],$_POST["requestinterval"], 1));
+
+
+                    $passwort_hash = password_hash($_POST["adminPW"], PASSWORD_DEFAULT);
+                    $statement = $GLOBALS["pdo"]->prepare("UPDATE users SET passwort = ? WHERE id = ?");
+                    $statement->execute(array($passwort_hash, 1));
+
+                    //adminPW
+
+
+
+
+                    Header("Location: /install?installer=1&step=2");
+                    die();
+                }
+            }
+        }
+
+
+        if(!empty($_POST["install"])){
                 //$mysqldatabaseRand = $this->generateRandomString(2);
-               // $mysqlpassword = $this->generateRandomString(20);
-               
+                // $mysqlpassword = $this->generateRandomString(20);
                 if(empty($_POST["mysqlusername"]) || empty($_POST["mysqlpassword"]) || empty($_POST["databaseName"])){
                     die("Error Wrong Details");
-                }
-
-                 $mysqldatabaseRand = $_POST["databaseName"];
-                 $mysqlpassword = $_POST["mysqlpassword"];
-                 $mysqlusername = $_POST["mysqlusername"];
+                }else{
+                    $mysqldatabaseRand = $_POST["databaseName"];
+                    $mysqlpassword = $_POST["mysqlpassword"];
+                    $mysqlusername = $_POST["mysqlusername"];
 
 
                     try{
@@ -37,7 +63,7 @@ class Install{
                         die($e->getmessage());
                     }
 
-               $database = "
+                    $database = "
                     USE ".$mysqldatabaseRand.";
                     DROP TABLE IF EXISTS bots;
                     DROP TABLE IF EXISTS botshop_access;
@@ -253,7 +279,7 @@ ALTER TABLE `tasks_completed`
 -- AUTO_INCREMENT für Tabelle `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
@@ -261,71 +287,82 @@ ALTER TABLE `users`
                    INSERT INTO users SET username = 'admin', passwort = '".str_replace("%","$",'%2y%10%e031/Nzd4x5LWstBinp7puC2Wil1bRIqm6e/c0eKfD/tLZVwlupyG')."'
                ";
 
-                try{
-                    $statement = $databaseCon->prepare($database);
-                    $statement->execute(array());
-                    $databaseErrors = $statement->errorInfo();
-                }catch(PDOException $e){
-                    die($e->getmessage());
+                    try{
+                        $statement = $databaseCon->prepare($database);
+                        $statement->execute(array());
+                        $databaseErrors = $statement->errorInfo();
+                    }catch(PDOException $e){
+                        die($e->getmessage());
+                    }
+
+
+                    if($databaseErrors[2] == NULL){
+                        $finishing = true;
+                    }else{
+                        var_dump($databaseErrors);
+                        die();
+                    }
+
+                    $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."'); \n %%%%pdo->exec(\"SET CHARACTER SET utf8\"); \n %%%%installPW = '". $mysqlpassword."';";
+                    file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
+
+
                 }
-
-
-                if($databaseErrors[2] == NULL){
-                    $finishing = true;
-                }else{
-                    var_dump($databaseErrors);
-                    die();
-                }
-
-            $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."'); \n %%%%pdo->exec(\"SET CHARACTER SET utf8\");";
-            file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
-
 
         }
 
-       
-            $return = array(
-                "mysql" => false,
-                "writable" => array(),
-                "dontwritable" => array(),
-            );
+        $return = array(
+            "mysql" => false,
+            "writable" => array(),
+            "dontwritable" => array(),
+        );
 
-            if(in_array("mysql",PDO::getAvailableDrivers())){
-                $return["mysql"] = true;
-            }
-            $newFileName = __DIR__.'/../../../../../file.txt';
-            $dirs = array_filter(glob('*'), 'is_dir');
-            if (  is_writable(dirname($newFileName))) {
-                $return["writable"][] = "Root Dir";
-            }
+        if(in_array("mysql",PDO::getAvailableDrivers())){
+            $return["mysql"] = true;
+        }
+        $newFileName = __DIR__.'/../../../../../file.txt';
+        $dirs = array_filter(glob('*'), 'is_dir');
+        if (  is_writable(dirname($newFileName))) {
+            $return["writable"][] = "Root Dir";
+        }
 
-            if(!extension_loaded("bcmath")){
-                die("install Bcmath Extension for PHP");
-            }
+        if(!extension_loaded("bcmath")){
+            die("install Bcmath Extension for PHP");
+        }
 
 
-            if(!extension_loaded("gmp")){
-                die("install gmp Extension for PHP");
-            }
+        if(!extension_loaded("gmp")){
+            die("install gmp Extension for PHP");
+        }
 
-            $neededDirs = array(
-                "versions",
-                __DIR__."/../../../../../",
-            );
+        $neededDirs = array(
+            "versions",
+            __DIR__."/../../../../../",
+        );
 
-            foreach ($dirs as $dir) {
+        foreach ($dirs as $dir) {
 
-                if(in_array($dir,$neededDirs)){
-                    if (is_writable($dir)) {
-                        $return["writable"][] = $dir;
-                    } else {
-                        $return["dontwritable"][] = $dir;
-                    }
+            if(in_array($dir,$neededDirs)){
+                if (is_writable($dir)) {
+                    $return["writable"][] = $dir;
+                } else {
+                    $return["dontwritable"][] = $dir;
                 }
-
             }
-            $GLOBALS["tpl"]->assign("finishing",$finishing);
-            $GLOBALS["tpl"]->assign("return",$return);
+
+        }
+
+        $step = "";
+        if(!empty($_GET["step"])){
+            $step = $_GET["step"];
+            if( $step  == 2){
+                Header("Location: /login");
+            }
+        }
+
+        $GLOBALS["tpl"]->assign("step",$step);
+        $GLOBALS["tpl"]->assign("return",$return);
+        $GLOBALS["tpl"]->assign("finishing",$finishing);
 
     }
 }
