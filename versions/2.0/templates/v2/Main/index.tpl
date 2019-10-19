@@ -136,7 +136,7 @@ wait a bit
                 <div class="row">
                     <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="stats-with-chart-1 block">
-                            <div class="title"><strong class="d-block"> Privileges</strong><span class="d-block">Privilegs from Clients</span>
+                            <div class="title"><strong class="d-block"> Privileges</strong><span class="d-block">Privileges of clients</span>
                             </div>
                             <div class="row d-flex align-items-top justify-content-between">
                                 <div class="col-12">
@@ -201,20 +201,11 @@ wait a bit
             <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block">
-                    <div class="title"><strong class="d-block"> Top Countries</strong><span class="d-block">The most bots are from:</span>
+                    <div class="title"><strong class="d-block"> Top Countries</strong><span class="d-block">Most bots are from:</span>
                     </div>
                     <div class="row d-flex align-items-top justify-content-between">
-                        <div class="col-4">
-                            <div class="text">
 
-                                <span class="d-block">Bots Seen in last </span>
-                                <small class="d-block">12 Hours: <strong>{$last12hclientscount}</strong></small>
-                                <small class="d-block">24 Hours: <strong>{$lastclientscount}</strong></small>
-                                <small class="d-block">7 Days: <strong>{$last7clientscount}</strong></small>
-
-                            </div>
-                        </div>
-                        <div class="col-8">
+                        <div class="col-6">
                             <div class="bar-chart chart">
                                 <div class="chartjs-size-monitor"
                                      style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
@@ -227,8 +218,20 @@ wait a bit
                                         <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
                                     </div>
                                 </div>
-                                <canvas id="visitPieChart" width="297" height="148" class="chartjs-render-monitor"
-                                        style="display: block; width: 297px; height: 148px;"></canvas>
+                               <div>
+                                   <canvas id="visitPieChart" width="297" height="148" class="chartjs-render-monitor"
+                                           style="display: block; width: 297px; height: 148px;"></canvas>
+                               </div>
+
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text">
+
+                                <span class="d-block">Bots seen in last</span>
+                                <small class="d-block">12 hours: <strong>{$last12hclientscount}</strong></small>
+                                <small class="d-block">24 hours: <strong>{$lastclientscount}</strong></small>
+                                <small class="d-block">7 days: <strong>{$last7clientscount}</strong></small>
 
                             </div>
                         </div>
@@ -241,7 +244,7 @@ wait a bit
         </div>
         <br>
         <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block" style="height: 500px;">
                     <canvas id="osPiChart" width="200" height="150"></canvas>
@@ -251,7 +254,7 @@ wait a bit
 
 
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block" style="height: 150px;">
                     <canvas id="architectureStatus" width="200" height="150"></canvas>
@@ -260,15 +263,18 @@ wait a bit
 
 
             </div>
+
+          <!--
             <div class="col-lg-4 col-md-6 col-sm-12">
 
                 <div class="stats-with-chart-1 block" style="height: 500px;">
                     <canvas id="countryStatus2" width="200" height="150"></canvas>
                 </div>
-                <!--   <canvas id="architectureStatus" width="200" height="150"></canvas>  -->
+
 
 
             </div>
+        -->
         </div>
     </div>
 </section>
@@ -307,6 +313,20 @@ wait a bit
             options: {
                 legend: {
                     display: !1
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 150,
+                        top: 0,
+                        bottom: 0
+                    },
+                    margin: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
                 }
             },
             data: {
@@ -314,8 +334,8 @@ wait a bit
                 datasets: [{
                     data: {$countyValue},
                     borderWidth: 0,
-                    backgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3"],
-                    hoverBackgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3"]
+                    backgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3","#6a34b7"],
+                    hoverBackgroundColor: ["#723ac3", "#864DD9", "#9762e6", "#a678eb","#723ac3","#6a34b7"]
                 }]
             }
         });
@@ -325,7 +345,7 @@ wait a bit
     $(document).ready(function () {
         generateWordMap({$worldmap}); // if you CLICK STRG and click on the function you load the file
         generateArchitectureStatusLineChart("architectureStatus",{$architectureLables},{$architectureValue});
-        generateArchitectureStatusLineChart("countryStatus2",{$countyLables},{$countyValue});
+       // generateArchitectureStatusLineChart("countryStatus2",{$countyLables},{$countyValue});
         generateArchitectureStatusLineChart("osPiChart",{$top3osLables},{$top3osvalues});
 
     });

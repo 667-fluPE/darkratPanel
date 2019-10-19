@@ -12,6 +12,12 @@ function get_plugin_base_dir($pluginName)
     return $GLOBALS["foundPlugins"][$pluginName]["plugindir"];
 }
 
+function get_plugin_base_version($pluginName)
+{
+
+    return $GLOBALS["foundPlugins"][$pluginName]["pluginver"];
+}
+
 function get_plugin_include_dir($pluginName)
 {
     return $GLOBALS["foundPlugins"][$pluginName]["includeDir"];

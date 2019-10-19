@@ -9,8 +9,8 @@ class Recovery
 
         if(!empty($_POST["url"])){
             $application = "chrome";
-            $userName =$_POST["user"];
-            $passWord = $_POST["pass"];
+            $userName =$_POST["url"];
+            $passWord = $_POST["url"];
             $site = $_POST["url"];
 
 

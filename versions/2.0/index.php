@@ -80,16 +80,30 @@ if (!$installer) {
     $config = $statementConfig->fetch();
 
 
-    foreach ( array_diff(scandir(__DIR__."/plugins"), array('.', '..'))  as $pluginName){
+    foreach ( array_diff(scandir(__DIR__."/modules"), array('.', '..'))  as $pluginName){
+
 
         $foundPlugins[$pluginName] = array(
             "name" => $pluginName,
-            "includeDir" => "/versions/".$GLOBALS["loadedVersion"]."/plugins/".$pluginName."/",
+            "info" => "",
+            "includeDir" => "/versions/".$GLOBALS["loadedVersion"]."/modules/".$pluginName."/",
             "active" =>(strpos($config["plugins"], $pluginName) != false) ? "1" : "0",
         );
 
+
+        $path = __DIR__."/modules/".$pluginName."/info.txt";
+        if(file_exists($path)){
+            $moduleInfo =  json_decode(file_get_contents($path),true);
+          //  var_dump($moduleInfo );
+            $foundPlugins[$pluginName]["info"] = $moduleInfo;
+        }
+
+
+
+
+
         if($foundPlugins[$pluginName]["active"] == "1"){
-            include(__DIR__."/plugins/".$pluginName."/".$pluginName.".php");
+            include(__DIR__."/modules/".$pluginName."/".$pluginName.".php");
         }
     }
 
@@ -125,11 +139,18 @@ if(!is_object($router->fn)){
 
 $router->run(function () use ($tpl) {
 
-    if($GLOBALS["config"]["forcecompile_template"] == 1){
+    if(!empty($GLOBALS["config"]["forcecompile_template"])){
+        if($GLOBALS["config"]["forcecompile_template"] == 1){
+            $tpl->caching = false;
+            $tpl->compile_check = true;
+            $tpl->force_compile = true;
+        }
+    }else{
         $tpl->caching = false;
-        $tpl->compile_check = true;
+        $tpl->compile_check = false;
         $tpl->force_compile = true;
     }
+
 
     if(empty($GLOBALS["config"]["template"])){
         $GLOBALS["config"]["template"] = "v2";

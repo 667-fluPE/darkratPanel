@@ -431,3 +431,17 @@ option.online{
 .multiselect-container a {
     color: white;
 }
+
+.stable{
+    color: white;
+    padding: 10px;
+    background: #1c7430;
+    border-radius: 25%;
+}
+
+.alpha{
+    border-radius: 25%;
+    color: white;
+    padding: 10px;
+    background: darkorange;
+}

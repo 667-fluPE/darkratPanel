@@ -26,7 +26,7 @@
     <!-- Sidebar Navigation-->
     <nav id="sidebar">
         <!-- Sidebar Header-->
-        <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
+
         <ul class="list-unstyled">
             <li class=""><a href="/dashboard"> <i class="icon-home"></i>Home </a></li>
             <li class=""><a href="/tasks"> <i class="icon-list"></i>Tasks </a></li>
@@ -45,7 +45,7 @@
         <div>
 
         </div>
-        <!-- Sidebar Navidation Menus--><span class="heading">Plugins</span>
+        <!-- Sidebar Navidation Menus--><span class="heading">Modules</span>
         <div class="plugin_registrations">
             <ul class="list-unstyled">
                 {foreach from=$navRegistrations key=name item=navTab}

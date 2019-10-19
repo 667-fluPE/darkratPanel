@@ -54,7 +54,7 @@
 
                 <form method="POST" id="newTask">
                     <select name="task" class="custom-select" id="inputGroupSelect01">
-                        <option selected disabled>Task method</option>
+                        <option selected disabled>choose task</option>
                         {foreach from=$task_configuration key=taskkey item=task}
 
                             <option data-value="{if !empty($task.value)}{$task.value}{/if}" data-placeholder="{if !empty($task.placeholder)} {$task.placeholder} {/if}" value="{$task.command|trim}">{$task.name}- {$taskkey}</option>
@@ -69,7 +69,7 @@
                 <table class="table taskstable">
                     <thead>
                         <tr>
-                            <th >Status</th>
+                            <th>Status</th>
                             <th>Command</th>
                             <th>Type</th>
                             <th>Executions</th>

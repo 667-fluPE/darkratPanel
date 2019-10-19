@@ -5,26 +5,26 @@ $foundPlugins = array();
 
 $task_configuration = array(
     "dande" => array(
-        "name" => "Download & Execute",
+        "name" => "download & execute",
         "command" => "dande",
         "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
     ),
     "runpe" => array(
-        "name" => "Download & Execute in Memory",
+        "name" => "download & execute in memory",
         "command" => "runpe",
         "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
     ),
     "update" => array(
-        "name" => "Update",
+        "name" => "update",
         "command" => "update",
         "placeholder" => "http://yourdomainorip.com/path/to/file.exe",
     ),
     "uninstall" => array(
-        "name" => "Uninstall",
+        "name" => "uninstall",
         "command" => "uninstall",
     ),
     "killpersistence" => array(
-        "name" => "Kill Persistence Loader",
+        "name" => "kill persistence loader",
         "command" => "killpersistence",
     )
 );

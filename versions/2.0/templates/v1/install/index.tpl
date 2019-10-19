@@ -58,7 +58,7 @@ body { font-family: Arial;
 </div>
 
 <div id="Requirements" class="tabcontent">
- 
+
     {if $return.mysql == "1"}
         MySql Installed
     {else}
@@ -120,6 +120,6 @@ function openTab(evt, cityName) {
 }
 document.getElementById("defaultOpen").click();
 </script>
-   
+
 </body>
 </html> 

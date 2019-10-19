@@ -4,6 +4,7 @@
  * Set Plugin dir in Globals
  */
 $GLOBALS["foundPlugins"]["botshop"]["plugindir"] = __DIR__;
+$GLOBALS["foundPlugins"]["botshop"]["pluginver"] = "1.0";
 
 require ("Classes/EthereumDriver/GenerateEthereumWallet.php");
 require ("Controller/botshop.class.php");
