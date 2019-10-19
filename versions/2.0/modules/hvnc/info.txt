@@ -1,0 +1,5 @@
+{
+ "author": "darkspider",
+ "version": "1.0",
+ "state": "stable"
+}

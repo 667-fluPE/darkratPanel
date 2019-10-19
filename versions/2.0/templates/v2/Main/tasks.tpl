@@ -29,7 +29,7 @@
 
     function opentaskInfo(id){
 
-        $.get( '/taskdetails/'+id, function( data ) {
+        $.get( '/{$defaulRoutes["Main@taskdetails"]}/'+id, function( data ) {
             $("#taskdetailsModal").modal( );
             $( "#taskInformation" ).html( data );
 
@@ -219,7 +219,7 @@
         });
     }
     $( document ).ready(function() {
-        $('.taskstable').DataTable({});
+        $('.taskstable').DataTable();
 
     });
 

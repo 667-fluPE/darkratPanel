@@ -4,17 +4,9 @@ class Main{
 
     public function __construct()
     {
-        $this->config_done = false;
 
-        $statement = $GLOBALS["pdo"]->prepare("SELECT * from config WHERE id = 1");
-        $statement->execute(array()); // 1 Day
-        $result = $statement->fetch();
 
-        if($result["enryptionkey"] != "KQC" && $result["useragent"] != "somesecret" ){
-            $this->config_done = true;
-        }
 
-        $GLOBALS["tpl"]->assign("config_done",$this->config_done);
 
     }
 

@@ -122,6 +122,7 @@ if (!$installer) {
         $cl = new FakeErrors();
         $cl->cloudflare_offlinehost();
         $GLOBALS["tpl"]->assign("includeDir", "/versions/".$GLOBALS["loadedVersion"]."/templates/".$GLOBALS["config"]["template"]."/");
+        $GLOBALS["tpl"]->assign("defaulRoutes", $GLOBALS["defaulRoutes"]);
         $GLOBALS["tpl"]->setTemplateDir(__DIR__ . "/templates/".$GLOBALS["config"]["template"]."/");
         $templateDir = $GLOBALS["template"][0] . "/" . $GLOBALS["template"][1] . ".tpl";
         $GLOBALS["tpl"]->display($templateDir);
@@ -163,6 +164,15 @@ $router->run(function () use ($tpl) {
         $GLOBALS["tpl"]->assign("navRegistrations", $GLOBALS["navigation"]);
         $GLOBALS["tpl"]->assign("task_configuration", $GLOBALS["task_configuration"]);
         $GLOBALS["tpl"]->assign("pluginSetting_Tabs", $GLOBALS["pluginSetting_Tabs"]);
+       $config_done = false;
+        $statement = $GLOBALS["pdo"]->prepare("SELECT enryptionkey,useragent from config WHERE id = 1");
+        $statement->execute(array()); // 1 Day
+        $result = $statement->fetch();
+        if($result["enryptionkey"] != "KQC" && $result["useragent"] != "somesecret" ){
+           $config_done = true;
+        }
+        $GLOBALS["tpl"]->assign("config_done", $config_done);
+        $GLOBALS["tpl"]->assign("defaulRoutes", $GLOBALS["defaulRoutes"]);
     }
 
     $tpl->display($templateDir);

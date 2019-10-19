@@ -8,7 +8,7 @@
 
     function openBotInfo(id){
 
-        $.get( /botinfo/+id, function( data ) {
+        $.get( /{$defaulRoutes["Main@botinfo"]}/+id, function( data ) {
             $("#botinfoModal").modal( { show: true } );
             $( "#botInformations" ).html( data );
 

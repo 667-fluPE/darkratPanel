@@ -11,6 +11,7 @@ register_navigation_tab($pluginName,get_plugin_include_dir($pluginName)."assets/
 $router->all('/reverse_socks', 'reverse_socks@dashboard');
 $router->all('/reverse_socks_controll', 'reverse_socks@reverse_socks_controll');
 
+$host = "http://".$_SERVER["HTTP_HOST"];
 
 $GLOBALS["task_configuration"][$pluginName] = array(
     "name" => "Start Reveres Socks Server",
