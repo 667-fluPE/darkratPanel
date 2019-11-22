@@ -41,7 +41,7 @@
 
 {if $config_done}{else}
 
-    <div class="alert alert-danger" role="alert">
+    <div style="margin:0px; border-radius: 0; border: none;" class="alert alert-danger" role="alert">
         Your configuration is not done, go to "<a href="/settings">Global Settings</a>" and setup your panel
     </div>
 

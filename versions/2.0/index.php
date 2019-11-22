@@ -26,7 +26,9 @@ if (file_exists(__DIR__ . '/../../config.php')) {
 }
 
 if(!empty($_GET["installer"])){
-    $installer = true;
+    if (file_exists(__DIR__ . '/../../enable_installer')) {
+        $installer = true;
+    }
 }
 
 if(!$installer){

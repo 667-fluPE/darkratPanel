@@ -1,7 +1,14 @@
 <?php
 
 class Install{
-    
+
+
+    public function __construct()
+    {
+        //TODO Check if Install File Exists
+    }
+
+
     function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -21,11 +28,9 @@ class Install{
 
         if(!empty($_POST["config"])){
             if($_POST["config"] == "Finish Setup"){
-                if(!empty($_POST["encryptionkey"]) || !empty($_POST["useragent"]) || !empty($_POST["requestinterval"] || !empty($_POST["installPW"]) || !empty($_POST["adminPW"]))){
+                if(!empty($_POST["encryptionkey"]) || !empty($_POST["useragent"]) || !empty($_POST["requestinterval"]) || !empty($_POST["adminPW"]) ){
                     include(__DIR__."/../../../../../config.php");
-                    if($_POST["installPW"] != $GLOBALS["installPW"]){
-                        die("Wrong Install PW");
-                    }
+
                     $statement = $GLOBALS["pdo"]->prepare("UPDATE config SET enryptionkey = ?,useragent = ?, requestinterval= ? WHERE id = ?");
                     $statement->execute(array($_POST["encryptionkey"],$_POST["useragent"],$_POST["requestinterval"], 1));
 
@@ -49,7 +54,7 @@ class Install{
         if(!empty($_POST["install"])){
                 //$mysqldatabaseRand = $this->generateRandomString(2);
                 // $mysqlpassword = $this->generateRandomString(20);
-                if(empty($_POST["mysqlusername"]) || empty($_POST["mysqlpassword"]) || empty($_POST["databaseName"])){
+                if(empty($_POST["mysqlusername"]) || empty($_POST["databaseName"])){
                     die("Error Wrong Details");
                 }else{
                     $mysqldatabaseRand = $_POST["databaseName"];

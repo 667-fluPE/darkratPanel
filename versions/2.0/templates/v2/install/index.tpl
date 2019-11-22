@@ -89,7 +89,7 @@ width: 100%;
     <input name="mysqlusername" required>
     <br>
     <label>MySQL Password</label>
-    <input name="mysqlpassword" required>
+    <input name="mysqlpassword" >
     <hr>
     <label>MySQL Database</label>
     <input name="databaseName" required> (Make sure this is Existing)
@@ -125,8 +125,6 @@ width: 100%;
   <input name="encryptionkey" required placeholder=" set a random encryption key (32 Lenght)"><br>
   <label>User Agent</label>
   <input name="useragent" value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Safari" required><br>
-  <label>MySQL Install Password</label> <br>
-  <input name="installPW" placeholder="MySql Install Password" required><br>
 
   <label>new admin password</label> <br>
   <input name="adminPW" placeholder="new admin password" required><br>
